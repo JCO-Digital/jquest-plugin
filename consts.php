@@ -1,0 +1,9 @@
+<?php // phpcs:ignore Squiz.Commenting.ClassComment.Missing
+const COMPOSER_AUTOLOADER          = '/vendor/autoload.php';
+const PREFIXED_COMPOSER_AUTOLOADER = '/vendor-prefixed/autoload.php';
+const BROILER_TABLE_PREFIX         = 'jquest_';
+const BROILER_OPTION_PREFIX        = 'jquest_';
+
+const BROILER_TEXT_DOMAIN = 'jcore-broiler';
+
+const BROILER_PLUGIN_PATH = __DIR__;

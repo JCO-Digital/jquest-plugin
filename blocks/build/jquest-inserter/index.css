@@ -1,0 +1,17 @@
+/*!***************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./blocks/src/jquest-inserter/editor.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.wp-block-jquest-inserter-jquest-inserter {
+  border: 3px solid #000;
+  background-color: #ffcd00;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 10px;
+}
+
+/*# sourceMappingURL=index.css.map*/
