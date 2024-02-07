@@ -1,6 +1,7 @@
 {
   "name": "jcodigital/jquest-plugin",
   "description": "JQUEST Plugin",
+  "type": "wordpress-plugin",
   "autoload": {
     "psr-4": {
       "JcoreBroiler\\": "classes/"
@@ -9,7 +10,11 @@
   "authors": [
     {
       "name": "J&Co Digital",
-      "email": "maxemilian@jco.fi"
+      "email": "support@jco.fi"
+    },
+    {
+      "name": "Johan Österberg",
+      "email": "johan@jco.fi"
     }
   ],
   "extra": {
