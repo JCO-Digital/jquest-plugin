@@ -1,6 +1,6 @@
 {
-  "name": "jcore-broiler",
-  "version": "0.1.0",
+  "name": "jquest-plugin",
+  "version": "0.1.1",
   "main": "Gruntfile.js",
   "author": "J&Co Digital <maxemilian@jco.fi>",
   "scripts": {

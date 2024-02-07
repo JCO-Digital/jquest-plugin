@@ -1,6 +1,6 @@
 {
-  "name": "jco/jcore-broiler",
-  "description": "A B(r)oilerplate for JCORE plugins",
+  "name": "jcodigital/jquest-plugin",
+  "description": "JQUEST Plugin",
   "autoload": {
     "psr-4": {
       "JcoreBroiler\\": "classes/"
