@@ -7,7 +7,7 @@
  * Author URI:      https://jco.fi
  * Text Domain:     jcore-broiler
  * Domain Path:     /languages
- * Version:         0.1.0
+ * Version:         0.3.0
  *
  * @package         JcoreBroiler
  */
