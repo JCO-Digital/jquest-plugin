@@ -21,8 +21,6 @@ export default function save({ attributes }) {
 		<div {...useBlockProps.save()}>
 			<script
 				src="https://files.jquest.fi/jquest/jquest.js"
-				defer
-				async
 				type="module"
 			></script>
 			<div
