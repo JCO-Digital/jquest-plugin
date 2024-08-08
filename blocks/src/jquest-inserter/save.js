@@ -20,6 +20,7 @@ export default function save({ attributes }) {
 	return (
 		<div {...useBlockProps.save()}>
 			<script
+				data-cookieconsent="ignore"
 				src="https://files.jquest.fi/jquest/jquest.js"
 				type="module"
 			></script>
