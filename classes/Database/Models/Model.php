@@ -20,7 +20,7 @@ abstract class Model implements ModelInterface {
 	public static function get_table_name(): string {
 		global $wpdb;
 
-		return $wpdb->prefix . BROILER_TABLE_PREFIX . strtolower( basename( str_replace( '\\', '/', static::class ) ) );
+		return $wpdb->prefix . JQUEST_TABLE_PREFIX . strtolower( basename( str_replace( '\\', '/', static::class ) ) );
 	}
 
 	/**

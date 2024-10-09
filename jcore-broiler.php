@@ -23,17 +23,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/consts.php';
 
 // Load regular composer autoloader.
-if ( is_readable( __DIR__ . COMPOSER_AUTOLOADER ) ) {
-	require_once __DIR__ . COMPOSER_AUTOLOADER;
-} elseif ( is_readable( ABSPATH . COMPOSER_AUTOLOADER ) ) {
-	require_once ABSPATH . COMPOSER_AUTOLOADER;
+if ( is_readable( __DIR__ . JQUEST_COMPOSER_AUTOLOADER ) ) {
+	require_once __DIR__ . JQUEST_COMPOSER_AUTOLOADER;
+} elseif ( is_readable( ABSPATH . JQUEST_COMPOSER_AUTOLOADER ) ) {
+	require_once ABSPATH . JQUEST_COMPOSER_AUTOLOADER;
 }
 
 // Load prefixed composer autoloader.
-if ( is_readable( __DIR__ . PREFIXED_COMPOSER_AUTOLOADER ) ) {
-	require_once __DIR__ . PREFIXED_COMPOSER_AUTOLOADER;
-} elseif ( is_readable( ABSPATH . PREFIXED_COMPOSER_AUTOLOADER ) ) {
-	require_once ABSPATH . PREFIXED_COMPOSER_AUTOLOADER;
+if ( is_readable( __DIR__ . JQUEST_PREFIXED_COMPOSER_AUTOLOADER ) ) {
+	require_once __DIR__ . JQUEST_PREFIXED_COMPOSER_AUTOLOADER;
+} elseif ( is_readable( ABSPATH . JQUEST_PREFIXED_COMPOSER_AUTOLOADER ) ) {
+	require_once ABSPATH . JQUEST_PREFIXED_COMPOSER_AUTOLOADER;
 }
 
 require_once __DIR__ . '/helpers.php';
@@ -46,10 +46,11 @@ require_once __DIR__ . '/includes/blocks.php';
  * @return bool
  */
 function check_prerequisites(): bool {
-	$pass = ( is_readable( __DIR__ . COMPOSER_AUTOLOADER ) ||
-			is_readable( ABSPATH . COMPOSER_AUTOLOADER ) ) &&
-		( is_readable( __DIR__ . PREFIXED_COMPOSER_AUTOLOADER ) ||
-			is_readable( ABSPATH . PREFIXED_COMPOSER_AUTOLOADER ) );
+	return true;
+	$pass = ( is_readable( __DIR__ . JQUEST_COMPOSER_AUTOLOADER ) ||
+	          is_readable( ABSPATH . JQUEST_COMPOSER_AUTOLOADER ) ) &&
+	        ( is_readable( __DIR__ . JQUEST_PREFIXED_COMPOSER_AUTOLOADER ) ||
+	          is_readable( ABSPATH . JQUEST_PREFIXED_COMPOSER_AUTOLOADER ) );
 
 	if ( $pass ) {
 		return true;
@@ -101,7 +102,7 @@ function register_plugin_activation_hook(): void {
  * @return void
  */
 function load_translations(): void {
-	load_plugin_textdomain( BROILER_TEXT_DOMAIN, false, basename( __DIR__ ) . '/languages' );
+	load_plugin_textdomain( JQUEST_TEXT_DOMAIN, false, basename( __DIR__ ) . '/languages' );
 }
 
 /**

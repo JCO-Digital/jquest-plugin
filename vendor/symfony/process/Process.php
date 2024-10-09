@@ -80,6 +80,7 @@ class Process implements \IteratorAggregate
     private WindowsPipes|UnixPipes $processPipes;
 
     private ?int $latestSignal = null;
+    private ?int $cachedExitCode = null;
 
     private static ?bool $sigchild = null;
 
@@ -88,7 +89,7 @@ class Process implements \IteratorAggregate
      *
      * User-defined errors must use exit codes in the 64-113 range.
      */
-    public static array $exitCodes = [
+    public static $exitCodes = [
         0 => 'OK',
         1 => 'General error',
         2 => 'Misuse of shell builtins',
@@ -199,7 +200,10 @@ class Process implements \IteratorAggregate
         throw new \BadMethodCallException('Cannot serialize '.__CLASS__);
     }
 
-    public function __wakeup(): void
+    /**
+     * @return void
+     */
+    public function __wakeup()
     {
         throw new \BadMethodCallException('Cannot unserialize '.__CLASS__);
     }
@@ -284,11 +288,13 @@ class Process implements \IteratorAggregate
      * @param callable|null $callback A PHP callback to run whenever there is some
      *                                output available on STDOUT or STDERR
      *
+     * @return void
+     *
      * @throws RuntimeException When process can't be launched
      * @throws RuntimeException When process is already running
      * @throws LogicException   In case a callback is provided and output has been disabled
      */
-    public function start(?callable $callback = null, array $env = []): void
+    public function start(?callable $callback = null, array $env = [])
     {
         if ($this->isRunning()) {
             throw new RuntimeException('Process is already running.');
@@ -340,7 +346,7 @@ class Process implements \IteratorAggregate
 
         $process = @proc_open($commandline, $descriptors, $this->processPipes->pipes, $this->cwd, $envPairs, $this->options);
 
-        if (!\is_resource($process)) {
+        if (!$process) {
             throw new RuntimeException('Unable to launch a new process.');
         }
         $this->process = $process;
@@ -1135,9 +1141,11 @@ class Process implements \IteratorAggregate
      * In case you run a background process (with the start method), you should
      * trigger this method regularly to ensure the process timeout
      *
+     * @return void
+     *
      * @throws ProcessTimedOutException In case the timeout was reached
      */
-    public function checkTimeout(): void
+    public function checkTimeout()
     {
         if (self::STATUS_STARTED !== $this->status) {
             return;
@@ -1175,8 +1183,10 @@ class Process implements \IteratorAggregate
      *
      * Enabling the "create_new_console" option allows a subprocess to continue
      * to run after the main process exited, on both Windows and *nix
+     *
+     * @return void
      */
-    public function setOptions(array $options): void
+    public function setOptions(array $options)
     {
         if ($this->isRunning()) {
             throw new RuntimeException('Setting options while the process is running is not possible.');
@@ -1201,7 +1211,7 @@ class Process implements \IteratorAggregate
     {
         static $isTtySupported;
 
-        return $isTtySupported ??= ('/' === \DIRECTORY_SEPARATOR && stream_isatty(\STDOUT));
+        return $isTtySupported ??= ('/' === \DIRECTORY_SEPARATOR && stream_isatty(\STDOUT) && @is_writable('/dev/tty'));
     }
 
     /**
@@ -1270,8 +1280,10 @@ class Process implements \IteratorAggregate
      * Updates the status of the process, reads pipes.
      *
      * @param bool $blocking Whether to use a blocking read call
+     *
+     * @return void
      */
-    protected function updateStatus(bool $blocking): void
+    protected function updateStatus(bool $blocking)
     {
         if (self::STATUS_STARTED !== $this->status) {
             return;
@@ -1279,6 +1291,19 @@ class Process implements \IteratorAggregate
 
         $this->processInformation = proc_get_status($this->process);
         $running = $this->processInformation['running'];
+
+        // In PHP < 8.3, "proc_get_status" only returns the correct exit status on the first call.
+        // Subsequent calls return -1 as the process is discarded. This workaround caches the first
+        // retrieved exit status for consistent results in later calls, mimicking PHP 8.3 behavior.
+        if (\PHP_VERSION_ID < 80300) {
+            if (!isset($this->cachedExitCode) && !$running && -1 !== $this->processInformation['exitcode']) {
+                $this->cachedExitCode = $this->processInformation['exitcode'];
+            }
+
+            if (isset($this->cachedExitCode) && !$running && -1 === $this->processInformation['exitcode']) {
+                $this->processInformation['exitcode'] = $this->cachedExitCode;
+            }
+        }
 
         $this->readPipes($running && $blocking, '\\' !== \DIRECTORY_SEPARATOR || !$running);
 
@@ -1375,8 +1400,9 @@ class Process implements \IteratorAggregate
     private function close(): int
     {
         $this->processPipes->close();
-        if (\is_resource($this->process)) {
+        if ($this->process) {
             proc_close($this->process);
+            $this->process = null;
         }
         $this->exitcode = $this->processInformation['exitcode'];
         $this->status = self::STATUS_TERMINATED;

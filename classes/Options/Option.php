@@ -14,7 +14,7 @@ class Option {
 	 *
 	 * @var string
 	 */
-	private static string $namespace = BROILER_OPTION_PREFIX;
+	private static string $namespace = JQUEST_OPTION_PREFIX;
 
 	/**
 	 * Returns the namespace.

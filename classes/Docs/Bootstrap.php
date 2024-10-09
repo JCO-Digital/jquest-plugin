@@ -59,8 +59,8 @@ class Bootstrap {
 	 */
 	private static function timber_init(): void {
 		Timber::$locations = array(
-			BROILER_PLUGIN_PATH . '/views',
-			BROILER_PLUGIN_PATH . '/docs',
+			JQUEST_PLUGIN_PATH . '/views',
+			JQUEST_PLUGIN_PATH . '/docs',
 		);
 	}
 
@@ -138,7 +138,7 @@ class Bootstrap {
 	 * @return array
 	 */
 	private static function build_docs_array(): array {
-		$docs_file = BROILER_PLUGIN_PATH . '/docs/docs.json';
+		$docs_file = JQUEST_PLUGIN_PATH . '/docs/docs.json';
 		if ( ! is_readable( $docs_file ) ) {
 			return array();
 		}
@@ -148,7 +148,7 @@ class Bootstrap {
 		}
 		$docs = array();
 		foreach ( $docs_json as $document ) {
-			if ( ! is_readable( BROILER_PLUGIN_PATH . '/docs/' . $document->file ) ) {
+			if ( ! is_readable( JQUEST_PLUGIN_PATH . '/docs/' . $document->file ) ) {
 				continue;
 			}
 			$docs[] = array(

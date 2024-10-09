@@ -15,7 +15,7 @@ add_action( 'init', 'JcoreBroiler\init_blocks' );
  */
 function init_blocks() {
 	// Define the path to the directory where the built blocks are stored.
-	$folder = BROILER_PLUGIN_PATH . '/blocks/build/';
+	$folder = JQUEST_PLUGIN_PATH . '/blocks/build/';
 
 	if ( is_dir( $folder ) ) {
 		$blocks = apply_filters( 'broiler_get_blocks', array_diff( scandir( $folder ), array( '..', '.' ) ) );

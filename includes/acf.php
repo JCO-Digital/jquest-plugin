@@ -13,7 +13,7 @@ use RuntimeException;
  * @throws RuntimeException When the directory cannot be created.
  */
 function acf_json_load_point( array $paths ): array {
-	$acf_json_path = BROILER_PLUGIN_PATH . '/acf-json';
+	$acf_json_path = JQUEST_PLUGIN_PATH . '/acf-json';
 	if ( ! @mkdir( $acf_json_path ) && ! is_dir( $acf_json_path ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions, WordPress.PHP.NoSilencedErrors.Discouraged
 		// Add an admin notice.
 		add_action(
@@ -48,7 +48,7 @@ function acf_json_save_point( string $path ): string {
 		return $path;
 	}
 
-	$acf_json_path = BROILER_PLUGIN_PATH . '/acf-json';
+	$acf_json_path = JQUEST_PLUGIN_PATH . '/acf-json';
 	if ( ! @mkdir( $acf_json_path ) && ! is_dir( $acf_json_path ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions, WordPress.PHP.NoSilencedErrors.Discouraged
 		// Add an admin notice.
 		add_action(
