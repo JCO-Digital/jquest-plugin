@@ -1,6 +1,6 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
 
-namespace JcoreBroiler\Options;
+namespace jQuestPlugin\Options;
 
 /**
  * Class OptionsPageBuilder, used to build options pages.
@@ -14,7 +14,7 @@ namespace JcoreBroiler\Options;
  * ->set_template('options-page.twig')
  * ->build();
  *
- * @package JcoreBroiler\Options
+ * @package jQuestPlugin\Options
  */
 class OptionsPageBuilder {
 	/**

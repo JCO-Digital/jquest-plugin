@@ -1,11 +1,11 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
 
-namespace JcoreBroiler\Database;
+namespace jQuestPlugin\Database;
 
 /**
  * The tables class can be used to access and modify the database tables.
  *
- * @package JcoreBroiler\Database
+ * @package jQuestPlugin\Database
  */
 class Tables {
 

@@ -1,15 +1,15 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName,Squiz.Commenting.ClassComment.Missing
 
-namespace JcoreBroiler\Database\Models;
+namespace jQuestPlugin\Database\Models;
 
-use JcoreBroiler\Database\Tables;
+use jQuestPlugin\Database\Tables;
 
 /**
  * Example model.
  * This is an example model, you can use this as a template for your own models.
  * You can also remove this file if you don't need it.
  *
- * @package JcoreBroiler\Database
+ * @package jQuestPlugin\Database
  */
 class ExampleModel extends Model {
 

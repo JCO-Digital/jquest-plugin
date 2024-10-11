@@ -1,6 +1,6 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
 
-namespace JcoreBroiler\Options;
+namespace jQuestPlugin\Options;
 
 use Timber\Timber;
 
@@ -264,6 +264,14 @@ class OptionsPage {
 			admin_url( 'admin.php' )
 		);
 
+		$action_url_2 = add_query_arg(
+			array(
+				'page'                      => $this->menu_slug,
+				"{$this->menu_slug}_action" => 2,
+			),
+			admin_url( 'admin.php' )
+		);
+
 		$api_nonce = wp_create_nonce( 'wp_rest' );
 
 		/**
@@ -276,14 +284,15 @@ class OptionsPage {
 		$context = apply_filters(
 			'timber_context_' . $this->menu_slug,
 			array(
-				'page_title' => $this->page_title,
-				'menu_title' => $this->menu_title,
-				'menu_slug'  => $this->menu_slug,
-				'action_url' => $action_url,
-				'options'    => $options,
-				'errors'     => get_settings_errors(),
-				'api_nonce'  => $api_nonce,
-				'success'    => isset( $_GET['success'] ),
+				'page_title'    => $this->page_title,
+				'menu_title'    => $this->menu_title,
+				'menu_slug'     => $this->menu_slug,
+				'action_url'    => $action_url,
+				'action_url_2'  => $action_url_2,
+				'options'       => $options,
+				'errors'        => get_settings_errors(),
+				'api_nonce'     => $api_nonce,
+				'success'       => isset( $_GET['success'] ),
 			),
 			$this
 		);
@@ -300,6 +309,7 @@ class OptionsPage {
 	 * @return void
 	 */
 	final public function save_options(): void {
+
 		// This is the URL we will redirect the user to after saving the options.
 		$url = add_query_arg(
 			array(
@@ -320,27 +330,38 @@ class OptionsPage {
 		if ( ! isset( $_GET[ "{$this->menu_slug}_action" ] ) ) {
 			return;
 		}
+
+		$action_number = $_GET[ "{$this->menu_slug}_action" ];
+
 		if ( isset( $_POST[ "{$this->menu_slug}_nonce" ] )
 			&& wp_verify_nonce( $_POST[ "{$this->menu_slug}_nonce" ], $this->menu_slug ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 			$input = wp_unslash( $_POST );
 
-			// Validate and sanitize the input data as needed.
-			$validate_options = $this->validate_options( $input );
+			if($action_number == '1'){
 
-			// Save the validated options.
-			foreach ( $validate_options as $option_name => $value ) {
-				Option::set( $option_name, $value );
+				// Validate and sanitize the input data as needed.
+				$validate_options = $this->validate_options( $input );
+
+				// Save the validated options.
+				foreach ( $validate_options as $option_name => $value ) {
+					Option::set( $option_name, $value );
+				}
+
+				$url = add_query_arg(
+					array(
+						'success' => true,
+					),
+					$url
+				);
+
+			} elseif($action_number == '2') {
+				// action_2 -> refresh quests
+
+				print_r("refresh quests");
 			}
 
-			$url = add_query_arg(
-				array(
-					'success' => true,
-				),
-				$url
-			);
-
 			// Redirect to avoid form resubmission.
-			wp_safe_redirect( $url );
+			//wp_safe_redirect( $url );
 			exit;
 		}
 	}

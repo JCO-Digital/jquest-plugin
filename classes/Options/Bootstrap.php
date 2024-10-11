@@ -1,12 +1,12 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
-namespace JcoreBroiler\Options;
+namespace jQuestPlugin\Options;
 
 use Timber\Timber;
 
 /**
  * Database class, handles bootstrapping the custom database tables.
  *
- * @package JcoreBroiler\Database
+ * @package jQuestPlugin\Database
  */
 class Bootstrap {
 

@@ -1,11 +1,11 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
 
-namespace JcoreBroiler\RestAPI;
+namespace jQuestPlugin\RestAPI;
 
 /**
  * Helper class for the REST API.
  *
- * @package JcoreBroiler\RestAPI
+ * @package jQuestPlugin\RestAPI
  */
 class RestAPIHelpers {
 

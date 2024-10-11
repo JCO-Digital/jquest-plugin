@@ -1,6 +1,6 @@
 <?php
 
-namespace JcoreBroiler;
+namespace jQuestPlugin;
 
 use RuntimeException;
 
@@ -21,7 +21,7 @@ function acf_json_load_point( array $paths ): array {
 			static function() {
 				?>
 			<div class="notice notice-error">
-				<p><?php esc_html_e( 'Could not create the ACF JSON directory. Please create it manually.', 'jcore-broiler' ); ?></p>
+				<p><?php esc_html_e( 'Could not create the ACF JSON directory. Please create it manually.', 'jquest-' ); ?></p>
 			</div>
 				<?php
 			}

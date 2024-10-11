@@ -1,11 +1,11 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
 
-namespace JcoreBroiler\Cache;
+namespace jQuestPlugin\Cache;
 
 /**
  * CacheManager class, handles the cache.
  *
- * @package JcoreBroiler\Cache
+ * @package jQuestPlugin\Cache
  */
 class CacheManager {
 	/**

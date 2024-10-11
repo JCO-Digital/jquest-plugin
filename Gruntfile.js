@@ -7,7 +7,7 @@ module.exports = function (grunt) {
 
 		addtextdomain: {
 			options: {
-				textdomain: "jcore-broiler",
+				textdomain: "jquest-",
 			},
 			update_all_domains: {
 				options: {
@@ -46,8 +46,8 @@ module.exports = function (grunt) {
 						"vendor/*",
 						"vendor-prefixed/*",
 					],
-					mainFile: "jcore-broiler.php",
-					potFilename: "jcore-broiler.pot",
+					mainFile: "jquest-plugin.php",
+					potFilename: "jquest-plugin.pot",
 					potHeaders: {
 						poedit: true,
 						"x-poedit-keywordslist": true,

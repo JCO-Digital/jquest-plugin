@@ -1,11 +1,11 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
 
-namespace JcoreBroiler\RestAPI;
+namespace jQuestPlugin\RestAPI;
 
 /**
  * Abstract class for all REST API classes.
  *
- * @package JcoreBroiler\RestAPI
+ * @package jQuestPlugin\RestAPI
  */
 abstract class RestAPI implements RestInterface {
 
@@ -14,7 +14,7 @@ abstract class RestAPI implements RestInterface {
 	 *
 	 * @var string
 	 */
-	public static string $namespace = 'jcore-broiler/v1';
+	public static string $namespace = 'jquest-plugin/v1';
 
 	/**
 	 * Gets a "nice" name of the class.

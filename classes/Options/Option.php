@@ -1,11 +1,11 @@
 <?php
 
-namespace JcoreBroiler\Options;
+namespace jQuestPlugin\Options;
 
 /**
  * Class Option, handles the options.
  *
- * @package JcoreBroiler\Options
+ * @package jQuestPlugin\Options
  */
 class Option {
 

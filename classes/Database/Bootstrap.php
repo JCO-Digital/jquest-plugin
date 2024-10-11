@@ -1,13 +1,13 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
-namespace JcoreBroiler\Database;
+namespace jQuestPlugin\Database;
 
-use JcoreBroiler\Database\Models\ModelInterface;
-use JcoreBroiler\StellarWP\DB\DB;
+use jQuestPlugin\Database\Models\ModelInterface;
+use jQuestPlugin\StellarWP\DB\DB;
 
 /**
  * Database class, handles bootstrapping the custom database tables.
  *
- * @package JcoreBroiler\Database
+ * @package jQuestPlugin\Database
  */
 class Bootstrap {
 

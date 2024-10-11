@@ -1,11 +1,11 @@
 <?php
 
-namespace JcoreBroiler\RestAPI;
+namespace jQuestPlugin\RestAPI;
 
 /**
  * Classes RestAPI class, registers the REST API endpoints for classes and handles the requests.
  *
- * @package JcoreBroiler\RestAPI
+ * @package jQuestPlugin\RestAPI
  */
 interface RestInterface {
 

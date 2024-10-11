@@ -25,6 +25,10 @@ class ComposerStaticInit629b7b2d19721689b07136a1b76b7295
     );
 
     public static $prefixLengthsPsr4 = array (
+        'j' => 
+        array (
+            'jQuestPlugin\\' => 13,
+        ),
         'T' => 
         array (
             'Twig\\Extra\\Markdown\\' => 20,
@@ -82,7 +86,6 @@ class ComposerStaticInit629b7b2d19721689b07136a1b76b7295
         array (
             'JsonSchema\\' => 11,
             'JsonMapper\\' => 11,
-            'JcoreBroiler\\' => 13,
         ),
         'D' => 
         array (
@@ -106,6 +109,10 @@ class ComposerStaticInit629b7b2d19721689b07136a1b76b7295
     );
 
     public static $prefixDirsPsr4 = array (
+        'jQuestPlugin\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/classes',
+        ),
         'Twig\\Extra\\Markdown\\' => 
         array (
             0 => __DIR__ . '/..' . '/twig/markdown-extra',
@@ -253,10 +260,6 @@ class ComposerStaticInit629b7b2d19721689b07136a1b76b7295
         'JsonMapper\\' => 
         array (
             0 => __DIR__ . '/..' . '/json-mapper/json-mapper/src',
-        ),
-        'JcoreBroiler\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/classes',
         ),
         'Dflydev\\DotAccessData\\' => 
         array (

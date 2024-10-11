@@ -1,13 +1,13 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
 
-namespace JcoreBroiler\RestAPI;
+namespace jQuestPlugin\RestAPI;
 
-use JcoreBroiler\RestAPI\APIs\JquestAPI;
+use jQuestPlugin\RestAPI\APIs\JquestAPI;
 
 /**
  * Bootstrap class, initializes the REST API.
  *
- * @package JcoreBroiler\RestAPI
+ * @package jQuestPlugin\RestAPI
  */
 class Bootstrap {
 
@@ -44,11 +44,11 @@ class Bootstrap {
 		foreach ( self::$apis as $api ) {
 			$api_urls[ $api::nice_name() ] = rest_url( $api::$namespace );
 		}
-		wp_register_script( 'jcore-broiler', '', array(), '1', false );
-		wp_enqueue_script( 'jcore-broiler' );
+		wp_register_script( 'jquest-plugin', '', array(), '1', false );
+		wp_enqueue_script( 'jquest-plugin' );
 		wp_localize_script(
-			'jcore-broiler',
-			'jcoreBroiler',
+			'jquest-plugin',
+			'jQuestPlugin',
 			array(
 				'api_urls' => $api_urls,
 				'nonce'    => wp_create_nonce( 'wp_rest' ),

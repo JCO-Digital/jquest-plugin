@@ -1,8 +1,8 @@
 <?php
 
-namespace JcoreBroiler\Docs;
+namespace jQuestPlugin\Docs;
 
-use JcoreBroiler\Options\OptionsPageBuilder;
+use jQuestPlugin\Options\OptionsPageBuilder;
 use Twig\Extra\Markdown\DefaultMarkdown;
 use Timber\Timber;
 use Twig\Environment;
@@ -13,7 +13,7 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface;
 /**
  * Registers the docs loader.
  *
- * @package JcoreBroiler\Docs
+ * @package jQuestPlugin\Docs
  */
 class Bootstrap {
 
@@ -52,16 +52,15 @@ class Bootstrap {
 		return $twig;
 	}
 
-	/**
-	 * Initializes Timber.
-	 *
-	 * @return void
-	 */
 	private static function timber_init(): void {
-		Timber::$locations = array(
-			JQUEST_PLUGIN_PATH . '/views',
-			JQUEST_PLUGIN_PATH . '/docs',
-		);
+		add_filter('timber/locations', function ($paths) {
+			$paths[] = [
+				JQUEST_PLUGIN_PATH . '/views',
+				JQUEST_PLUGIN_PATH . '/docs',
+			];
+
+			return $paths;
+		});
 	}
 
 	/**

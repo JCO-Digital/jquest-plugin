@@ -1,15 +1,15 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
 
-namespace JcoreBroiler\Database\Models;
+namespace jQuestPlugin\Database\Models;
 
-use JcoreBroiler\StellarWP\DB\QueryBuilder\QueryBuilder;
+use jQuestPlugin\StellarWP\DB\QueryBuilder\QueryBuilder;
 
 /**
  * The model interface implements the basic methods for the models.
  *
  * TODO: Add all needed interface methods, like get_by_id and so on.
  *
- * @package JcoreBroiler\Database\Models
+ * @package jQuestPlugin\Database\Models
  */
 interface ModelInterface {
 	/**

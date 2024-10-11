@@ -5,16 +5,16 @@
  * Description:     A plugin for inserting JQUESTs into your site.
  * Author:          J&Co Digital Oy
  * Author URI:      https://jco.fi
- * Text Domain:     jcore-broiler
+ * Text Domain:     jquest-
  * Domain Path:     /languages
  * Version:         0.1.0
  *
- * @package         JcoreBroiler
+ * @package         jQuestPlugin
  */
 
-namespace JcoreBroiler;
+namespace jQuestPlugin;
 
-use JcoreBroiler\Options\Option;
+use jQuestPlugin\Options\Option;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

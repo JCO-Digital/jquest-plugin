@@ -1,15 +1,15 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
 
-namespace JcoreBroiler\Database\Models;
+namespace jQuestPlugin\Database\Models;
 
-use JcoreBroiler\Cache\CacheManager;
-use JcoreBroiler\StellarWP\DB\DB;
-use JcoreBroiler\StellarWP\DB\QueryBuilder\QueryBuilder;
+use jQuestPlugin\Cache\CacheManager;
+use jQuestPlugin\StellarWP\DB\DB;
+use jQuestPlugin\StellarWP\DB\QueryBuilder\QueryBuilder;
 
 /**
  * The model class can be used to access and modify the database tables.
  *
- * @package JcoreBroiler\Database
+ * @package jQuestPlugin\Database
  */
 abstract class Model implements ModelInterface {
 

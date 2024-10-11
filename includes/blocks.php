@@ -2,12 +2,12 @@
 /**
  * This file handles the registration of Gutenberg blocks for the WordPress editor.
  *
- * @package JcoreBroiler
+ * @package jQuestPlugin
  */
 
-namespace JcoreBroiler;
+namespace jQuestPlugin;
 
-add_action( 'init', 'JcoreBroiler\init_blocks' );
+add_action( 'init', 'jQuestPlugin\init_blocks' );
 //add_filter( 'broiler_get_blocks', 'JcoreBroiler\filter_blocks' );
 /**
  * The 'init_blocks' function is used to initialize and register custom Gutenberg blocks for the WordPress editor.

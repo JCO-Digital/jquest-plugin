@@ -1,10 +1,10 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
 
-namespace JcoreBroiler\RestAPI\APIs;
+namespace jQuestPlugin\RestAPI\APIs;
 
-use JcoreBroiler\Options\Option;
-use JcoreBroiler\RestAPI\RestAPI;
-use JcoreBroiler\RestAPI\RestAPIHelpers;
+use jQuestPlugin\Options\Option;
+use jQuestPlugin\RestAPI\RestAPI;
+use jQuestPlugin\RestAPI\RestAPIHelpers;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -13,7 +13,7 @@ use WP_REST_Response;
  * This class is an example of how to create a new API.
  * You can use this as a template for your own APIs or remove it if you don't need it.
  *
- * @package JcoreBroiler\RestAPI
+ * @package jQuestPlugin\RestAPI
  */
 class ExampleAPI extends RestAPI {
 	/**

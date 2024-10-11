@@ -1,6 +1,6 @@
 <?php
 
-namespace JcoreBroiler;
+namespace jQuestPlugin;
 
 /**
  * Used to show an error message when the plugin is missing dependencies.
