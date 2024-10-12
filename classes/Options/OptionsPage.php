@@ -3,6 +3,7 @@
 namespace jQuestPlugin\Options;
 
 use Timber\Timber;
+use function jQuestPlugin\fetch_jquests_wrapper;
 
 /**
  * Class for creating an options page.
@@ -357,11 +358,16 @@ class OptionsPage {
 			} elseif($action_number == '2') {
 				// action_2 -> refresh quests
 
-				print_r("refresh quests");
+				$org = Option::get('organization_id');
+
+				if($org){
+					fetch_jquests_wrapper('organization_id', $org);
+				}
+
 			}
 
 			// Redirect to avoid form resubmission.
-			//wp_safe_redirect( $url );
+			wp_safe_redirect( $url );
 			exit;
 		}
 	}
