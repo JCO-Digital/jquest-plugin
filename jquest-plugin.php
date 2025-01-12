@@ -14,7 +14,9 @@
 
 namespace jQuestPlugin;
 
-use jQuestPlugin\Options\Option;
+require_once __DIR__ . '/includes/helpers.php';
+
+use jQuestPlugin\Options\OptionsPage;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -74,11 +76,9 @@ add_action( 'plugins_loaded', __NAMESPACE__ . '\check_prerequisites' );
  * @return void
  */
 function initialize_plugin(): void {
-	// Bootstrap the plugins parts, comment out the ones you don't need.
 	Database\Bootstrap::init();
-	Docs\Bootstrap::init();
 	RestAPI\Bootstrap::init();
-	Options\Bootstrap::init();
+	OptionsPage::get_instance();
 }
 
 /**
@@ -150,20 +150,6 @@ function fetch_jquests_wrapper( $option, $value ) {
 	fetch_jquests( null, $value, $option );
 }
 add_action( 'add_option_jquest__organization_id', __NAMESPACE__ . '\fetch_jquests_wrapper', 10, 2 );
-
-/**
- * Adds the organization message and games to the settings page context.
- *
- * @param array $context The context array.
- *
- * @return mixed
- */
-function add_context_to_settings_page( $context ) {
-	$context['organization_message'] = Option::get( 'organization_message' );
-	$context['organization_games']   = Option::get( 'organization_games' );
-	return $context;
-}
-add_filter( 'timber_context_jquest-settings', __NAMESPACE__ . '\add_context_to_settings_page' );
 
 register_activation_hook( __FILE__, __NAMESPACE__ . '\register_plugin_activation_hook' );
 add_action( 'admin_init', __NAMESPACE__ . '\check_prerequisites' );

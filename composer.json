@@ -17,20 +17,6 @@
       "email": "johan@jco.fi"
     }
   ],
-  "extra": {
-    "strauss": {
-      "exclude_from_prefix": {
-        "packages": [
-          "timber/timber"
-        ]
-      },
-      "exclude_from_copy": {
-        "packages": [
-          "timber/timber"
-        ]
-      }
-    }
-  },
   "scripts": {
     "strauss": [
       "vendor/bin/strauss"
@@ -44,8 +30,6 @@
   },
   "require": {
     "stellarwp/db": "^1.0",
-    "timber/timber": "2.2.0",
-    "twig/markdown-extra": "^3.7.0",
     "league/commonmark": "^2.4.0"
   },
   "require-dev": {

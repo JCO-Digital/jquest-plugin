@@ -404,6 +404,12 @@ EOT
                 ) {
                     continue;
                 }
+
+                // disable symlinking for the root package by default as that most likely makes no sense
+                if (($repoConfig['type'] ?? null) === 'path' && !isset($repoConfig['options']['symlink'])) {
+                    $repoConfig['options']['symlink'] = false;
+                }
+
                 $repositorySet->addRepository(RepositoryFactory::createRepo($io, $config, $repoConfig, $rm));
             }
         }
@@ -424,20 +430,15 @@ EOT
             throw new \InvalidArgumentException($errorMessage .'.');
         }
 
-        $oldCwd = Platform::getCwd();
         // handler Ctrl+C aborts gracefully
         @mkdir($directory, 0777, true);
         if (false !== ($realDir = realpath($directory))) {
-            $signalHandler = SignalHandler::create([SignalHandler::SIGINT, SignalHandler::SIGTERM, SignalHandler::SIGHUP], function (string $signal, SignalHandler $handler) use ($realDir, $oldCwd) {
-                chdir($oldCwd);
+            $signalHandler = SignalHandler::create([SignalHandler::SIGINT, SignalHandler::SIGTERM, SignalHandler::SIGHUP], function (string $signal, SignalHandler $handler) use ($realDir) {
                 $this->getIO()->writeError('Received '.$signal.', aborting', true, IOInterface::DEBUG);
                 $fs = new Filesystem();
                 $fs->removeDirectory($realDir);
                 $handler->exitWithLastSignal();
             });
-        }
-        if (!chdir($directory)) {
-            throw new \RuntimeException('Failed to chdir into the new project dir at '.$directory);
         }
 
         // avoid displaying 9999999-dev as version if default-branch was selected
@@ -472,6 +473,7 @@ EOT
         $installedFromVcs = 'source' === $package->getInstallationSource();
 
         $io->writeError('<info>Created project in ' . $directory . '</info>');
+        chdir($directory);
 
         // ensure that the env var being set does not interfere with create-project
         // as it is probably not meant to be used here, so we do not use it if a composer.json can be found

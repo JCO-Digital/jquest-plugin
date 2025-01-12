@@ -7,9 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'jQuestPlugin\\' => array($baseDir . '/classes'),
-    'Twig\\Extra\\Markdown\\' => array($vendorDir . '/twig/markdown-extra'),
-    'Twig\\' => array($vendorDir . '/twig/twig/src'),
-    'Timber\\' => array($vendorDir . '/timber/timber/src'),
     'Symfony\\Polyfill\\Php81\\' => array($vendorDir . '/symfony/polyfill-php81'),
     'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Symfony\\Polyfill\\Php73\\' => array($vendorDir . '/symfony/polyfill-php73'),
