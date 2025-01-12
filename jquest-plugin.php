@@ -14,8 +14,6 @@
 
 namespace jQuestPlugin;
 
-require_once __DIR__ . '/includes/helpers.php';
-
 use jQuestPlugin\Options\OptionsPage;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -41,6 +39,8 @@ if ( is_readable( __DIR__ . JQUEST_PREFIXED_COMPOSER_AUTOLOADER ) ) {
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/includes/acf.php';
 require_once __DIR__ . '/includes/blocks.php';
+require_once __DIR__ . '/includes/fields.php';
+require_once __DIR__ . '/includes/helpers.php';
 
 /**
  * Checks the prerequisites for the plugin.

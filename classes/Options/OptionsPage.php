@@ -49,14 +49,7 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	final public function register_settings(): void {
-		// Settings registration.
-		register_setting(
-			'jquest-options-general',
-			'jquest_is_enabled',
-			array(
-				'sanitize_callback' => 'boolval',
-			)
-		);
+
 		register_setting(
 			'jquest-options-general',
 			'jquest_org_id',
@@ -73,17 +66,9 @@ class OptionsPage extends Singleton {
 			'jquest-options-general',
 		);
 
-		// Settings fields.
-		add_settings_field(
-			'jquest_is_enabled',
-			__( 'Enabled', 'jquest-plugin' ),
-			array( $this, 'render_enabled_field' ),
-			'jquest-options-general',
-			'jquest-general'
-		);
 		add_settings_field(
 			'jquest_org_id',
-			__( 'Project ID', 'jquest-plugin' ),
+			__( 'Organisation ID', 'jquest-plugin' ),
 			array( $this, 'render_id_field' ),
 			'jquest-options-general',
 			'jquest-general',
@@ -102,20 +87,6 @@ class OptionsPage extends Singleton {
 		echo '<p>' . esc_html__( 'General settings required for jQuest integration.', 'jquest-plugin' ) . '</p>';
 	}
 
-	/**
-	 * Renders the Enabled field.
-	 *
-	 * @return void
-	 */
-	final public function render_enabled_field(): void {
-		render_checkbox_field(
-			array(
-				'id'          => 'jquest_is_enabled',
-				'value'       => get_option( 'jquest_is_enabled', '' ),
-				'placeholder' => __( 'Enable jQuest', 'jquest-plugin' ),
-			)
-		);
-	}
 
 	/**
 	 * Handles rendering the ID field.
