@@ -48,11 +48,9 @@ require_once __DIR__ . '/includes/helpers.php';
  * @return bool
  */
 function check_prerequisites(): bool {
-	return true;
+
 	$pass = ( is_readable( __DIR__ . JQUEST_COMPOSER_AUTOLOADER ) ||
-	          is_readable( ABSPATH . JQUEST_COMPOSER_AUTOLOADER ) ) &&
-	        ( is_readable( __DIR__ . JQUEST_PREFIXED_COMPOSER_AUTOLOADER ) ||
-	          is_readable( ABSPATH . JQUEST_PREFIXED_COMPOSER_AUTOLOADER ) );
+	          is_readable( ABSPATH . JQUEST_COMPOSER_AUTOLOADER ) );
 
 	if ( $pass ) {
 		return true;
