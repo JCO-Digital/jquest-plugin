@@ -33,29 +33,3 @@ function render_text_field( array $args = array() ): void {
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo render_template( 'fields/text', $data );
 }
-
-/**
- * Renders a checkbox field.
- *
- * Echoes the rendered field.
- *
- * @param array $args {
- *     Optional. Array of field arguments.
- *
- *     @type string $id    The ID of the field. Default empty string.
- *     @type string $value The value of the field. Default empty string.
- * }
- *
- * @return void
- */
-function render_checkbox_field( array $args = array() ): void {
-	$data = wp_parse_args(
-		$args,
-		array(
-			'id'    => '',
-			'value' => '',
-		)
-	);
-	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	echo render_template( 'fields/checkbox', $data );
-}

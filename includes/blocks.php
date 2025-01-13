@@ -8,7 +8,7 @@
 namespace jQuestPlugin;
 
 add_action( 'init', 'jQuestPlugin\init_blocks' );
-//add_filter( 'broiler_get_blocks', 'JcoreBroiler\filter_blocks' );
+
 /**
  * The 'init_blocks' function is used to initialize and register custom Gutenberg blocks for the WordPress editor.
  * It scans the '/blocks/build/' directory for block files and registers them.
@@ -26,15 +26,4 @@ function init_blocks() {
 			}
 		}
 	}
-}
-
-/**
- * Filter the blocks to register.
- *
- * @param  array $blocks An array of block names.
- * @return array A new array of block names.
- */
-function filter_blocks( $blocks ) {
-	// Example how to remove a block.
-	return array_diff( $blocks, array( 'example-static' ) );
 }
