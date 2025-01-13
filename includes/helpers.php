@@ -112,3 +112,36 @@ function render_template( string $template, array $data = array() ): string {
 	require $final_path;
 	return ob_get_clean();
 }
+
+/**
+ * Fetch the JQUESTs from Firestore.
+ * This function is called when the 'jquest__organization_id' option is updated.
+ *
+ * @param mixed  $value The new value of the 'jquest__organization_id' option.
+ *
+ * @return void
+ */
+function fetch_jquests( $value ) {
+
+	$api_url           = 'https://europe-north1-jquest-e67dc.cloudfunctions.net/organizationGames-getorganizationgames?orgId=' . $value;
+	$api_response      = wp_remote_get( $api_url,
+		array(
+			'timeout' => 30,
+		)
+	);
+	$api_response_body = wp_remote_retrieve_body( $api_response );
+	$decoded_response  = json_decode( $api_response_body, false );
+	if ( is_null( $decoded_response ) ) {
+		update_option('jquest_org_message', 'Failed to fetch JQUESTs from Firestore.');
+	}
+
+	$message = $decoded_response->message ?? '';
+	update_option('jquest_org_message', $message);
+
+	if ( ! $decoded_response->success === true ) {
+		update_option('jquest_org_games', []);
+		return;
+	}
+
+	update_option('jquest_org_games', $decoded_response->data);
+}

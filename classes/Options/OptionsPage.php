@@ -8,7 +8,7 @@
 namespace jQuestPlugin\Options;
 
 use jQuestPlugin\Singleton;
-use function jQuestPlugin\render_checkbox_field;
+use function jQuestPlugin\fetch_jquests;
 use function jQuestPlugin\render_template;
 use function jQuestPlugin\render_text_field;
 
@@ -26,7 +26,20 @@ class OptionsPage extends Singleton {
 		add_action( 'admin_menu', array( $this, 'add_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_init', array( $this, 'enqueue_assets' ) );
+		add_action( 'updated_option', array( $this, 'jquest_plugin_option_updated' ), 10, 3);
 	}
+
+	/**
+	 * Handles fetching jQuest games
+	 *
+	 * @return void
+	 */
+	function jquest_plugin_option_updated($option_name, $old_value, $new_value) {
+		if ($option_name === 'jquest_org_id' && trim($new_value) !== '' && $old_value !== $new_value ) {
+			fetch_jquests(get_option('jquest_org_id'));
+		}
+	}
+
 
 	/**
 	 * Adds the options page to the admin menu.
@@ -38,7 +51,7 @@ class OptionsPage extends Singleton {
 			'jQuest Options',
 			'jQuest Settings',
 			'manage_options',
-			'jquest-options',
+			'jquest-option',
 			array( $this, 'render_page' )
 		);
 	}
@@ -55,6 +68,34 @@ class OptionsPage extends Singleton {
 			'jquest_org_id',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		register_setting(
+			'jquest-general',
+			'jquest_org_message',
+			array(
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		register_setting(
+			'jquest-general',
+			'jquest_org_games',
+			array(
+				'sanitize_callback' => function($input) {
+					if (is_array($input)) {
+						return array_map(function($item) {
+							if (is_object($item)) {
+								$item->title = isset($item->title) ? sanitize_text_field($item->title) : '';
+								$item->ID = isset($item->ID) ? sanitize_text_field($item->ID) : '';
+								return $item;
+							}
+							return (object) ['title' => '', 'id' => ''];
+						}, $input);
+					}
+					return [];
+				},
 			)
 		);
 
@@ -76,6 +117,7 @@ class OptionsPage extends Singleton {
 				'label_for' => 'jquest_org_id',
 			)
 		);
+
 	}
 
 	/**

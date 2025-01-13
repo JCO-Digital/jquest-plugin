@@ -19,4 +19,28 @@
 		endif;
 		?>
 	</form>
+
+	<div class="o-container" style="padding: 20px 20px 20px 0">
+		<div class="c-card">
+			<div class="c-card__header">
+				<h2 class="c-heading"><?php esc_html_e( 'Organisation Games', 'jquest-plugin' ); ?></h2>
+			</div>
+			<div class="c-card__body">
+				<div class="c-card__item__content">
+					<ul class="c-list">
+						<?php if (get_option( 'jquest_org_games' )): ?>
+							<?php foreach ( get_option( 'jquest_org_games' ) as $game ) : ?>
+								<li class="c-list__item"><?php echo $game->title ?></li>
+							<?php
+							endforeach;
+						else:
+							echo get_option( 'jquest_org_message', '' );
+						endif;
+						?>
+
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

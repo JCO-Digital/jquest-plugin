@@ -105,52 +105,6 @@ function load_translations(): void {
 	load_plugin_textdomain( JQUEST_TEXT_DOMAIN, false, basename( __DIR__ ) . '/languages' );
 }
 
-/**
- * Fetch the JQUESTs from Firestore.
- * This function is called when the 'jquest__organization_id' option is updated.
- *
- * @param mixed  $old_value The old value of the 'jquest__organization_id' option.
- * @param mixed  $value The new value of the 'jquest__organization_id' option.
- * @param string $option The name of the option.
- *
- * @return void
- */
-function fetch_jquests( $old_value, $value, $option ) {
-	$api_url           = 'https://europe-north1-jquest-e67dc.cloudfunctions.net/organizationGames-getorganizationgames?orgId=' . $value;
-	$api_response      = wp_remote_get( $api_url,
-		array(
-			'timeout' => 30,
-		)
-	);
-	$api_response_body = wp_remote_retrieve_body( $api_response );
-	$decoded_response  = json_decode( $api_response_body, false );
-	if ( is_null( $decoded_response ) ) {
-		Option::set( 'organization_message', 'Failed to fetch JQUESTs from Firestore.' );
-	}
-
-	$message = $decoded_response->message ?? '';
-	Option::set( 'organization_message', $message );
-
-	if ( ! $decoded_response->success === true ) {
-		Option::remove( 'organization_games' );
-		return;
-	}
-	Option::set( 'organization_games', $decoded_response->data );
-}
-add_action( 'update_option_jquest__organization_id', __NAMESPACE__ . '\fetch_jquests', 10, 3 );
-
-/**
- * Wrapper function for fetch_jquests() to be called when the 'jquest__organization_id' option is added.
- *
- * @param mixed $option The name of the option.
- * @param mixed $value The new value of the 'jquest__organization_id' option.
- * @return void
- */
-function fetch_jquests_wrapper( $option, $value ) {
-	fetch_jquests( null, $value, $option );
-}
-add_action( 'add_option_jquest__organization_id', __NAMESPACE__ . '\fetch_jquests_wrapper', 10, 2 );
-
 register_activation_hook( __FILE__, __NAMESPACE__ . '\register_plugin_activation_hook' );
 add_action( 'admin_init', __NAMESPACE__ . '\check_prerequisites' );
 add_action( 'plugins_loaded', __NAMESPACE__ . '\load_translations' );
