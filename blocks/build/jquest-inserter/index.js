@@ -2,45 +2,6 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./blocks/src/jquest-inserter/deprecated/v1.js":
-/*!*****************************************************!*\
-  !*** ./blocks/src/jquest-inserter/deprecated/v1.js ***!
-  \*****************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   v1: function() { return /* binding */ v1; }
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-function v1Save({
-  attributes
-}) {
-  const {
-    selectedGame,
-    organization
-  } = attributes;
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    ...useBlockProps.save()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("script", {
-    src: "https://files.jquest.fi/jquest/jquest.js",
-    defer: true,
-    async: true,
-    type: "module"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "jquest-app",
-    "data-org-id": organization,
-    "data-game-id": selectedGame
-  }));
-}
-const v1 = {
-  save: v1Save
-};
-
-/***/ }),
-
 /***/ "./blocks/src/jquest-inserter/edit.js":
 /*!********************************************!*\
   !*** ./blocks/src/jquest-inserter/edit.js ***!
@@ -97,7 +58,7 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  *
- * @return {Element} Element to render.
+ * @return {JSX.Element} Element to render.
  */
 function Edit({
   attributes,
@@ -206,7 +167,8 @@ function Edit({
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "jquest-app",
     "data-org-id": organization,
-    "data-game-id": selectedGame
+    "data-game-id": selectedGame,
+    "data-new-styles": newStyles
   }, text)));
 }
 
@@ -225,7 +187,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./blocks/src/jquest-inserter/edit.js");
 /* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./blocks/src/jquest-inserter/save.js");
 /* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./block.json */ "./blocks/src/jquest-inserter/block.json");
-/* harmony import */ var _deprecated_v1__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./deprecated/v1 */ "./blocks/src/jquest-inserter/deprecated/v1.js");
 /**
  * Registers a new block provided a unique name and an object defining its behavior.
  *
@@ -249,7 +210,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 /**
  * Every block starts by registering a new block type definition.
  *
@@ -263,8 +223,7 @@ __webpack_require__.r(__webpack_exports__);
   /**
    * @see ./save.js
    */
-  save: _save__WEBPACK_IMPORTED_MODULE_3__["default"],
-  deprecated: [_deprecated_v1__WEBPACK_IMPORTED_MODULE_5__.v1]
+  save: _save__WEBPACK_IMPORTED_MODULE_3__["default"]
 });
 
 /***/ }),
@@ -306,18 +265,22 @@ function save({
 }) {
   const {
     selectedGame,
-    organization
+    organization,
+    staging,
+    newStyles
   } = attributes;
+  const scriptUrl = staging ? "https://files.jquest.fi/jquest/staging/jquest-staging.js" : "https://files.jquest.fi/jquest/jquest.js";
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save()
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("script", {
     "data-cookieconsent": "ignore",
-    src: "https://files.jquest.fi/jquest/jquest.js",
+    src: scriptUrl,
     type: "module"
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "jquest-app",
     "data-org-id": organization,
-    "data-game-id": selectedGame
+    "data-game-id": selectedGame,
+    "data-new-styles": newStyles
   }));
 }
 
@@ -423,7 +386,7 @@ module.exports = window["wp"]["i18n"];
   \***********************************************/
 /***/ (function(module) {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"jquest-inserter/jquest-inserter","version":"0.1.0","title":"JQUEST Inserter","category":"embed","icon":"games","description":"Insert a JQUEST App","keywords":["jquest","game","gamification","learning","education","quiz","questionnaire","quizzes","learn"],"example":{},"supports":{"html":false},"textdomain":"jquest-inserter","editorScript":"file:./index.js","editorStyle":"file:./index.css","attributes":{"selectedGame":{"type":"string"},"organization":{"type":"string"}}}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"jquest-inserter/jquest-inserter","version":"0.1.0","title":"JQUEST Inserter","category":"embed","icon":"games","description":"Insert a JQUEST App","keywords":["jquest","game","gamification","learning","education","quiz","questionnaire","quizzes","learn"],"example":{},"supports":{"html":false},"textdomain":"jquest-inserter","editorScript":"file:./index.js","editorStyle":"file:./index.css","attributes":{"selectedGame":{"type":"string"},"organization":{"type":"string"},"newStyles":{"type":"boolean","default":false},"staging":{"type":"boolean","default":false}}}');
 
 /***/ })
 

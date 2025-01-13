@@ -31,6 +31,14 @@
     },
     "organization": {
       "type": "string"
+    },
+    "newStyles": {
+      "type": "boolean",
+      "default": false
+    },
+    "staging": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

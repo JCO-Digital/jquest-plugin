@@ -30,7 +30,7 @@ import "./editor.scss";
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  *
- * @return {Element} Element to render.
+ * @return {JSX.Element} Element to render.
  */
 export default function Edit({ attributes, setAttributes }) {
 	const { selectedGame, organization, staging, newStyles } = attributes;
@@ -143,6 +143,7 @@ export default function Edit({ attributes, setAttributes }) {
 					className="jquest-app"
 					data-org-id={organization}
 					data-game-id={selectedGame}
+					data-new-styles={newStyles}
 				>
 					{text}
 				</div>
