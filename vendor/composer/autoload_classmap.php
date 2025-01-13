@@ -7,9 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
-    'CURLStringFile' => $vendorDir . '/symfony/polyfill-php81/Resources/stubs/CURLStringFile.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'JsonException' => $vendorDir . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
     'Nette\\ArgumentOutOfRangeException' => $vendorDir . '/nette/utils/src/exceptions.php',
     'Nette\\DeprecatedException' => $vendorDir . '/nette/utils/src/exceptions.php',
     'Nette\\DirectoryNotFoundException' => $vendorDir . '/nette/utils/src/exceptions.php',
@@ -71,11 +69,8 @@ return array(
     'Nette\\Utils\\Type' => $vendorDir . '/nette/utils/src/Utils/Type.php',
     'Nette\\Utils\\UnknownImageFileException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
     'Nette\\Utils\\Validators' => $vendorDir . '/nette/utils/src/Utils/Validators.php',
-    'Normalizer' => $vendorDir . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
     'PhpToken' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
-    'ReturnTypeWillChange' => $vendorDir . '/symfony/polyfill-php81/Resources/stubs/ReturnTypeWillChange.php',
-    'Stringable' => $vendorDir . '/myclabs/php-enum/stubs/Stringable.php',
+    'Stringable' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
     'UnhandledMatchError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
     'ValueError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
-    '©' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
 );
