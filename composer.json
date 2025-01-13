@@ -29,7 +29,6 @@
     ]
   },
   "require": {
-    "stellarwp/db": "^1.0",
     "league/commonmark": "^2.4.0"
   },
   "require-dev": {

@@ -5,7 +5,7 @@
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '305b56c462b544b0809fc66bb741ab228682cb77',
+        'reference' => 'fbc038a89aadcce23a51918b4b42c9c068c6df11',
         'name' => 'jcodigital/jquest-plugin',
         'dev' => true,
     ),
@@ -112,7 +112,7 @@
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '305b56c462b544b0809fc66bb741ab228682cb77',
+            'reference' => 'fbc038a89aadcce23a51918b4b42c9c068c6df11',
             'dev_requirement' => false,
         ),
         'json-mapper/json-mapper' => array(
@@ -314,15 +314,6 @@
             'aliases' => array(),
             'reference' => '04a6112e883ad76c0ada8e4a9f7520bbfdb6bb98',
             'dev_requirement' => true,
-        ),
-        'stellarwp/db' => array(
-            'pretty_version' => '1.1.1',
-            'version' => '1.1.1.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../stellarwp/db',
-            'aliases' => array(),
-            'reference' => 'cbaed00b77f212b791263689cb8a24cbdfdf2100',
-            'dev_requirement' => false,
         ),
         'symfony/cache' => array(
             'pretty_version' => 'v6.4.16',

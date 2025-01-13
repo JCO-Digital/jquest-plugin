@@ -36,7 +36,6 @@
       <path value="$PROJECT_DIR$/vendor/symfony/var-exporter" />
       <path value="$PROJECT_DIR$/vendor/symfony/cache-contracts" />
       <path value="$PROJECT_DIR$/vendor/altorouter/altorouter" />
-      <path value="$PROJECT_DIR$/vendor/stellarwp/db" />
       <path value="$PROJECT_DIR$/vendor/upstatement/routes" />
       <path value="$PROJECT_DIR$/vendor/json-mapper/json-mapper" />
       <path value="$PROJECT_DIR$/vendor/psr/cache" />

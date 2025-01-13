@@ -42,7 +42,6 @@ class ComposerStaticInitf3985931e6d9302ebdbc02213afa92bd
             'Symfony\\Component\\Filesystem\\' => 29,
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\Cache\\' => 24,
-            'StellarWP\\DB\\' => 13,
             'Seld\\Signal\\' => 12,
             'Seld\\PharUtils\\' => 15,
             'Seld\\JsonLint\\' => 14,
@@ -165,10 +164,6 @@ class ComposerStaticInitf3985931e6d9302ebdbc02213afa92bd
         'Symfony\\Component\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/cache',
-        ),
-        'StellarWP\\DB\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stellarwp/db/src/DB',
         ),
         'Seld\\Signal\\' => 
         array (
