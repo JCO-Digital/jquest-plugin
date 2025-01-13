@@ -17,23 +17,11 @@
       "email": "johan@jco.fi"
     }
   ],
-  "scripts": {
-    "strauss": [
-      "vendor/bin/strauss"
-    ],
-    "post-install-cmd": [
-      "@strauss"
-    ],
-    "post-update-cmd": [
-      "@strauss"
-    ]
-  },
   "require": {
     "league/commonmark": "^2.4.0"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest",
-    "brianhenryie/strauss": "^0.14.0"
+    "roave/security-advisories": "dev-latest"
   },
   "config": {
     "allow-plugins": {
