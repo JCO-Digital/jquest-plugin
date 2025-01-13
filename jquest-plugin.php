@@ -76,25 +76,9 @@ add_action( 'plugins_loaded', __NAMESPACE__ . '\check_prerequisites' );
  * @return void
  */
 function initialize_plugin(): void {
-	Database\Bootstrap::init();
 	RestAPI\Bootstrap::init();
 	OptionsPage::get_instance();
 }
-
-/**
- * The registration function for the plugin.
- *
- * @return void
- */
-function register_plugin_activation_hook(): void {
-	$pass = check_prerequisites();
-	if ( ! $pass ) {
-		return;
-	}
-	// Create the database tables on plugin activation.
-	Database\Bootstrap::create_tables();
-}
-
 
 /**
  * Loads the translations.
@@ -105,7 +89,6 @@ function load_translations(): void {
 	load_plugin_textdomain( JQUEST_TEXT_DOMAIN, false, basename( __DIR__ ) . '/languages' );
 }
 
-register_activation_hook( __FILE__, __NAMESPACE__ . '\register_plugin_activation_hook' );
 add_action( 'admin_init', __NAMESPACE__ . '\check_prerequisites' );
 add_action( 'plugins_loaded', __NAMESPACE__ . '\load_translations' );
 add_action( 'plugins_loaded', __NAMESPACE__ . '\initialize_plugin' );
