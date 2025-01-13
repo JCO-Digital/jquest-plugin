@@ -1,7 +1,7 @@
 <?php // phpcs:ignore Squiz.Commenting.FileComment.Missing ?>
 <div class="wrap">
-	<h1><?php esc_html_e( 'jQuest Settings', 'jquest-plugin' ); ?></h1>
-
+	<h1>
+		<?php esc_html_e( 'jQuest Settings', 'jquest-plugin' ); ?></h1>
 	<div class="nav-tab-wrapper">
 		<?php foreach ( $jquest_tabs as $jquest_tab => $tab_data ) : ?>
 			<a href="<?php echo esc_url( $tab_data['url'] ); ?>"
@@ -34,27 +34,19 @@
 		</form>
 	<?php endif; ?>
 
-	<div class="o-container" style="padding: 20px 20px 20px 0">
-		<div class="c-card">
-			<div class="c-card__header">
-				<h2 class="c-heading"><?php esc_html_e( 'Organisation Games', 'jquest-plugin' ); ?></h2>
+	<div style="padding: 20px 20px 20px 0;">
+		<div>
+			<div>
+				<h2><?php esc_html_e( 'Organisation Games', 'jquest-plugin' ); ?></h2>
 			</div>
-			<div class="c-card__body">
-				<div class="c-card__item__content">
-					<ul class="c-list">
-						<?php if (get_option( 'jquest_org_games' )): ?>
-							<?php foreach ( get_option( 'jquest_org_games' ) as $game ) : ?>
-								<li class="c-list__item"><?php echo $game->title ?></li>
-							<?php
-							endforeach;
-						else:
-							echo get_option( 'jquest_org_message', '' );
-						endif;
-						?>
-
-					</ul>
-				</div>
-			</div>
+			<?php
+			use jQuestPlugin\jquest_table;
+			$table = new jquest_table();
+			// Prepare table
+			$table->prepare_items();
+			// Display table
+			$table->display();
+			?>
 		</div>
 	</div>
 </div>

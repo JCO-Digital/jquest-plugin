@@ -24,6 +24,24 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
+msgid "jQuest Settings"
+msgstr ""
+
+msgid "General settings required for jQuest integration."
+msgstr ""
+
+msgid "Organisation ID"
+msgstr ""
+
+msgid "General"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
 #. Plugin Name of the plugin/theme
 msgid "JQUEST plugin"
 msgstr ""

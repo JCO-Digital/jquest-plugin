@@ -7,6 +7,7 @@
 
 namespace jQuestPlugin\Options;
 
+use jQuestPlugin\jquest_table;
 use jQuestPlugin\Singleton;
 use function jQuestPlugin\fetch_jquests;
 use function jQuestPlugin\render_template;
@@ -179,6 +180,7 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	final public function render_page(): void {
+
 		$tab  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'general'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$data = array(
 			'tabs'       => array(

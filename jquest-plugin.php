@@ -40,6 +40,7 @@ require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/includes/blocks.php';
 require_once __DIR__ . '/includes/fields.php';
 require_once __DIR__ . '/includes/helpers.php';
+require_once __DIR__ . '/includes/table.php';
 
 /**
  * Checks the prerequisites for the plugin.
