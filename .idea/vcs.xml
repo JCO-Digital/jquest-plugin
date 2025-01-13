@@ -8,6 +8,7 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../jcore-iit" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../../../rekai-wordpress" vcs="Git" />
   </component>
 </project>

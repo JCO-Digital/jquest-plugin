@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../jcore-iit/.idea/jcore-iit.iml" filepath="$PROJECT_DIR$/../jcore-iit/.idea/jcore-iit.iml" />
       <module fileurl="file://$PROJECT_DIR$/jquest-plugin.iml" filepath="$PROJECT_DIR$/jquest-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../../rekai-wordpress/.idea/rekai-wordpress.iml" filepath="$PROJECT_DIR$/../../../../rekai-wordpress/.idea/rekai-wordpress.iml" />
     </modules>
   </component>
 </project>

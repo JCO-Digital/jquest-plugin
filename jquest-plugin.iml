@@ -6,6 +6,6 @@
       <sourceFolder url="file://$MODULE_DIR$/classes" isTestSource="false" packagePrefix="jQuestPlugin\" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="jcore-iit" />
+    <orderEntry type="module" module-name="jquest-plugin" />
   </component>
 </module>
