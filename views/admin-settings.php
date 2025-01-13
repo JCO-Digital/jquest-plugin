@@ -20,6 +20,20 @@
 		?>
 	</form>
 
+	<?php if(get_option('jquest_org_id')): ?>
+		<form method="post" action="admin-post.php">
+			<?php
+			wp_nonce_field('my_plugin_button_action_nonce', 'my_plugin_button_action_nonce_field');
+			?>
+			<p>
+				<button type="submit" name="jquest_refresh_games" class="button-primary">
+					Refresh games
+				</button>
+			</p>
+			<input type="hidden" name="action" value="jquest_refresh_games">
+		</form>
+	<?php endif; ?>
+
 	<div class="o-container" style="padding: 20px 20px 20px 0">
 		<div class="c-card">
 			<div class="c-card__header">

@@ -27,6 +27,19 @@ class OptionsPage extends Singleton {
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_init', array( $this, 'enqueue_assets' ) );
 		add_action( 'updated_option', array( $this, 'jquest_plugin_option_updated' ), 10, 3);
+		add_action('admin_post_jquest_refresh_games', array( $this, 'jquest_plugin_refresh_games' ));
+	}
+
+	function jquest_plugin_refresh_games() {
+		if ( isset($_POST['jquest_refresh_games']) ) {
+			if( trim(get_option('jquest_org_id', '')) !== '' ) {
+				fetch_jquests(get_option('jquest_org_id'));
+			}
+
+			$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('options-general.php?page=jquest-option');
+			wp_redirect($referer);
+			exit;
+		}
 	}
 
 	/**
@@ -35,8 +48,13 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	function jquest_plugin_option_updated($option_name, $old_value, $new_value) {
-		if ($option_name === 'jquest_org_id' && trim($new_value) !== '' && $old_value !== $new_value ) {
-			fetch_jquests(get_option('jquest_org_id'));
+		if ( $option_name === 'jquest_org_id' && $old_value !== $new_value ) {
+			if( trim($new_value) !== '' ) {
+				fetch_jquests(get_option('jquest_org_id'));
+			} else {
+				update_option('jquest_org_games', []);
+			}
+
 		}
 	}
 
