@@ -4,7 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
 import { __ } from "@wordpress/i18n";
-import { SelectControl, PanelBody } from "@wordpress/components";
+import { SelectControl, PanelBody, ToggleControl } from "@wordpress/components";
 import apiFetch from "@wordpress/api-fetch";
 import { useEffect, useState } from "@wordpress/element";
 
@@ -33,7 +33,7 @@ import "./editor.scss";
  * @return {Element} Element to render.
  */
 export default function Edit({ attributes, setAttributes }) {
-	const { selectedGame, organization } = attributes;
+	const { selectedGame, organization, staging, newStyles } = attributes;
 
 	// Initialize the state for the games and text.
 	const [games, setGames] = useState([]);
@@ -87,6 +87,22 @@ export default function Edit({ attributes, setAttributes }) {
 		setAttributes({ selectedGame: newGame });
 	};
 
+	/**
+	 *
+	 * @param {string} state - New value.
+	 */
+	const onChangeNewStyles = (state) => {
+		setAttributes({ newStyles: state });
+	};
+
+	/**
+	 *
+	 * @param {string} state - New value.
+	 */
+	const onChangeStaging = (state) => {
+		setAttributes({ staging: state });
+	};
+
 	// Render the block.
 	return (
 		<>
@@ -97,6 +113,28 @@ export default function Edit({ attributes, setAttributes }) {
 						value={selectedGame}
 						options={games}
 						onChange={onChangeGame}
+					/>
+					<ToggleControl
+						__nextHasNoMarginBottom
+						label="New styles"
+						help={
+							newStyles ? "Uses new styles." : "Uses old styles."
+						}
+						checked={newStyles}
+						onChange={onChangeNewStyles}
+						value={newStyles}
+					/>
+					<ToggleControl
+						__nextHasNoMarginBottom
+						label="Staging"
+						help={
+							staging
+								? "Uses staging script."
+								: "Uses live script."
+						}
+						checked={staging}
+						onChange={onChangeStaging}
+						value={staging}
 					/>
 				</PanelBody>
 			</InspectorControls>

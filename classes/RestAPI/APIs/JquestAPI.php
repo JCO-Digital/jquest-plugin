@@ -45,8 +45,8 @@ class JquestAPI extends RestAPI {
 	 * @return WP_REST_Response
 	 */
 	public static function get_games( WP_REST_Request $request ): WP_REST_Response {
-		$organization = Option::get( 'organization_id' );
-		$games        = Option::get( 'organization_games' );
+		$organization = get_option( 'jquest_org_id' );
+		$games        = get_option( 'jquest_org_games' );
 
 		$data = array(
 			'organization' => $organization,
