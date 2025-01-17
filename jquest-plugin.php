@@ -50,7 +50,7 @@ require_once __DIR__ . '/includes/table.php';
 function check_prerequisites(): bool {
 
 	$pass = ( is_readable( __DIR__ . JQUEST_COMPOSER_AUTOLOADER ) ||
-	          is_readable( ABSPATH . JQUEST_COMPOSER_AUTOLOADER ) );
+				is_readable( ABSPATH . JQUEST_COMPOSER_AUTOLOADER ) );
 
 	if ( $pass ) {
 		return true;
@@ -100,7 +100,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), __NAMESPACE__ 
  *
  * @return array
  */
-function my_plugin_settings( $settings ) {
-	$settings[] = '<a href="' . get_admin_url( null, 'options-general.php?page=jquest-settings' ) . '">Settings</a>';
+function my_plugin_settings( $settings ): array {
+	$settings[] = '<a href="' . get_admin_url( null, 'options-general.php?page=jquest-options' ) . '">Settings</a>';
 	return $settings;
 }
