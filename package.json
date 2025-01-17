@@ -8,7 +8,8 @@
     "readme": "grunt readme",
     "i18n": "grunt i18n",
     "start-blocks": "wp-scripts start --webpack-src-dir=blocks/src --output-path=blocks/build",
-    "build-blocks": "wp-scripts build --webpack-src-dir=blocks/src --output-path=blocks/build"
+    "build-blocks": "wp-scripts build --webpack-src-dir=blocks/src --output-path=blocks/build",
+    "postversion": "git push && git push --tags"
   },
   "devDependencies": {
     "grunt": "~1.6.1",
