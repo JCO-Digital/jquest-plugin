@@ -27,18 +27,24 @@ class OptionsPage extends Singleton {
 		add_action( 'admin_menu', array( $this, 'add_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_init', array( $this, 'enqueue_assets' ) );
-		add_action( 'updated_option', array( $this, 'jquest_plugin_option_updated' ), 10, 3);
-		add_action('admin_post_jquest_refresh_games', array( $this, 'jquest_plugin_refresh_games' ));
+		add_action( 'updated_option', array( $this, 'jquest_plugin_option_updated' ), 10, 3 );
+		add_action( 'admin_post_jquest_refresh_games', array( $this, 'jquest_plugin_refresh_games' ) );
 	}
 
-	function jquest_plugin_refresh_games() {
-		if ( isset($_POST['jquest_refresh_games']) ) {
-			if( trim(get_option('jquest_org_id', '')) !== '' ) {
-				fetch_jquests(get_option('jquest_org_id'));
+	/**
+	 * Handles refreshing the jQuest games.
+	 *
+	 * @return void
+	 */
+	public function jquest_plugin_refresh_games(): void {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( isset( $_POST['jquest_refresh_games'] ) ) {
+			if ( trim( get_option( 'jquest_org_id', '' ) ) !== '' ) {
+				fetch_jquests( get_option( 'jquest_org_id' ) );
 			}
 
-			$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('options-general.php?page=jquest-option');
-			wp_redirect($referer);
+			$referer = $_SERVER['HTTP_REFERER'] ?? admin_url( 'options-general.php?page=jquest-option' );
+			wp_safe_redirect( $referer );
 			exit;
 		}
 	}
@@ -48,14 +54,13 @@ class OptionsPage extends Singleton {
 	 *
 	 * @return void
 	 */
-	function jquest_plugin_option_updated($option_name, $old_value, $new_value) {
+	public function jquest_plugin_option_updated( $option_name, $old_value, $new_value ): void {
 		if ( $option_name === 'jquest_org_id' && $old_value !== $new_value ) {
-			if( trim($new_value) !== '' ) {
-				fetch_jquests(get_option('jquest_org_id'));
+			if ( trim( $new_value ) !== '' ) {
+				fetch_jquests( get_option( 'jquest_org_id' ) );
 			} else {
-				update_option('jquest_org_games', []);
+				update_option( 'jquest_org_games', array() );
 			}
-
 		}
 	}
 
@@ -70,7 +75,7 @@ class OptionsPage extends Singleton {
 			'jQuest Options',
 			'jQuest Settings',
 			'manage_options',
-			'jquest-option',
+			'jquest-options',
 			array( $this, 'render_page' )
 		);
 	}
@@ -102,18 +107,24 @@ class OptionsPage extends Singleton {
 			'jquest-general',
 			'jquest_org_games',
 			array(
-				'sanitize_callback' => function($input) {
-					if (is_array($input)) {
-						return array_map(function($item) {
-							if (is_object($item)) {
-								$item->title = isset($item->title) ? sanitize_text_field($item->title) : '';
-								$item->ID = isset($item->ID) ? sanitize_text_field($item->ID) : '';
-								return $item;
-							}
-							return (object) ['title' => '', 'id' => ''];
-						}, $input);
+				'sanitize_callback' => function ( $input ) {
+					if ( is_array( $input ) ) {
+						return array_map(
+							function ( $item ) {
+								if ( is_object( $item ) ) {
+									$item->title = isset( $item->title ) ? sanitize_text_field( $item->title ) : '';
+									$item->ID = isset( $item->ID ) ? sanitize_text_field( $item->ID ) : '';
+									return $item;
+								}
+								return (object) array(
+									'title' => '',
+									'id'    => '',
+								);
+							},
+							$input
+						);
 					}
-					return [];
+					return array();
 				},
 			)
 		);
@@ -136,7 +147,6 @@ class OptionsPage extends Singleton {
 				'label_for' => 'jquest_org_id',
 			)
 		);
-
 	}
 
 	/**
