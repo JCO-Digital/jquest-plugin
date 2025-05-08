@@ -132,14 +132,14 @@ class OptionsPage extends Singleton {
 		// Settings sections.
 		add_settings_section(
 			'jquest-general',
-			__( 'General', 'jquest-plugin' ),
+			__( 'General', 'jquest-' ),
 			array( $this, 'render_general_section' ),
 			'jquest-options-general',
 		);
 
 		add_settings_field(
 			'jquest_org_id',
-			__( 'Organisation ID', 'jquest-plugin' ),
+			__( 'Organisation ID', 'jquest-' ),
 			array( $this, 'render_id_field' ),
 			'jquest-options-general',
 			'jquest-general',
@@ -155,7 +155,7 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	final public function render_general_section(): void {
-		echo '<p>' . esc_html__( 'General settings required for jQuest integration.', 'jquest-plugin' ) . '</p>';
+		echo '<p>' . esc_html__( 'General settings required for jQuest integration.', 'jquest-' ) . '</p>';
 	}
 
 
@@ -169,7 +169,7 @@ class OptionsPage extends Singleton {
 			array(
 				'id'          => 'jquest_org_id',
 				'value'       => get_option( 'jquest_org_id', '' ),
-				'placeholder' => __( 'Organisation ID', 'jquest-plugin' ),
+				'placeholder' => __( 'Organisation ID', 'jquest-' ),
 			)
 		);
 	}
@@ -195,7 +195,7 @@ class OptionsPage extends Singleton {
 		$data = array(
 			'tabs'       => array(
 				'general' => array(
-					'label' => __( 'General', 'jquest-plugin' ),
+					'label' => __( 'General', 'jquest-' ),
 					'url'   => add_query_arg( array( 'tab' => 'general' ), admin_url( 'admin.php?page=jquest-options' ) ),
 				),
 			),

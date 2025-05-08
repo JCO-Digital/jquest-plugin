@@ -10,7 +10,7 @@ namespace jQuestPlugin;
 function dependencies_errors(): void {
 	?>
 	<div class="notice notice-error">
-		<p><?php esc_html_e( 'The plugin "Jcore Broiler" could not be activated because it is missing dependencies. Please install the dependencies and try again.', 'jcore-broiler' ); ?></p>
+		<p><?php esc_html_e( 'The plugin "Jcore Broiler" could not be activated because it is missing dependencies. Please install the dependencies and try again.', 'jquest-' ); ?></p>
 	</div>
 	<?php
 }

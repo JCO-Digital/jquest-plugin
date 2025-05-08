@@ -3,10 +3,10 @@
   "apiVersion": 3,
   "name": "jquest-inserter/jquest-inserter",
   "version": "0.1.0",
-  "title": "JQUEST Inserter",
+  "title": "jQuest",
   "category": "embed",
   "icon": "games",
-  "description": "Insert a JQUEST App",
+  "description": "Insert an jQUEST-app",
   "keywords": [
     "jquest",
     "game",

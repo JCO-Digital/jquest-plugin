@@ -37,7 +37,7 @@ export default function Edit({ attributes, setAttributes }) {
 
 	// Initialize the state for the games and text.
 	const [games, setGames] = useState([]);
-	const [text, setText] = useState(__("JQUEST Inserter", "jquest-inserter"));
+	const [text, setText] = useState(__("", "jquest-inserter"));
 
 	// Use the useEffect hook to fetch the games when the component mounts.
 	useEffect(() => {

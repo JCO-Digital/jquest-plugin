@@ -15,7 +15,7 @@ if ( is_admin() ) {
 		function get_columns()
 		{
 			$columns = array(
-				'Title'       => __('Title', 'jquest-plugin'),
+				'Title'       => __('Title', 'jquest-'),
 				'ID'          => "ID",
 			);
 			return $columns;

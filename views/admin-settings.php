@@ -1,7 +1,7 @@
 <?php // phpcs:ignore Squiz.Commenting.FileComment.Missing ?>
 <div class="wrap">
 	<h1>
-		<?php esc_html_e( 'jQuest Settings', 'jquest-plugin' ); ?></h1>
+		<?php esc_html_e( 'jQuest Settings', 'jquest-' ); ?></h1>
 	<div class="nav-tab-wrapper">
 		<?php foreach ( $jquest_tabs as $jquest_tab => $tab_data ) : ?>
 			<a href="<?php echo esc_url( $tab_data['url'] ); ?>"
@@ -37,7 +37,7 @@
 	<div style="padding: 20px 20px 20px 0;">
 		<div>
 			<div>
-				<h2><?php esc_html_e( 'Organisation Games', 'jquest-plugin' ); ?></h2>
+				<h2><?php esc_html_e( 'Organisation Games', 'jquest-' ); ?></h2>
 			</div>
 			<?php
 			use jQuestPlugin\jquest_table;

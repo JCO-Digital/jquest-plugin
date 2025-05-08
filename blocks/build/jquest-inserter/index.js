@@ -1,16 +1,26 @@
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
+
+/***/ "./blocks/src/jquest-inserter/block.json":
+/*!***********************************************!*\
+  !*** ./blocks/src/jquest-inserter/block.json ***!
+  \***********************************************/
+/***/ ((module) => {
+
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"jquest-inserter/jquest-inserter","version":"0.1.0","title":"jQuest","category":"embed","icon":"games","description":"Insert an jQUEST-app","keywords":["jquest","game","gamification","learning","education","quiz","questionnaire","quizzes","learn"],"example":{},"supports":{"html":false},"textdomain":"jquest-inserter","editorScript":"file:./index.js","editorStyle":"file:./index.css","attributes":{"selectedGame":{"type":"string"},"organization":{"type":"string"},"newStyles":{"type":"boolean","default":false},"staging":{"type":"boolean","default":false}}}');
+
+/***/ }),
 
 /***/ "./blocks/src/jquest-inserter/edit.js":
 /*!********************************************!*\
   !*** ./blocks/src/jquest-inserter/edit.js ***!
   \********************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ Edit; }
+/* harmony export */   "default": () => (/* binding */ Edit)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -73,7 +83,7 @@ function Edit({
 
   // Initialize the state for the games and text.
   const [games, setGames] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useState)([]);
-  const [text, setText] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useState)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("JQUEST Inserter", "jquest-inserter"));
+  const [text, setText] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useState)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("", "jquest-inserter"));
 
   // Use the useEffect hook to fetch the games when the component mounts.
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
@@ -174,11 +184,23 @@ function Edit({
 
 /***/ }),
 
+/***/ "./blocks/src/jquest-inserter/editor.scss":
+/*!************************************************!*\
+  !*** ./blocks/src/jquest-inserter/editor.scss ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
 /***/ "./blocks/src/jquest-inserter/index.js":
 /*!*********************************************!*\
   !*** ./blocks/src/jquest-inserter/index.js ***!
   \*********************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
@@ -232,11 +254,11 @@ __webpack_require__.r(__webpack_exports__);
 /*!********************************************!*\
   !*** ./blocks/src/jquest-inserter/save.js ***!
   \********************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ save; }
+/* harmony export */   "default": () => (/* binding */ save)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -286,37 +308,15 @@ function save({
 
 /***/ }),
 
-/***/ "./blocks/src/jquest-inserter/editor.scss":
-/*!************************************************!*\
-  !*** ./blocks/src/jquest-inserter/editor.scss ***!
-  \************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
-
-
-/***/ }),
-
 /***/ "./blocks/src/jquest-inserter/style.scss":
 /*!***********************************************!*\
   !*** ./blocks/src/jquest-inserter/style.scss ***!
   \***********************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
-
-/***/ }),
-
-/***/ "react":
-/*!************************!*\
-  !*** external "React" ***!
-  \************************/
-/***/ (function(module) {
-
-module.exports = window["React"];
 
 /***/ }),
 
@@ -324,7 +324,7 @@ module.exports = window["React"];
 /*!**********************************!*\
   !*** external ["wp","apiFetch"] ***!
   \**********************************/
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = window["wp"]["apiFetch"];
 
@@ -334,7 +334,7 @@ module.exports = window["wp"]["apiFetch"];
 /*!*************************************!*\
   !*** external ["wp","blockEditor"] ***!
   \*************************************/
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = window["wp"]["blockEditor"];
 
@@ -344,7 +344,7 @@ module.exports = window["wp"]["blockEditor"];
 /*!********************************!*\
   !*** external ["wp","blocks"] ***!
   \********************************/
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = window["wp"]["blocks"];
 
@@ -354,7 +354,7 @@ module.exports = window["wp"]["blocks"];
 /*!************************************!*\
   !*** external ["wp","components"] ***!
   \************************************/
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = window["wp"]["components"];
 
@@ -364,7 +364,7 @@ module.exports = window["wp"]["components"];
 /*!*********************************!*\
   !*** external ["wp","element"] ***!
   \*********************************/
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = window["wp"]["element"];
 
@@ -374,19 +374,19 @@ module.exports = window["wp"]["element"];
 /*!******************************!*\
   !*** external ["wp","i18n"] ***!
   \******************************/
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = window["wp"]["i18n"];
 
 /***/ }),
 
-/***/ "./blocks/src/jquest-inserter/block.json":
-/*!***********************************************!*\
-  !*** ./blocks/src/jquest-inserter/block.json ***!
-  \***********************************************/
-/***/ (function(module) {
+/***/ "react":
+/*!************************!*\
+  !*** external "React" ***!
+  \************************/
+/***/ ((module) => {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"jquest-inserter/jquest-inserter","version":"0.1.0","title":"JQUEST Inserter","category":"embed","icon":"games","description":"Insert a JQUEST App","keywords":["jquest","game","gamification","learning","education","quiz","questionnaire","quizzes","learn"],"example":{},"supports":{"html":false},"textdomain":"jquest-inserter","editorScript":"file:./index.js","editorStyle":"file:./index.css","attributes":{"selectedGame":{"type":"string"},"organization":{"type":"string"},"newStyles":{"type":"boolean","default":false},"staging":{"type":"boolean","default":false}}}');
+module.exports = window["React"];
 
 /***/ })
 
@@ -421,9 +421,9 @@ module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/chunk loaded */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		var deferred = [];
-/******/ 		__webpack_require__.O = function(result, chunkIds, fn, priority) {
+/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
 /******/ 			if(chunkIds) {
 /******/ 				priority = priority || 0;
 /******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
@@ -432,12 +432,10 @@ module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json
 /******/ 			}
 /******/ 			var notFulfilled = Infinity;
 /******/ 			for (var i = 0; i < deferred.length; i++) {
-/******/ 				var chunkIds = deferred[i][0];
-/******/ 				var fn = deferred[i][1];
-/******/ 				var priority = deferred[i][2];
+/******/ 				var [chunkIds, fn, priority] = deferred[i];
 /******/ 				var fulfilled = true;
 /******/ 				for (var j = 0; j < chunkIds.length; j++) {
-/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every(function(key) { return __webpack_require__.O[key](chunkIds[j]); })) {
+/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
 /******/ 						chunkIds.splice(j--, 1);
 /******/ 					} else {
 /******/ 						fulfilled = false;
@@ -452,50 +450,50 @@ module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json
 /******/ 			}
 /******/ 			return result;
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = function(module) {
+/******/ 		__webpack_require__.n = (module) => {
 /******/ 			var getter = module && module.__esModule ?
-/******/ 				function() { return module['default']; } :
-/******/ 				function() { return module; };
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
 /******/ 			__webpack_require__.d(getter, { a: getter });
 /******/ 			return getter;
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 		__webpack_require__.d = (exports, definition) => {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	!function() {
-/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// no baseURI
 /******/ 		
 /******/ 		// object to store loaded and loading chunks
@@ -516,17 +514,15 @@ module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		__webpack_require__.O.j = function(chunkId) { return installedChunks[chunkId] === 0; };
+/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = function(parentChunkLoadingFunction, data) {
-/******/ 			var chunkIds = data[0];
-/******/ 			var moreModules = data[1];
-/******/ 			var runtime = data[2];
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0;
-/******/ 			if(chunkIds.some(function(id) { return installedChunks[id] !== 0; })) {
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
 /******/ 				for(moduleId in moreModules) {
 /******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
 /******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
@@ -545,17 +541,17 @@ module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunkjquest_plugin"] = self["webpackChunkjquest_plugin"] || [];
+/******/ 		var chunkLoadingGlobal = globalThis["webpackChunkjquest_plugin"] = globalThis["webpackChunkjquest_plugin"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["jquest-inserter/style-index"], function() { return __webpack_require__("./blocks/src/jquest-inserter/index.js"); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["jquest-inserter/style-index"], () => (__webpack_require__("./blocks/src/jquest-inserter/index.js")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

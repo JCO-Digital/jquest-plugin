@@ -93,6 +93,7 @@ class ComposerStaticInitf3985931e6d9302ebdbc02213afa92bd
         'Nette\\Schema\\Processor' => __DIR__ . '/..' . '/nette/schema/src/Schema/Processor.php',
         'Nette\\Schema\\Schema' => __DIR__ . '/..' . '/nette/schema/src/Schema/Schema.php',
         'Nette\\Schema\\ValidationException' => __DIR__ . '/..' . '/nette/schema/src/Schema/ValidationException.php',
+        'Nette\\ShouldNotHappenException' => __DIR__ . '/..' . '/nette/utils/src/exceptions.php',
         'Nette\\SmartObject' => __DIR__ . '/..' . '/nette/utils/src/SmartObject.php',
         'Nette\\StaticClass' => __DIR__ . '/..' . '/nette/utils/src/StaticClass.php',
         'Nette\\UnexpectedValueException' => __DIR__ . '/..' . '/nette/utils/src/exceptions.php',

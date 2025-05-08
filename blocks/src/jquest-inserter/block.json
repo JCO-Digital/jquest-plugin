@@ -1,12 +1,12 @@
 {
-	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"apiVersion": 3,
-	"name": "jquest-inserter/jquest-inserter",
-	"version": "0.1.0",
-	"title": "JQUEST Inserter",
-	"category": "embed",
-	"icon": "games",
-	"description": "Insert a JQUEST App",
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "jquest-inserter/jquest-inserter",
+  "version": "0.1.0",
+  "title": "jQuest",
+  "category": "embed",
+  "icon": "games",
+  "description": "Insert an jQUEST-app",
   "keywords": [
     "jquest",
     "game",
@@ -18,13 +18,13 @@
     "quizzes",
     "learn"
   ],
-	"example": {},
-	"supports": {
-		"html": false
-	},
-	"textdomain": "jquest-inserter",
-	"editorScript": "file:./index.js",
-	"editorStyle": "file:./index.css",
+  "example": {},
+  "supports": {
+    "html": false
+  },
+  "textdomain": "jquest-inserter",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
   "attributes": {
     "selectedGame": {
       "type": "string"
