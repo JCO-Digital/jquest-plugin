@@ -14,7 +14,11 @@ import { useEffect, useState } from "@wordpress/element";
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, InspectorControls } from "@wordpress/block-editor";
+import {
+	useBlockProps,
+	InspectorControls,
+	RichText,
+} from "@wordpress/block-editor";
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -56,7 +60,7 @@ export default function Edit({ attributes, setAttributes }) {
 			}
 			if (!data.games) {
 				setText(
-					__("No games found for organization", "jquest-inserter"),
+					__("No games found for organization.", "jquest-inserter"),
 				);
 				return;
 			}
@@ -76,6 +80,15 @@ export default function Edit({ attributes, setAttributes }) {
 			setAttributes({ organization: data.organization });
 		});
 	}, []);
+
+	// Show the selected game label in the block.
+	useEffect(() => {
+		games.find((game) => {
+			if (game.value === selectedGame) {
+				setText(__(game.label, "jquest-inserter"));
+			}
+		});
+	}, [selectedGame, organization, games]);
 
 	/**
 	 * The `onChangeGame` function is called when the selected game changes.
@@ -101,6 +114,17 @@ export default function Edit({ attributes, setAttributes }) {
 	 */
 	const onChangeStaging = (state) => {
 		setAttributes({ staging: state });
+	};
+
+	const openDashboard = (state) => {
+		// go to dashboard
+		window.open(
+			"https://dashboard.jquest.fi/#/dashboard/" +
+				organization +
+				"/" +
+				selectedGame,
+			"_blank",
+		);
 	};
 
 	// Render the block.
@@ -145,7 +169,12 @@ export default function Edit({ attributes, setAttributes }) {
 					data-game-id={selectedGame}
 					data-new-styles={newStyles}
 				>
-					{text}
+					<p>{text}</p>
+					{organization !== "" && selectedGame !== "" && (
+						<button onClick={openDashboard}>
+							Edit in dashboard
+						</button>
+					)}
 				</div>
 			</div>
 		</>

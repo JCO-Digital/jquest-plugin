@@ -6,7 +6,7 @@
   "title": "jQuest",
   "category": "embed",
   "icon": "games",
-  "description": "Insert an jQUEST-app",
+  "description": "Insert jQuest content.",
   "keywords": [
     "jquest",
     "game",
@@ -16,7 +16,12 @@
     "quiz",
     "questionnaire",
     "quizzes",
-    "learn"
+    "learn",
+    "rating",
+    "poll",
+    "survey",
+    "chooser",
+    "wheel of fortune"
   ],
   "example": {},
   "supports": {
@@ -34,11 +39,11 @@
     },
     "newStyles": {
       "type": "boolean",
-      "default": false
+      "default": true
     },
     "staging": {
       "type": "boolean",
-      "default": false
+      "default": true
     }
   }
 }

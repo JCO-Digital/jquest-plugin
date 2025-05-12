@@ -8,7 +8,7 @@
   \***********************************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"jquest-inserter/jquest-inserter","version":"0.1.0","title":"jQuest","category":"embed","icon":"games","description":"Insert an jQUEST-app","keywords":["jquest","game","gamification","learning","education","quiz","questionnaire","quizzes","learn"],"example":{},"supports":{"html":false},"textdomain":"jquest-inserter","editorScript":"file:./index.js","editorStyle":"file:./index.css","attributes":{"selectedGame":{"type":"string"},"organization":{"type":"string"},"newStyles":{"type":"boolean","default":false},"staging":{"type":"boolean","default":false}}}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"jquest-inserter/jquest-inserter","version":"0.1.0","title":"jQuest","category":"embed","icon":"games","description":"Insert jQuest content.","keywords":["jquest","game","gamification","learning","education","quiz","questionnaire","quizzes","learn","rating","poll","survey","chooser","wheel of fortune"],"example":{},"supports":{"html":false},"textdomain":"jquest-inserter","editorScript":"file:./index.js","editorStyle":"file:./index.css","attributes":{"selectedGame":{"type":"string"},"organization":{"type":"string"},"newStyles":{"type":"boolean","default":true},"staging":{"type":"boolean","default":true}}}');
 
 /***/ }),
 
@@ -96,7 +96,7 @@ function Edit({
         return;
       }
       if (!data.games) {
-        setText((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No games found for organization", "jquest-inserter"));
+        setText((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No games found for organization.", "jquest-inserter"));
         return;
       }
 
@@ -117,6 +117,15 @@ function Edit({
       });
     });
   }, []);
+
+  // Show the selected game label in the block.
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
+    games.find(game => {
+      if (game.value === selectedGame) {
+        setText((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)(game.label, "jquest-inserter"));
+      }
+    });
+  }, [selectedGame, organization, games]);
 
   /**
    * The `onChangeGame` function is called when the selected game changes.
@@ -149,6 +158,10 @@ function Edit({
       staging: state
     });
   };
+  const openDashboard = state => {
+    // go to dashboard
+    window.open("https://dashboard.jquest.fi/#/dashboard/" + organization + "/" + selectedGame, "_blank");
+  };
 
   // Render the block.
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_5__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
@@ -179,7 +192,9 @@ function Edit({
     "data-org-id": organization,
     "data-game-id": selectedGame,
     "data-new-styles": newStyles
-  }, text)));
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, text), organization !== "" && selectedGame !== "" && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    onClick: openDashboard
+  }, "Edit in dashboard"))));
 }
 
 /***/ }),
