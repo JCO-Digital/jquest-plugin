@@ -120,9 +120,9 @@ export default function Edit({ attributes, setAttributes }) {
 		// go to dashboard
 		window.open(
 			"https://dashboard.jquest.fi/#/dashboard/" +
-				organization +
-				"/" +
-				selectedGame,
+			organization +
+			"/" +
+			selectedGame,
 			"_blank",
 		);
 	};
@@ -169,7 +169,7 @@ export default function Edit({ attributes, setAttributes }) {
 					data-game-id={selectedGame}
 					data-new-styles={newStyles}
 				>
-					<p>{text}</p>
+					{text}
 					{organization !== "" && selectedGame !== "" && (
 						<button onClick={openDashboard}>
 							Edit in dashboard

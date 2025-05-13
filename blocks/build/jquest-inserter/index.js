@@ -192,7 +192,7 @@ function Edit({
     "data-org-id": organization,
     "data-game-id": selectedGame,
     "data-new-styles": newStyles
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, text), organization !== "" && selectedGame !== "" && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, text, organization !== "" && selectedGame !== "" && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     onClick: openDashboard
   }, "Edit in dashboard"))));
 }
