@@ -9,7 +9,7 @@ try {
     .replace(/^(.*)Version:.*$/m, `$1Version: ${pack.version}`);
   writeFileSync(pluginFileName, baseString);
 
-  const readmeFile = readFileSync("README.txt");
+  const readmeFile = readFileSync("readme.txt");
   const readmeString = readmeFile
     .toString()
     .replace(/^(.*)Stable tag:.*$/m, `$1Stable tag: ${pack.version}`);
