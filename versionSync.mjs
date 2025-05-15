@@ -13,7 +13,7 @@ try {
   const readmeString = readmeFile
     .toString()
     .replace(/^(.*)Stable tag:.*$/m, `$1Stable tag: ${pack.version}`);
-  writeFileSync("README.txt", readmeString);
+  writeFileSync("readme.txt", readmeString);
 } catch (error) {
   console.error(error);
 }
