@@ -7,7 +7,6 @@
 
 namespace jQuestPlugin\Options;
 
-use jQuestPlugin\jquest_table;
 use jQuestPlugin\Singleton;
 use function jQuestPlugin\fetch_jquests;
 use function jQuestPlugin\render_template;

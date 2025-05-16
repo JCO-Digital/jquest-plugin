@@ -1,4 +1,8 @@
-<?php // phpcs:ignore Squiz.Commenting.FileComment.Missing ?>
+<?php // phpcs:ignore Squiz.Commenting.FileComment.Missing 
+
+use jQuestPlugin\JQuest_table;
+
+?>
 <div class="wrap">
 	<h1>
 		<?php esc_html_e( 'jQuest Settings', 'jquest-' ); ?></h1>
@@ -20,10 +24,10 @@
 		?>
 	</form>
 
-	<?php if(get_option('jquest_org_id')): ?>
+	<?php if ( get_option( 'jquest_org_id' ) ) : ?>
 		<form method="post" action="admin-post.php">
 			<?php
-			wp_nonce_field('my_plugin_button_action_nonce', 'my_plugin_button_action_nonce_field');
+			wp_nonce_field( 'my_plugin_button_action_nonce', 'my_plugin_button_action_nonce_field' );
 			?>
 			<p>
 				<button type="submit" name="jquest_refresh_games" class="button-primary">
@@ -40,11 +44,8 @@
 				<h2><?php esc_html_e( 'Organisation Games', 'jquest-' ); ?></h2>
 			</div>
 			<?php
-			use jQuestPlugin\jquest_table;
-			$table = new jquest_table();
-			// Prepare table
+			$table = new Jquest_table();
 			$table->prepare_items();
-			// Display table
 			$table->display();
 			?>
 		</div>
