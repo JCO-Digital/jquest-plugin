@@ -29,18 +29,12 @@ if ( is_readable( __DIR__ . JQUEST_COMPOSER_AUTOLOADER ) ) {
 	require_once ABSPATH . JQUEST_COMPOSER_AUTOLOADER;
 }
 
-// Load prefixed composer autoloader.
-if ( is_readable( __DIR__ . JQUEST_PREFIXED_COMPOSER_AUTOLOADER ) ) {
-	require_once __DIR__ . JQUEST_PREFIXED_COMPOSER_AUTOLOADER;
-} elseif ( is_readable( ABSPATH . JQUEST_PREFIXED_COMPOSER_AUTOLOADER ) ) {
-	require_once ABSPATH . JQUEST_PREFIXED_COMPOSER_AUTOLOADER;
-}
-
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/includes/blocks.php';
 require_once __DIR__ . '/includes/fields.php';
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/table.php';
+require_once __DIR__ . '/includes/scripts.php';
 
 /**
  * Checks the prerequisites for the plugin.
@@ -48,10 +42,8 @@ require_once __DIR__ . '/includes/table.php';
  * @return bool
  */
 function check_prerequisites(): bool {
-
 	$pass = ( is_readable( __DIR__ . JQUEST_COMPOSER_AUTOLOADER ) ||
 				is_readable( ABSPATH . JQUEST_COMPOSER_AUTOLOADER ) );
-
 	if ( $pass ) {
 		return true;
 	}
@@ -91,7 +83,7 @@ add_action( 'admin_init', __NAMESPACE__ . '\check_prerequisites' );
 add_action( 'plugins_loaded', __NAMESPACE__ . '\load_translations' );
 add_action( 'plugins_loaded', __NAMESPACE__ . '\initialize_plugin' );
 
-add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), __NAMESPACE__ . '\my_plugin_settings' );
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), __NAMESPACE__ . '\jquest_plugin_settings_link' );
 
 /**
  * Adds a link to the settings page to the plugins page.
@@ -100,7 +92,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), __NAMESPACE__ 
  *
  * @return array
  */
-function my_plugin_settings( $settings ): array {
+function jquest_plugin_settings_link( $settings ): array {
 	$settings[] = '<a href="' . get_admin_url( null, 'options-general.php?page=jquest-options' ) . '">Settings</a>';
 	return $settings;
 }

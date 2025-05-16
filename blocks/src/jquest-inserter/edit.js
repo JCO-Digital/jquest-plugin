@@ -120,9 +120,9 @@ export default function Edit({ attributes, setAttributes }) {
 		// go to dashboard
 		window.open(
 			"https://dashboard.jquest.fi/#/dashboard/" +
-			organization +
-			"/" +
-			selectedGame,
+				organization +
+				"/" +
+				selectedGame,
 			"_blank",
 		);
 	};
@@ -137,6 +137,7 @@ export default function Edit({ attributes, setAttributes }) {
 						value={selectedGame}
 						options={games}
 						onChange={onChangeGame}
+						__next40pxDefaultSize
 					/>
 					<ToggleControl
 						__nextHasNoMarginBottom
@@ -162,7 +163,11 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<div {...useBlockProps()}>
+			<div
+				{...useBlockProps({
+					"data-staging": attributes.staging,
+				})}
+			>
 				<div
 					className="jquest-app"
 					data-org-id={organization}

@@ -18,17 +18,12 @@ import { useBlockProps } from "@wordpress/block-editor";
 export default function save({ attributes }) {
 	const { selectedGame, organization, staging, newStyles } = attributes;
 
-	const scriptUrl = staging
-		? "https://files.jquest.fi/jquest/staging/jquest-staging.js"
-		: "https://files.jquest.fi/jquest/jquest.js";
-
 	return (
-		<div {...useBlockProps.save()}>
-			<script
-				data-cookieconsent="ignore"
-				src={scriptUrl}
-				type="module"
-			></script>
+		<div
+			{...useBlockProps.save({
+				"data-staging": staging,
+			})}
+		>
 			<div
 				className="jquest-app"
 				data-org-id={organization}
