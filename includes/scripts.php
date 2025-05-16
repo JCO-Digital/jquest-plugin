@@ -25,6 +25,7 @@ function maybe_insert_jquest_script() {
 			$has_jquest_blocks = true;
 			if ( false === $needs_staging ) {
 				// Unfortunately, this is the only way to get the default attributes from the block...
+				// This could be avoided by just assuming the default value, but then we would need to keep the block.json in sync with this.
 				$rendered_block = apply_filters( 'the_content', render_block( $block ) );
 				if ( strpos( $rendered_block, 'data-staging="true"' ) !== false ) {
 					$needs_staging = true;
