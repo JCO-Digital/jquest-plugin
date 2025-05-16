@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the JQUEST Plugin package.
 msgid ""
 msgstr ""
-"Project-Id-Version: JQUEST Plugin 0.5.0\n"
+"Project-Id-Version: JQUEST Plugin 0.5.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/jquest-plugin\n"
-"POT-Creation-Date: 2025-05-16 09:10:28+00:00\n"
+"POT-Creation-Date: 2025-05-16 09:16:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,61 +24,34 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: .history/classes/Options/OptionsPage_20250515170352.php:135
-#: .history/classes/Options/OptionsPage_20250515170352.php:198
-#: .history/classes/Options/OptionsPage_20250516113118.php:135
-#: .history/classes/Options/OptionsPage_20250516113118.php:198
-#: .history/classes/Options/OptionsPage_20250516113131.php:134
-#: .history/classes/Options/OptionsPage_20250516113131.php:197
 #: classes/Options/OptionsPage.php:134 classes/Options/OptionsPage.php:197
 msgid "General"
 msgstr ""
 
-#: .history/classes/Options/OptionsPage_20250515170352.php:142
-#: .history/classes/Options/OptionsPage_20250515170352.php:172
-#: .history/classes/Options/OptionsPage_20250516113118.php:142
-#: .history/classes/Options/OptionsPage_20250516113118.php:172
-#: .history/classes/Options/OptionsPage_20250516113131.php:141
-#: .history/classes/Options/OptionsPage_20250516113131.php:171
 #: classes/Options/OptionsPage.php:141 classes/Options/OptionsPage.php:171
 msgid "Organisation ID"
 msgstr ""
 
-#: .history/classes/Options/OptionsPage_20250515170352.php:158
-#: .history/classes/Options/OptionsPage_20250516113118.php:158
-#: .history/classes/Options/OptionsPage_20250516113131.php:157
 #: classes/Options/OptionsPage.php:157
 msgid "General settings required for jQuest integration."
-msgstr ""
-
-#: .history/includes/table_20250515170352.php:18
-#: .history/includes/table_20250516113043.php:17
-#: .history/includes/table_20250516113056.php:17 includes/table.php:17
-msgid "Title"
-msgstr ""
-
-#: .history/views/admin-settings_20250515170352.php:4
-#: .history/views/admin-settings_20250516113139.php:4
-#: .history/views/admin-settings_20250516113142.php:4
-#: .history/views/admin-settings_20250516113145.php:4
-#: .history/views/admin-settings_20250516113149.php:8
-#: views/admin-settings.php:8
-msgid "jQuest Settings"
-msgstr ""
-
-#: .history/views/admin-settings_20250515170352.php:40
-#: .history/views/admin-settings_20250516113139.php:40
-#: .history/views/admin-settings_20250516113142.php:40
-#: .history/views/admin-settings_20250516113145.php:40
-#: .history/views/admin-settings_20250516113149.php:44
-#: views/admin-settings.php:44
-msgid "Organisation Games"
 msgstr ""
 
 #: helpers.php:13
 msgid ""
 "The plugin \"Jcore Broiler\" could not be activated because it is missing "
 "dependencies. Please install the dependencies and try again."
+msgstr ""
+
+#: includes/table.php:17
+msgid "Title"
+msgstr ""
+
+#: views/admin-settings.php:8
+msgid "jQuest Settings"
+msgstr ""
+
+#: views/admin-settings.php:44
+msgid "Organisation Games"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
