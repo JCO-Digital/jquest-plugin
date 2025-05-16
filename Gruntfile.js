@@ -22,6 +22,7 @@ module.exports = function (grunt) {
 					"!tests/**/*",
 					"!vendor/**/*",
 					"!vendor-prefixed/**/*",
+					"!.history/**/*",
 				],
 			},
 		},
