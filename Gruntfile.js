@@ -46,6 +46,7 @@ module.exports = function (grunt) {
 						"tests/*",
 						"vendor/*",
 						"vendor-prefixed/*",
+						".history/*",
 					],
 					mainFile: "jquest-plugin.php",
 					potFilename: "jquest-plugin.pot",
