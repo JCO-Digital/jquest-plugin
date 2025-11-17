@@ -16,20 +16,32 @@ import { useBlockProps } from "@wordpress/block-editor";
  * @return {WPElement} Element to render.
  */
 export default function save({ attributes }) {
-	const { selectedGame, organization, staging, newStyles } = attributes;
+  const {
+    selectedGame,
+    organization,
+    popup,
+    popupAuto,
+    popupDelay,
+    popupLimit,
+    version,
+  } = attributes;
 
-	return (
-		<div
-			{...useBlockProps.save({
-				"data-staging": staging,
-			})}
-		>
-			<div
-				className="jquest-app"
-				data-org-id={organization}
-				data-game-id={selectedGame}
-				data-new-styles={newStyles}
-			></div>
-		</div>
-	);
+  return (
+    <div
+      {...useBlockProps.save({
+        "data-version": version,
+      })}
+    >
+      <div
+        className="jquest-app"
+        data-org-id={organization}
+        data-game-id={selectedGame}
+        data-popup={popup ? "true" : "false"}
+        data-popup-auto={popupAuto ? "true" : "false"}
+        data-popup-delay={popupDelay}
+        data-popup-limit={popupLimit}
+        data-new-styles="true"
+      ></div>
+    </div>
+  );
 }

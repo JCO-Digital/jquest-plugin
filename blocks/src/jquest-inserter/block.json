@@ -37,13 +37,25 @@
     "organization": {
       "type": "string"
     },
-    "newStyles": {
-      "type": "boolean",
-      "default": true
+    "version": {
+      "type": "string",
+      "default": "stable"
     },
-    "staging": {
+    "popup": {
       "type": "boolean",
-      "default": true
+      "default": false
+    },
+    "popupAuto": {
+      "type": "boolean",
+      "default": false
+    },
+    "popupDelay": {
+      "type": "number",
+      "default": 5000
+    },
+    "popupLimit": {
+      "type": "number",
+      "default": 0
     }
   }
 }

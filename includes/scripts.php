@@ -19,7 +19,7 @@ function maybe_insert_jquest_script() {
 	}
 
 	$has_jquest_blocks = false;
-	$needs_staging     = false;
+	$version           = false;
 
 	$post = get_post();
 	if ( ! $post ) {
@@ -32,18 +32,19 @@ function maybe_insert_jquest_script() {
 		$results = contains_jquest_insterter( $block );
 
 		$has_jquest_blocks = $results['has_jquest_blocks'];
-		$needs_staging     = $results['needs_staging'];
-
-		// Can only add one script at a time. So might as well break.
-		if ( $needs_staging ) {
+		$version           = $results['version'];
+print_r($version);
+		if ( !$version ) {
 			break;
 		}
 	}
 	if ( $has_jquest_blocks ) {
-		$url = $needs_staging
-		? 'https://files.jquest.fi/jquest/staging/jquest-staging.js'
-		: 'https://files.jquest.fi/jquest/jquest.js';
 
+		if($version == 'stable') {
+			$url = 'https://files.jquest.fi/jquest/stable/jquest.js';
+		} else if($version == 'latest') {
+			$url = 'https://files.jquest.fi/jquest/latest/jquest-latest.js';
+		}
      // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 		?>
 		<script
@@ -59,17 +60,19 @@ function contains_jquest_insterter( $block ): array {
 
 	$return_value = array(
 		'has_jquest_blocks' => false,
-		'needs_staging'     => false,
+		'version'           => false
 	);
 
 	if ( 'jquest-inserter/jquest-inserter' === $block['blockName'] ) {
 		$return_value['has_jquest_blocks'] = true;
-		if ( false === $return_value['needs_staging'] ) {
+		if ( false === $return_value['version'] ) {
 			// Unfortunately, this is the only way to get the default attributes from the block...
 			// This could be avoided by just assuming the default value, but then we would need to keep the block.json in sync with this.
 			$rendered_block = apply_filters( 'the_content', render_block( $block ) );
-			if ( strpos( $rendered_block, 'data-staging="true"' ) !== false ) {
-				$return_value['needs_staging'] = true;
+			if ( strpos( $rendered_block, 'data-version="stable"' ) !== false ) {
+				$return_value['version'] = "stable";
+			} if ( strpos( $rendered_block, 'data-version="latest"' ) !== false ) {
+				$return_value['version'] = "latest";
 			}
 		}
 	}
@@ -79,7 +82,7 @@ function contains_jquest_insterter( $block ): array {
 			$inner_values = contains_jquest_insterter( $inner_block );
 
 			$return_value['has_jquest_blocks'] = $return_value['has_jquest_blocks'] || $inner_values['has_jquest_blocks'];
-			$return_value['needs_staging']     = $return_value['needs_staging'] || $inner_values['needs_staging'];
+			$return_value['version']     = $return_value['version'];
 		}
 	}
 
