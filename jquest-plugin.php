@@ -7,7 +7,7 @@
  * Author URI:      https://jco.fi
  * Text Domain:     jquest-
  * Domain Path:     /languages
- * Version: 0.5.6
+ * Version: 1.0.0
  *
  * @package         jQuestPlugin
  */
