@@ -33,7 +33,6 @@ function maybe_insert_jquest_script() {
 
 		$has_jquest_blocks = $results['has_jquest_blocks'];
 		$version           = $results['version'];
-print_r($version);
 		if ( !$version ) {
 			break;
 		}
