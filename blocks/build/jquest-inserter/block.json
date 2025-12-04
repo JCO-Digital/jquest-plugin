@@ -49,6 +49,18 @@
       "type": "boolean",
       "default": false
     },
+    "popupDisableDismiss": {
+      "type": "boolean",
+      "default": false
+    },
+    "popupDisableNoscroll": {
+      "type": "boolean",
+      "default": false
+    },
+    "popupAttach": {
+      "type": "string",
+      "default": "body"
+    },
     "popupDelay": {
       "type": "number",
       "default": 5000

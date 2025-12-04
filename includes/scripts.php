@@ -33,14 +33,14 @@ function maybe_insert_jquest_script() {
 
 		$has_jquest_blocks = $results['has_jquest_blocks'];
 		$version           = $results['version'];
-		if ( !$version ) {
+		if ( !!$version ) {
 			break;
 		}
 	}
 	if ( $has_jquest_blocks ) {
 
 		if($version == 'stable') {
-			$url = 'https://files.jquest.fi/jquest/stable/jquest.js';
+			$url = 'https://files.jquest.fi/jquest/stable/jquest-stable.js';
 		} else if($version == 'latest') {
 			$url = 'https://files.jquest.fi/jquest/latest/jquest-latest.js';
 		}
