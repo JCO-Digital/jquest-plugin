@@ -47,7 +47,7 @@ function maybe_insert_jquest_script() {
      // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 		?>
 		<script
-				data-cookieconsent-ignore='true'
+				data-cookieconsent="ignore"
 				type='module'
 				src='<?php echo $url; ?>'></script>
 		<?php
