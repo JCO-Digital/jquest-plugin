@@ -92,6 +92,6 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), __NAMESPACE__ 
  * @return array
  */
 function jquest_plugin_settings_link( $settings ): array {
-	$settings[] = '<a href="' . get_admin_url( null, 'options-general.php?page=jquest-options' ) . '">Settings</a>';
+	$settings[] = '<a href="' . get_admin_url( null, 'admin.php?page=jquest-options' ) . '">Settings</a>';
 	return $settings;
 }

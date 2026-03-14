@@ -43,7 +43,7 @@ class OptionsPage extends Singleton {
 				fetch_jquests( get_option( 'jquest_org_id' ) );
 			}
 
-			$referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( $_SERVER['HTTP_REFERER'] ) : admin_url( 'options-general.php?page=jquest-option' );
+			$referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( $_SERVER['HTTP_REFERER'] ) : admin_url( 'admin.php?page=jquest-options' );
 			wp_safe_redirect( $referer );
 			exit;
 		}
@@ -71,12 +71,32 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	final public function add_page(): void {
-		add_options_page(
-			'jQuest Options',
-			'jQuest Settings',
+		add_menu_page(
+			'jQuest',
+			'jQuest',
+			'manage_options',
+			'jquest-options',
+			array( $this, 'render_page' ),
+			'dashicons-games',
+			80
+		);
+
+		add_submenu_page(
+			'jquest-options',
+			__( 'General', 'jquest-' ),
+			__( 'General', 'jquest-' ),
 			'manage_options',
 			'jquest-options',
 			array( $this, 'render_page' )
+		);
+
+		add_submenu_page(
+			'jquest-options',
+			__( 'Popup', 'jquest-' ),
+			__( 'Popup', 'jquest-' ),
+			'manage_options',
+			'jquest-popup',
+			array( $this, 'render_popup_page' )
 		);
 	}
 
@@ -128,6 +148,21 @@ class OptionsPage extends Singleton {
 				},
 			)
 		);
+
+		// Popup settings — one group per language (or 'default' when Polylang is inactive).
+		$popup_langs = function_exists( 'pll_languages_list' )
+			? pll_languages_list( array( 'fields' => 'slug' ) )
+			: array( 'default' );
+
+		foreach ( $popup_langs as $lang ) {
+			$prefix = 'jquest_popup_' . $lang . '_';
+			$group  = 'jquest-popup-' . $lang;
+
+			register_setting( $group, $prefix . 'enabled', array( 'sanitize_callback' => 'absint' ) );
+			register_setting( $group, $prefix . 'quest_id', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+			register_setting( $group, $prefix . 'desktop_label', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+			register_setting( $group, $prefix . 'mobile_label', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		}
 
 		// Settings sections.
 		add_settings_section(
@@ -182,6 +217,38 @@ class OptionsPage extends Singleton {
 	final public function enqueue_assets(): void {
 		wp_enqueue_style( 'jquest-admin' );
 		wp_enqueue_script( 'jquest-backend' );
+	}
+
+	/**
+	 * Handles the rendering of the popup settings page.
+	 *
+	 * @return void
+	 */
+	final public function render_popup_page(): void {
+		$tabs = array();
+
+		if ( function_exists( 'pll_languages_list' ) ) {
+			foreach ( pll_languages_list( array( 'fields' => 'slug' ) ) as $slug ) {
+				$tabs[ $slug ] = array(
+					'label' => strtoupper( $slug ),
+					'url'   => add_query_arg( array( 'tab' => $slug ), admin_url( 'admin.php?page=jquest-popup' ) ),
+				);
+			}
+		}
+
+		$first_tab  = ! empty( $tabs ) ? array_key_first( $tabs ) : '';
+		$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : $first_tab; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		$lang_key = $active_tab ?: 'default';
+
+		$data = array(
+			'tabs'       => $tabs,
+			'active_tab' => $active_tab,
+			'lang_key'   => $lang_key,
+			'games'      => get_option( 'jquest_org_games', array() ),
+		);
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo render_template( 'popup-settings', $data );
 	}
 
 	/**
