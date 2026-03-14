@@ -288,6 +288,11 @@ class OptionsPage extends Singleton {
 					'url'   => add_query_arg( array( 'tab' => $slug ), admin_url( 'admin.php?page=jquest-popup' ) ),
 				);
 			}
+		} else {
+			$tabs['default'] = array(
+				'label' => __( 'Popup', 'jquest-' ),
+				'url'   => add_query_arg( array( 'tab' => 'default' ), admin_url( 'admin.php?page=jquest-popup' ) ),
+			);
 		}
 
 		$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'trigger'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
