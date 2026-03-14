@@ -77,7 +77,7 @@ class OptionsPage extends Singleton {
 			'manage_options',
 			'jquest-options',
 			array( $this, 'render_page' ),
-			'dashicons-games',
+			'data:image/svg+xml;base64,' . base64_encode( '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 118 137"><path fill="black" d="M19.62,45.96v19.05c0,1.2-1.3,1.95-2.34,1.35L.78,56.84c-.48-.28-.78-.79-.78-1.35v-20.85c0-.56.3-1.07.78-1.35L58.07.21c.48-.28,1.08-.28,1.56,0l16.5,9.53c1.04.6,1.04,2.1,0,2.7L20.4,44.61c-.48.28-.78.79-.78,1.35ZM58.15,114.8L2.41,82.62c-1.04-.6-2.34.15-2.34,1.35v19.05c0,.56.29,1.07.78,1.35l57.29,33.08c.48.28,1.08.28,1.56,0l18.06-10.43c.48-.28.78-.79.78-1.35v-19.05c0-1.2-1.3-1.95-2.34-1.35l-16.5,9.53c-.48.28-1.08.28-1.56,0ZM98.08,45.72v64.35c0,1.2,1.3,1.95,2.34,1.35l16.5-9.52c.48-.28.78-.79.78-1.35V34.39c0-.56-.3-1.07-.78-1.35l-18.06-10.43c-.48-.28-1.08-.28-1.56,0l-16.5,9.53c-1.04.6-1.04,2.1,0,2.7l16.5,9.53c.48.28.78.79.78,1.35ZM77.94,80.54c.38-.3.61-.75.61-1.24v-20.94c0-.49-.23-.94-.61-1.24l-18.31-10.58c-.49-.28-1.08-.28-1.56,0l-18.31,10.58c-.38.3-.61.75-.61,1.24v20.94c0,.49.23.94.61,1.24l18.31,10.58c.47.28,1.07.28,1.56,0l18.31-10.58Z"/></svg>' ),
 			80
 		);
 
@@ -162,7 +162,40 @@ class OptionsPage extends Singleton {
 			register_setting( $group, $prefix . 'quest_id', array( 'sanitize_callback' => 'sanitize_text_field' ) );
 			register_setting( $group, $prefix . 'desktop_label', array( 'sanitize_callback' => 'sanitize_text_field' ) );
 			register_setting( $group, $prefix . 'mobile_label', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+			register_setting( $group, $prefix . 'attach', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+			register_setting( $group, $prefix . 'auto', array( 'sanitize_callback' => 'absint' ) );
+			register_setting( $group, $prefix . 'limit', array( 'sanitize_callback' => 'absint' ) );
+			register_setting( $group, $prefix . 'disable_dismiss', array( 'sanitize_callback' => 'absint' ) );
+			register_setting( $group, $prefix . 'disable_noscroll', array( 'sanitize_callback' => 'absint' ) );
+			register_setting( $group, $prefix . 'latest_script', array( 'sanitize_callback' => 'absint' ) );
 		}
+
+		// Trigger settings — global (not per-language).
+		$svg_kses = array(
+			'svg'    => array( 'xmlns' => true, 'viewBox' => true, 'width' => true, 'height' => true, 'fill' => true ),
+			'path'   => array( 'd' => true, 'fill' => true, 'fill-rule' => true, 'clip-rule' => true, 'stroke' => true, 'stroke-width' => true ),
+			'g'      => array( 'fill' => true ),
+			'circle' => array( 'cx' => true, 'cy' => true, 'r' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true ),
+			'rect'   => array( 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'fill' => true, 'rx' => true ),
+		);
+
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_enabled', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_text_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_bg_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_text_hover_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_bg_hover_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_bg_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_bg_hover_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_mode', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		register_setting(
+			'jquest-popup-trigger',
+			'jquest_popup_trigger_icon_custom',
+			array(
+				'sanitize_callback' => function( $input ) use ( $svg_kses ) {
+					return wp_kses( $input, $svg_kses );
+				},
+			)
+		);
 
 		// Settings sections.
 		add_settings_section(
@@ -217,6 +250,20 @@ class OptionsPage extends Singleton {
 	final public function enqueue_assets(): void {
 		wp_enqueue_style( 'jquest-admin' );
 		wp_enqueue_script( 'jquest-backend' );
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script( 'wp-color-picker' );
+
+		$palette = wp_get_global_settings( array( 'color', 'palette' ) );
+		$colors  = array_column(
+			array_merge( $palette['theme'] ?? array(), $palette['default'] ?? array() ),
+			'color'
+		);
+		wp_localize_script( 'wp-color-picker', 'jquestColorPalette', $colors );
+		wp_add_inline_script(
+			'wp-color-picker',
+			'jQuery(function($){ $(".jquest-color-picker").wpColorPicker({ palettes: window.jquestColorPalette }); });',
+			'after'
+		);
 	}
 
 	/**
@@ -225,7 +272,12 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	final public function render_popup_page(): void {
-		$tabs = array();
+		$tabs = array(
+			'trigger' => array(
+				'label' => __( 'Trigger', 'jquest-' ),
+				'url'   => add_query_arg( array( 'tab' => 'trigger' ), admin_url( 'admin.php?page=jquest-popup' ) ),
+			),
+		);
 
 		if ( function_exists( 'pll_languages_list' ) ) {
 			foreach ( pll_languages_list( array( 'fields' => 'slug' ) ) as $slug ) {
@@ -236,8 +288,7 @@ class OptionsPage extends Singleton {
 			}
 		}
 
-		$first_tab  = ! empty( $tabs ) ? array_key_first( $tabs ) : '';
-		$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : $first_tab; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'trigger'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		$lang_key = $active_tab ?: 'default';
 
