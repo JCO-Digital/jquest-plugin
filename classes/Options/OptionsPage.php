@@ -11,6 +11,7 @@ use jQuestPlugin\Singleton;
 use function jQuestPlugin\fetch_jquests;
 use function jQuestPlugin\render_template;
 use function jQuestPlugin\render_text_field;
+use function jQuestPlugin\style_register;
 
 /**
  * Options page class.
@@ -248,6 +249,7 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	final public function enqueue_assets(): void {
+		style_register( 'jquest-admin', 'assets/css/admin.css' );
 		wp_enqueue_style( 'jquest-admin' );
 		wp_enqueue_script( 'jquest-backend' );
 		wp_enqueue_style( 'wp-color-picker' );

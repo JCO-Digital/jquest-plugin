@@ -4,8 +4,11 @@ $jquest_prefix = 'jquest_popup_' . $jquest_lang_key . '_';
 $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 
 ?>
-<div class="wrap">
-	<h1><?php esc_html_e( 'jQuest Popup', 'jquest-' ); ?></h1>
+<div class="wrap jquest-wrap">
+	<div class="jquest-page-header">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 118 137" fill="#1a2e40" aria-hidden="true"><path d="M19.62,45.96v19.05c0,1.2-1.3,1.95-2.34,1.35L.78,56.84c-.48-.28-.78-.79-.78-1.35v-20.85c0-.56.3-1.07.78-1.35L58.07.21c.48-.28,1.08-.28,1.56,0l16.5,9.53c1.04.6,1.04,2.1,0,2.7L20.4,44.61c-.48.28-.78.79-.78,1.35ZM58.15,114.8L2.41,82.62c-1.04-.6-2.34.15-2.34,1.35v19.05c0,.56.29,1.07.78,1.35l57.29,33.08c.48.28,1.08.28,1.56,0l18.06-10.43c.48-.28.78-.79.78-1.35v-19.05c0-1.2-1.3-1.95-2.34-1.35l-16.5,9.53c-.48.28-1.08.28-1.56,0ZM98.08,45.72v64.35c0,1.2,1.3,1.95,2.34,1.35l16.5-9.52c.48-.28.78-.79.78-1.35V34.39c0-.56-.3-1.07-.78-1.35l-18.06-10.43c-.48-.28-1.08-.28-1.56,0l-16.5,9.53c-1.04.6-1.04,2.1,0,2.7l16.5,9.53c.48.28.78.79.78,1.35ZM77.94,80.54c.38-.3.61-.75.61-1.24v-20.94c0-.49-.23-.94-.61-1.24l-18.31-10.58c-.49-.28-1.08-.28-1.56,0l-18.31,10.58c-.38.3-.61.75-.61,1.24v20.94c0,.49.23.94.61,1.24l18.31,10.58c.47.28,1.07.28,1.56,0l18.31-10.58Z"/></svg>
+		<h1><?php esc_html_e( 'jQuest Popup', 'jquest-' ); ?></h1>
+	</div>
 
 	<?php if ( ! empty( $jquest_tabs ) ) : ?>
 		<div class="nav-tab-wrapper">
@@ -18,6 +21,7 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 
 	<?php if ( 'trigger' === $jquest_lang_key ) : ?>
 
+	<div class="jquest-card">
 	<form method="post" action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>">
 		<?php settings_fields( 'jquest-popup-trigger' ); ?>
 
@@ -157,9 +161,11 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 
 		<?php submit_button(); ?>
 	</form>
+	</div>
 
 	<?php else : ?>
 
+	<div class="jquest-card">
 	<form method="post" action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>">
 		<?php settings_fields( $jquest_group ); ?>
 
@@ -224,7 +230,7 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 						class="regular-text">
 				</td>
 			</tr>
-			<tr>
+			<tr class="jquest-section-divider">
 				<td colspan="2"><h2><?php esc_html_e( 'Advanced', 'jquest-' ); ?></h2></td>
 			</tr>
 			<tr>
@@ -312,6 +318,7 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 
 		<?php submit_button(); ?>
 	</form>
+	</div>
 
 	<?php endif; ?>
 </div>

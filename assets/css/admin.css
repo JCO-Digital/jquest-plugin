@@ -1,0 +1,214 @@
+/* jQuest Admin Styles */
+
+/* ── Page wrapper ─────────────────────────────── */
+.jquest-wrap {
+	max-width: 900px;
+}
+
+/* ── Page header ──────────────────────────────── */
+.jquest-wrap .jquest-page-header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 20px 0 8px;
+}
+
+.jquest-wrap .jquest-page-header h1 {
+	margin: 0;
+	padding: 0;
+	font-size: 1.6rem;
+	font-weight: 600;
+	color: #1a2e40;
+}
+
+.jquest-wrap .jquest-page-header svg {
+	width: 28px;
+	height: 28px;
+	flex-shrink: 0;
+}
+
+/* ── Nav tabs ─────────────────────────────────── */
+.jquest-wrap .nav-tab-wrapper {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border-bottom: 2px solid #e2e8f0;
+}
+
+.jquest-wrap .nav-tab {
+	background: transparent;
+	border: none;
+	border-bottom: 2px solid transparent;
+	margin-bottom: -2px;
+	color: #64748b;
+	font-weight: 500;
+	padding: 10px 16px;
+	transition: color 0.15s, border-color 0.15s;
+}
+
+.jquest-wrap .nav-tab:hover {
+	background: transparent;
+	color: #1a2e40;
+	border-bottom-color: #94a3b8;
+}
+
+.jquest-wrap .nav-tab-active,
+.jquest-wrap .nav-tab-active:hover {
+	background: transparent;
+	color: #1a2e40;
+	border-bottom-color: #1a2e40;
+	font-weight: 600;
+}
+
+/* ── Card ─────────────────────────────────────── */
+.jquest-card {
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	padding: 24px 28px;
+	margin-top: 20px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* ── Form table ───────────────────────────────── */
+.jquest-wrap .form-table {
+	margin: 0;
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
+.jquest-wrap .form-table th {
+	padding: 14px 20px 14px 0;
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: #374151;
+	width: 220px;
+	vertical-align: top;
+}
+
+.jquest-wrap .form-table td {
+	padding: 12px 0;
+	vertical-align: top;
+}
+
+.jquest-wrap .form-table tr:not(:last-child) th,
+.jquest-wrap .form-table tr:not(:last-child) td {
+	border-bottom: 1px solid #f1f5f9;
+}
+
+/* Section divider row (Advanced h2) */
+.jquest-wrap .form-table .jquest-section-divider td {
+	padding-top: 24px;
+	padding-bottom: 4px;
+	border-bottom: none;
+}
+
+.jquest-wrap .form-table .jquest-section-divider h2 {
+	margin: 0;
+	font-size: 0.7rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: #94a3b8;
+}
+
+/* ── Input fields ─────────────────────────────── */
+.jquest-wrap input[type="text"].regular-text,
+.jquest-wrap input[type="text"]:not([class]),
+.jquest-wrap input[type="number"].small-text,
+.jquest-wrap select,
+.jquest-wrap textarea.large-text {
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	padding: 7px 10px;
+	font-size: 0.875rem;
+	color: #1f2937;
+	background: #fff;
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.jquest-wrap input[type="text"].regular-text:focus,
+.jquest-wrap input[type="text"]:not([class]):focus,
+.jquest-wrap input[type="number"].small-text:focus,
+.jquest-wrap select:focus,
+.jquest-wrap textarea.large-text:focus {
+	border-color: #1a2e40;
+	box-shadow: 0 0 0 2px rgba(26, 46, 64, 0.12);
+	outline: none;
+}
+
+.jquest-wrap select {
+	padding-right: 28px;
+	cursor: pointer;
+}
+
+.jquest-wrap textarea.large-text {
+	padding: 10px;
+	resize: vertical;
+	font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+	font-size: 0.8rem;
+}
+
+/* ── Checkbox ─────────────────────────────────── */
+.jquest-wrap input[type="checkbox"] {
+	width: 16px;
+	height: 16px;
+	margin-right: 6px;
+	vertical-align: middle;
+	accent-color: #1a2e40;
+	cursor: pointer;
+}
+
+.jquest-wrap .form-table label {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.875rem;
+	color: #374151;
+	cursor: pointer;
+}
+
+/* ── Color picker override ─────────────────────── */
+.jquest-wrap .wp-picker-container .wp-color-result {
+	border-radius: 6px;
+	border-color: #d1d5db;
+}
+
+/* ── Submit button area ───────────────────────── */
+.jquest-wrap .submit {
+	padding: 16px 0 0;
+}
+
+.jquest-wrap .button-primary {
+	background: #1a2e40;
+	border-color: #1a2e40;
+	color: #fff;
+	border-radius: 6px;
+	padding: 6px 16px;
+	font-size: 0.875rem;
+	font-weight: 500;
+	transition: background 0.15s;
+}
+
+.jquest-wrap .button-primary:hover,
+.jquest-wrap .button-primary:focus {
+	background: #253d52;
+	border-color: #253d52;
+	color: #fff;
+}
+
+/* ── Games section ────────────────────────────── */
+.jquest-games-section {
+	margin-top: 20px;
+}
+
+.jquest-games-section h2 {
+	margin: 0 0 12px;
+	font-size: 1rem;
+	font-weight: 600;
+	color: #1a2e40;
+}
+
+.jquest-wrap .widefat th,
+.jquest-wrap .widefat td {
+	font-size: 0.85rem;
+}
