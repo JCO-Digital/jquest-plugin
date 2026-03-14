@@ -39,6 +39,9 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 					</label>
 				</td>
 			</tr>
+			<tr class="jquest-section-divider">
+				<td colspan="2"><h2><?php esc_html_e( 'Default', 'jquest-' ); ?></h2></td>
+			</tr>
 			<tr>
 				<th scope="row">
 					<label for="jquest_popup_trigger_text_color">
@@ -69,8 +72,25 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 			</tr>
 			<tr>
 				<th scope="row">
+					<label for="jquest_popup_trigger_icon_bg_color">
+						<?php esc_html_e( 'Icon container background', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="text"
+						name="jquest_popup_trigger_icon_bg_color"
+						id="jquest_popup_trigger_icon_bg_color"
+						class="jquest-color-picker"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_icon_bg_color', '' ) ); ?>">
+				</td>
+			</tr>
+			<tr class="jquest-section-divider">
+				<td colspan="2"><h2><?php esc_html_e( 'Hover', 'jquest-' ); ?></h2></td>
+			</tr>
+			<tr>
+				<th scope="row">
 					<label for="jquest_popup_trigger_text_hover_color">
-						<?php esc_html_e( 'Text hover colour', 'jquest-' ); ?>
+						<?php esc_html_e( 'Text colour', 'jquest-' ); ?>
 					</label>
 				</th>
 				<td>
@@ -84,7 +104,7 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 			<tr>
 				<th scope="row">
 					<label for="jquest_popup_trigger_bg_hover_color">
-						<?php esc_html_e( 'Background hover colour', 'jquest-' ); ?>
+						<?php esc_html_e( 'Background colour', 'jquest-' ); ?>
 					</label>
 				</th>
 				<td>
@@ -97,22 +117,8 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 			</tr>
 			<tr>
 				<th scope="row">
-					<label for="jquest_popup_trigger_icon_bg_color">
-						<?php esc_html_e( 'Icon container background', 'jquest-' ); ?>
-					</label>
-				</th>
-				<td>
-					<input type="text"
-						name="jquest_popup_trigger_icon_bg_color"
-						id="jquest_popup_trigger_icon_bg_color"
-						class="jquest-color-picker"
-						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_icon_bg_color', '' ) ); ?>">
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">
 					<label for="jquest_popup_trigger_icon_bg_hover_color">
-						<?php esc_html_e( 'Icon container background hover', 'jquest-' ); ?>
+						<?php esc_html_e( 'Icon container background', 'jquest-' ); ?>
 					</label>
 				</th>
 				<td>

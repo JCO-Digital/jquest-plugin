@@ -232,21 +232,30 @@ function maybe_insert_popup_trigger(): void {
 			z-index: 99;
 			height: 42px;
 			max-width: 100%;
-		}
-		.jquest-popup-toggle a {
-			position: relative;
-			background-color: <?php echo esc_attr( $bg_color ); ?>;
-			cursor: pointer;
-			border-radius: 25px;
-			text-decoration: none;
-			color: <?php echo esc_attr( $text_color ); ?>;
-			padding: 11px 53px 11px 23px;
-			font-weight: 400;
-			display: flex;
+			transition: all .3s;
+			> * {
+				transition: all .3s;
+			}
+
+			a {
+				position: relative;
+				background-color: <?php echo esc_attr( $bg_color ); ?>;
+				cursor: pointer;
+				border-radius: 25px;
+				text-decoration: none;
+				color: <?php echo esc_attr( $text_color ); ?>;
+				padding: 11px 53px 11px 23px;
+				font-weight: 400;
+				display: flex;
     		height: 100%;
-		      .label{
-		      line-height: 18px;
-		      }
+			      .label{
+			      line-height: 18px;
+			      }
+			}
+
+			&.no-icon a{
+				padding: 11px 23px;
+			}
 		}
 		.jquest-popup-toggle a:hover {
 			background-color: <?php echo esc_attr( $bg_hover_color ); ?>;
@@ -279,7 +288,7 @@ function maybe_insert_popup_trigger(): void {
 			}
 		}
 	</style>
-	<div class="jquest-popup-toggle">
+	<div class="jquest-popup-toggle <?php echo isset( $icon ) && '' !== $icon ? 'has-icon' : 'no-icon'; ?>">
 		<a href="#jquest-popup-<?php echo esc_attr( $quest_id ); ?>">
 			<?php if ( '' !== $label || '' !== $label_mobile ) : ?>
 				<span class="label">
