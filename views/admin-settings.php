@@ -44,7 +44,7 @@ use jQuestPlugin\JQuest_table;
 				<h2><?php esc_html_e( 'Organisation Games', 'jquest-' ); ?></h2>
 			</div>
 			<?php
-			$table = new Jquest_table();
+			$table = new JQuest_table();
 			$table->prepare_items();
 			$table->display();
 			?>

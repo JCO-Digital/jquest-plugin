@@ -5,7 +5,7 @@
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '04fc969f9cb6efd0064c466b4eb2851b03cf2573',
+        'reference' => 'c3a4ed7122c4744575fd6e7ee8efc79af21bc37a',
         'name' => 'jcodigital/jquest-plugin',
         'dev' => true,
     ),
@@ -25,7 +25,7 @@
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '04fc969f9cb6efd0064c466b4eb2851b03cf2573',
+            'reference' => 'c3a4ed7122c4744575fd6e7ee8efc79af21bc37a',
             'dev_requirement' => false,
         ),
         'phpcsstandards/phpcsextra' => array(

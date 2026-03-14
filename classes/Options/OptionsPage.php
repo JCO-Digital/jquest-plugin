@@ -36,13 +36,14 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	public function jquest_plugin_refresh_games(): void {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		check_admin_referer( 'my_plugin_button_action_nonce', 'my_plugin_button_action_nonce_field' );
+
 		if ( isset( $_POST['jquest_refresh_games'] ) ) {
 			if ( trim( get_option( 'jquest_org_id', '' ) ) !== '' ) {
 				fetch_jquests( get_option( 'jquest_org_id' ) );
 			}
 
-			$referer = $_SERVER['HTTP_REFERER'] ?? admin_url( 'options-general.php?page=jquest-option' );
+			$referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( $_SERVER['HTTP_REFERER'] ) : admin_url( 'options-general.php?page=jquest-option' );
 			wp_safe_redirect( $referer );
 			exit;
 		}
@@ -56,7 +57,7 @@ class OptionsPage extends Singleton {
 	public function jquest_plugin_option_updated( $option_name, $old_value, $new_value ): void {
 		if ( $option_name === 'jquest_org_id' && $old_value !== $new_value ) {
 			if ( trim( $new_value ) !== '' ) {
-				fetch_jquests( get_option( 'jquest_org_id' ) );
+				fetch_jquests( $new_value );
 			} else {
 				update_option( 'jquest_org_games', array() );
 			}
@@ -189,6 +190,7 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	final public function render_page(): void {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 
 		$tab  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'general'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$data = array(
