@@ -33,4 +33,5 @@ stop:
 
 clean:
 	rm -rf node_modules
+	rm -rf vendor
 	rm -rf build
