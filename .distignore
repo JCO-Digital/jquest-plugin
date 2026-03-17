@@ -41,3 +41,6 @@ node_modules
 *.sql
 *.tar.gz
 *.zip
+Makefile
+.wp
+versionSync.mjs

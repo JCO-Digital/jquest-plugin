@@ -3,7 +3,12 @@ phpcs.xml
 phpunit.xml
 Thumbs.db
 wp-cli.local.yml
-node_modules/
+/node_modules/
+/vendor/bin/
+/vendor/dealerdirect/
+/vendor/phpcsstandards/
+/vendor/squizlabs/
+/vendor/wp-coding-standards/
 *.sql
 *.tar.gz
 *.zip
@@ -13,3 +18,4 @@ node_modules/
 /.idea/*
 /.history/
 .phpactor.json
+/build/
