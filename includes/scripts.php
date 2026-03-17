@@ -27,6 +27,7 @@ function insert_jquest_script( string $url ): void {
 	?>
 	<script
 		data-cookieconsent="ignore"
+		data-ot-ignore
 		type="module"
 		src="<?php echo esc_url( $url ); ?>"></script>
 	<?php
