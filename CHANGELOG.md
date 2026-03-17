@@ -1,9 +1,12 @@
+
 # [1.2.0](https://github.com/JCO-Digital/jquest-plugin/compare/v1.3.0...v1.2.0) (2026-03-17)
 
 
 ### Features
 
 * **changelog:** automate generation via conventional-changelog ([d6ffbf6](https://github.com/JCO-Digital/jquest-plugin/commit/d6ffbf6f9a05021265d7bbbad2e937819c0bb236))
+
+# [1.3.0](https://github.com/JCO-Digital/jquest-plugin/compare/v1.2.4...v1.3.0) (2026-03-14)
 
 ## [1.2.4](https://github.com/JCO-Digital/jquest-plugin/compare/v1.2.3...v1.2.4) (2026-03-14)
 
