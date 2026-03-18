@@ -181,13 +181,32 @@ class OptionsPage extends Singleton {
 		);
 
 		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_enabled', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_font_size', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_font_weight', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_underline_width', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_underline_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_underline_hover_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
 		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_text_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
 		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_bg_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
 		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_text_hover_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
 		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_bg_hover_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
 		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_bg_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
 		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_bg_hover_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_hover_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
 		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_mode', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_container_size', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_container_border_radius', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_items_gap', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_size', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_side', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_offset_x', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_offset_y', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_border_radius', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_padding_top', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_padding_right', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_padding_bottom', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_padding_left', array( 'sanitize_callback' => 'absint' ) );
 		register_setting(
 			'jquest-popup-trigger',
 			'jquest_popup_trigger_icon_custom',

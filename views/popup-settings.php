@@ -39,13 +39,195 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 					</label>
 				</td>
 			</tr>
+
+<tr class="jquest-section-divider">
+				<td colspan="2"><h2><?php esc_html_e( 'Position', 'jquest-' ); ?></h2></td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_side">
+						<?php esc_html_e( 'Side', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<select name="jquest_popup_trigger_side" id="jquest_popup_trigger_side">
+						<option value="right" <?php selected( get_option( 'jquest_popup_trigger_side', 'right' ), 'right' ); ?>>
+							<?php esc_html_e( 'Right', 'jquest-' ); ?>
+						</option>
+						<option value="left" <?php selected( get_option( 'jquest_popup_trigger_side', 'right' ), 'left' ); ?>>
+							<?php esc_html_e( 'Left', 'jquest-' ); ?>
+						</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_offset_x">
+						<?php esc_html_e( 'X offset (px)', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_offset_x"
+						id="jquest_popup_trigger_offset_x"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_offset_x', 16 ) ); ?>"
+						min="0"
+						class="small-text">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_offset_y">
+						<?php esc_html_e( 'Y offset (px)', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_offset_y"
+						id="jquest_popup_trigger_offset_y"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_offset_y', 16 ) ); ?>"
+						min="0"
+						class="small-text">
+				</td>
+			</tr>
+
 			<tr class="jquest-section-divider">
-				<td colspan="2"><h2><?php esc_html_e( 'Default', 'jquest-' ); ?></h2></td>
+				<td colspan="2"><h2><?php esc_html_e( 'Layout', 'jquest-' ); ?></h2></td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_border_radius">
+						<?php esc_html_e( 'Border radius (px)', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_border_radius"
+						id="jquest_popup_trigger_border_radius"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_border_radius', 25 ) ); ?>"
+						min="0"
+						class="small-text">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_padding_top">
+						<?php esc_html_e( 'Padding top (px)', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_padding_top"
+						id="jquest_popup_trigger_padding_top"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_padding_top', 11 ) ); ?>"
+						min="0"
+						class="small-text">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_padding_right">
+						<?php esc_html_e( 'Padding right (px)', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_padding_right"
+						id="jquest_popup_trigger_padding_right"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_padding_right', 23 ) ); ?>"
+						min="0"
+						class="small-text">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_padding_bottom">
+						<?php esc_html_e( 'Padding bottom (px)', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_padding_bottom"
+						id="jquest_popup_trigger_padding_bottom"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_padding_bottom', 11 ) ); ?>"
+						min="0"
+						class="small-text">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_padding_left">
+						<?php esc_html_e( 'Padding left (px)', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_padding_left"
+						id="jquest_popup_trigger_padding_left"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_padding_left', 23 ) ); ?>"
+						min="0"
+						class="small-text">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_items_gap">
+						<?php esc_html_e( 'Items gap (px)', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_items_gap"
+						id="jquest_popup_trigger_items_gap"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_items_gap', 8 ) ); ?>"
+						min="0"
+						class="small-text">
+				</td>
+			</tr>
+
+			<tr class="jquest-section-divider">
+				<td colspan="2"><h2><?php esc_html_e( 'Typography', 'jquest-' ); ?></h2></td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_font_size">
+						<?php esc_html_e( 'Font size (px)', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_font_size"
+						id="jquest_popup_trigger_font_size"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_font_size', 18 ) ); ?>"
+						min="0"
+						class="small-text">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_font_weight">
+						<?php esc_html_e( 'Font weight', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_font_weight"
+						id="jquest_popup_trigger_font_weight"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_font_weight', '400' ) ); ?>"
+						min="100"
+						max="900"
+						step="100"
+						class="small-text">
+				</td>
+			</tr>
+
+			<tr class="jquest-section-divider">
+				<td colspan="2"><h2><?php esc_html_e( 'Colors', 'jquest-' ); ?></h2></td>
 			</tr>
 			<tr>
 				<th scope="row">
 					<label for="jquest_popup_trigger_text_color">
-						<?php esc_html_e( 'Text colour', 'jquest-' ); ?>
+						<?php esc_html_e( 'Text', 'jquest-' ); ?>
 					</label>
 				</th>
 				<td>
@@ -59,7 +241,7 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 			<tr>
 				<th scope="row">
 					<label for="jquest_popup_trigger_bg_color">
-						<?php esc_html_e( 'Background colour', 'jquest-' ); ?>
+						<?php esc_html_e( 'Background', 'jquest-' ); ?>
 					</label>
 				</th>
 				<td>
@@ -72,8 +254,51 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 			</tr>
 			<tr>
 				<th scope="row">
+					<label for="jquest_popup_trigger_underline_color">
+						<?php esc_html_e( 'Underline', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="text"
+						name="jquest_popup_trigger_underline_color"
+						id="jquest_popup_trigger_underline_color"
+						class="jquest-color-picker"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_underline_color', '' ) ); ?>">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_underline_width">
+						<?php esc_html_e( 'Underline width (px)', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_underline_width"
+						id="jquest_popup_trigger_underline_width"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_underline_width', 1 ) ); ?>"
+						min="0"
+						class="small-text">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_icon_color">
+						<?php esc_html_e( 'Icon', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="text"
+						name="jquest_popup_trigger_icon_color"
+						id="jquest_popup_trigger_icon_color"
+						class="jquest-color-picker"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_icon_color', '' ) ); ?>">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
 					<label for="jquest_popup_trigger_icon_bg_color">
-						<?php esc_html_e( 'Icon container background', 'jquest-' ); ?>
+						<?php esc_html_e( 'Icon container', 'jquest-' ); ?>
 					</label>
 				</th>
 				<td>
@@ -84,13 +309,14 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_icon_bg_color', '' ) ); ?>">
 				</td>
 			</tr>
+
 			<tr class="jquest-section-divider">
-				<td colspan="2"><h2><?php esc_html_e( 'Hover', 'jquest-' ); ?></h2></td>
+				<td colspan="2"><h2><?php esc_html_e( 'Colors: Hover', 'jquest-' ); ?></h2></td>
 			</tr>
 			<tr>
 				<th scope="row">
 					<label for="jquest_popup_trigger_text_hover_color">
-						<?php esc_html_e( 'Text colour', 'jquest-' ); ?>
+						<?php esc_html_e( 'Text', 'jquest-' ); ?>
 					</label>
 				</th>
 				<td>
@@ -104,7 +330,7 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 			<tr>
 				<th scope="row">
 					<label for="jquest_popup_trigger_bg_hover_color">
-						<?php esc_html_e( 'Background colour', 'jquest-' ); ?>
+						<?php esc_html_e( 'Background', 'jquest-' ); ?>
 					</label>
 				</th>
 				<td>
@@ -117,8 +343,36 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 			</tr>
 			<tr>
 				<th scope="row">
+					<label for="jquest_popup_trigger_underline_hover_color">
+						<?php esc_html_e( 'Underline', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="text"
+						name="jquest_popup_trigger_underline_hover_color"
+						id="jquest_popup_trigger_underline_hover_color"
+						class="jquest-color-picker"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_underline_hover_color', '' ) ); ?>">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_icon_hover_color">
+						<?php esc_html_e( 'Icon', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="text"
+						name="jquest_popup_trigger_icon_hover_color"
+						id="jquest_popup_trigger_icon_hover_color"
+						class="jquest-color-picker"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_icon_hover_color', '' ) ); ?>">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
 					<label for="jquest_popup_trigger_icon_bg_hover_color">
-						<?php esc_html_e( 'Icon container background', 'jquest-' ); ?>
+						<?php esc_html_e( 'Icon container', 'jquest-' ); ?>
 					</label>
 				</th>
 				<td>
@@ -128,6 +382,10 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 						class="jquest-color-picker"
 						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_icon_bg_hover_color', '' ) ); ?>">
 				</td>
+			</tr>
+
+			<tr class="jquest-section-divider">
+				<td colspan="2"><h2><?php esc_html_e( 'Icon', 'jquest-' ); ?></h2></td>
 			</tr>
 			<tr>
 				<th scope="row">
@@ -161,6 +419,51 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 						id="jquest_popup_trigger_icon_custom"
 						rows="5"
 						class="large-text code"><?php echo esc_textarea( get_option( 'jquest_popup_trigger_icon_custom', '' ) ); ?></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_icon_size">
+						<?php esc_html_e( 'Icon size (px)', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_icon_size"
+						id="jquest_popup_trigger_icon_size"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_icon_size', 20 ) ); ?>"
+						min="0"
+						class="small-text">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_icon_container_size">
+						<?php esc_html_e( 'Container size (px)', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_icon_container_size"
+						id="jquest_popup_trigger_icon_container_size"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_icon_container_size', 29 ) ); ?>"
+						min="0"
+						class="small-text">
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_icon_container_border_radius">
+						<?php esc_html_e( 'Container border radius (px)', 'jquest-' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_icon_container_border_radius"
+						id="jquest_popup_trigger_icon_container_border_radius"
+						value="<?php echo esc_attr( get_option( 'jquest_popup_trigger_icon_container_border_radius', 50 ) ); ?>"
+						min="0"
+						class="small-text">
 				</td>
 			</tr>
 		</table>
