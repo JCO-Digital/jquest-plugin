@@ -1,6 +1,6 @@
 {
   "name": "jquest-plugin",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "main": "Gruntfile.js",
   "author": "J&Co Digital <maxemilian@jco.fi>",
   "scripts": {
