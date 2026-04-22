@@ -220,6 +220,9 @@ function output_popup_trigger_styles(): void
 	$underline_width = (int) get_option('jquest_popup_trigger_underline_width', 1);
 	$underline_color = get_option('jquest_popup_trigger_underline_color', '');
 	$underline_hover_color = get_option('jquest_popup_trigger_underline_hover_color', '');
+	$minimized = (bool) get_option('jquest_popup_trigger_minimized', 0);
+	$watch_selector = get_option('jquest_popup_trigger_watch_selector', 'footer');
+	$watch_threshold = (int) get_option('jquest_popup_trigger_watch_threshold', 10);
 	// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 	?>
 	<style>
@@ -302,7 +305,39 @@ function output_popup_trigger_styles(): void
 				display: none !important;
 			}
 		}
+		<?php if ($minimized): ?>
+		.jquest-popup-toggle.is-minimized a {
+			border-radius: 50%;
+			padding: <?php echo esc_attr($padding_top); ?>px;
+		}
+		.jquest-popup-toggle.is-minimized .label {
+			display: none;
+		}
+		<?php endif; ?>
 	</style>
+	<?php if ($minimized): ?>
+	<script>
+	(function () {
+		var selector  = <?php echo wp_json_encode($watch_selector); ?>;
+		var threshold = <?php echo esc_js($watch_threshold / 100); ?>;
+		function init() {
+			var toggles = document.querySelectorAll('.jquest-popup-toggle');
+			if (!toggles.length) return;
+			var target = document.querySelector(selector);
+			if (!target) return;
+			new IntersectionObserver(function (entries) {
+				var visible = entries[0].isIntersecting;
+				toggles.forEach(function (el) { el.classList.toggle('is-minimized', visible); });
+			}, { threshold: threshold }).observe(target);
+		}
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', init);
+		} else {
+			init();
+		}
+	})();
+	</script>
+	<?php endif; ?>
 	<?php
 	// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 }

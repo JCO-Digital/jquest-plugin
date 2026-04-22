@@ -181,6 +181,9 @@ class OptionsPage extends Singleton {
 		);
 
 		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_enabled', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_minimized', array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_watch_selector', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_watch_threshold', array( 'sanitize_callback' => 'absint' ) );
 		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_font_size', array( 'sanitize_callback' => 'absint' ) );
 		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_font_weight', array( 'sanitize_callback' => 'sanitize_text_field' ) );
 		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_underline_width', array( 'sanitize_callback' => 'absint' ) );

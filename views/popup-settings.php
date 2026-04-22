@@ -59,6 +59,51 @@ $jquest_group = 'jquest-popup-' . $jquest_lang_key;
 					</label>
 				</td>
 			</tr>
+			<tr>
+				<th scope="row"><?php esc_html_e('Minimize trigger', 'jquest-'); ?></th>
+				<td>
+					<input type="hidden" name="jquest_popup_trigger_minimized" value="0">
+					<label>
+						<input type="checkbox"
+							name="jquest_popup_trigger_minimized"
+							value="1"
+							<?php checked(get_option('jquest_popup_trigger_minimized', 0), 1); ?>>
+						<?php esc_html_e('Minimizes trigger at bottom of screen', 'jquest-'); ?>
+					</label>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_watch_selector">
+						<?php esc_html_e('Watch selector', 'jquest-'); ?>
+					</label>
+				</th>
+				<td>
+					<input type="text"
+						name="jquest_popup_trigger_watch_selector"
+						id="jquest_popup_trigger_watch_selector"
+						value="<?php echo esc_attr(get_option('jquest_popup_trigger_watch_selector', 'footer')); ?>"
+						class="regular-text">
+					<p class="description"><?php esc_html_e('CSS selector of element to watch (querySelector)', 'jquest-'); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="jquest_popup_trigger_watch_threshold">
+						<?php esc_html_e('Visibility threshold (%)', 'jquest-'); ?>
+					</label>
+				</th>
+				<td>
+					<input type="number"
+						name="jquest_popup_trigger_watch_threshold"
+						id="jquest_popup_trigger_watch_threshold"
+						value="<?php echo esc_attr(get_option('jquest_popup_trigger_watch_threshold', 10)); ?>"
+						min="0"
+						max="100"
+						class="small-text">
+					<p class="description"><?php esc_html_e('How much of the watched element must be visible (0–100%) before the trigger minimizes', 'jquest-'); ?></p>
+				</td>
+			</tr>
 
 <tr class="jquest-section-divider">
 				<td colspan="2"><h2><?php esc_html_e('Position', 'jquest-'); ?></h2></td>
