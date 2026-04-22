@@ -68,6 +68,18 @@
     "popupLimit": {
       "type": "number",
       "default": 0
+    },
+    "popupTriggerButton": {
+      "type": "boolean",
+      "default": false
+    },
+    "popupTriggerButtonLabel": {
+      "type": "string",
+      "default": ""
+    },
+    "popupTriggerButtonLabelMobile": {
+      "type": "string",
+      "default": ""
     }
   }
 }

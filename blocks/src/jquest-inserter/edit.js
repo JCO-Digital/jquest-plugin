@@ -48,7 +48,10 @@ export default function Edit({ attributes, setAttributes }) {
 		popupLimit,
 		popupDisableDismiss,
 		popupDisableNoscroll,
-		popupAttach
+		popupAttach,
+		popupTriggerButton,
+		popupTriggerButtonLabel,
+		popupTriggerButtonLabelMobile
 	} = attributes;
 
 	// Initialize the state for the games and text.
@@ -189,6 +192,30 @@ export default function Edit({ attributes, setAttributes }) {
 									"If enabled, the popup will open automatically on page load."
 								}
 							/>
+							{!popupAuto && (
+								<>
+									<ToggleControl
+										label={"Add trigger button"}
+										checked={!!popupTriggerButton}
+										onChange={(val) => setAttributes({ popupTriggerButton: val })}
+										help={"Trigger button styling comes from global trigger styles set in jQuest settings"}
+									/>
+									{popupTriggerButton && (
+										<>
+											<TextControl
+												label={"Trigger button label"}
+												value={popupTriggerButtonLabel}
+												onChange={(val) => setAttributes({ popupTriggerButtonLabel: val })}
+											/>
+											<TextControl
+												label={"Trigger button label mobile"}
+												value={popupTriggerButtonLabelMobile}
+												onChange={(val) => setAttributes({ popupTriggerButtonLabelMobile: val })}
+											/>
+										</>
+									)}
+								</>
+							)}
 							{popupAuto && (
 								<>
 									<TextControl

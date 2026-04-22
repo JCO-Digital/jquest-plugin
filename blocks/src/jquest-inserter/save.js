@@ -4,7 +4,7 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps } from "@wordpress/block-editor";
+import { useBlockProps } from '@wordpress/block-editor';
 
 /**
  * The save function defines the way in which the different attributes should
@@ -26,28 +26,51 @@ export default function save({ attributes }) {
 		version,
 		popupDisableNoscroll,
 		popupDisableDismiss,
-		popupAttach
+		popupAttach,
+		popupTriggerButton,
+		popupTriggerButtonLabel,
+		popupTriggerButtonLabelMobile,
 	} = attributes;
+
+	const showTrigger = popup && !popupAuto && popupTriggerButton;
 
 	return (
 		<div
 			{...useBlockProps.save({
-				"data-version": version,
+				'data-version': version,
 			})}
 		>
 			<div
 				className="jquest-app"
 				data-org-id={organization}
 				data-game-id={selectedGame}
-				data-popup={popup ? "true" : "false"}
-				data-popup-auto={popupAuto ? "true" : "false"}
+				data-popup={popup ? 'true' : 'false'}
+				data-popup-auto={popupAuto ? 'true' : 'false'}
 				data-popup-delay={popupDelay}
 				data-popup-limit={popupLimit}
 				data-new-styles="true"
-				data-popup-disable-dismiss={popupDisableDismiss ? "true" : "false"}
-				data-popup-disable-noscroll={popupDisableNoscroll ? "true" : "false"}
+				data-popup-disable-dismiss={popupDisableDismiss ? 'true' : 'false'}
+				data-popup-disable-noscroll={popupDisableNoscroll ? 'true' : 'false'}
 				data-popup-attach={popupAttach ? popupAttach : 'body'}
 			></div>
+			{showTrigger && (
+				<div className="jquest-popup-toggle">
+					<a href={`#jquest-popup-${selectedGame}`}>
+						{(popupTriggerButtonLabel || popupTriggerButtonLabelMobile) && (
+							<span className="label">
+								{popupTriggerButtonLabel && (
+									<span className="desktop-only">{popupTriggerButtonLabel}</span>
+								)}
+								{popupTriggerButtonLabelMobile && (
+									<span className="mobile-only">
+										{popupTriggerButtonLabelMobile}
+									</span>
+								)}
+							</span>
+						)}
+					</a>
+				</div>
+			)}
 		</div>
 	);
 }
