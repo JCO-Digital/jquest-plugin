@@ -8,3 +8,9 @@ const JQUEST_TEXT_DOMAIN = 'jquest-';
 
 const JQUEST_PLUGIN_PATH = __DIR__;
 define( 'JQUEST_PLUGIN_URI', plugin_dir_url( __FILE__ ) );
+
+// Single source of truth for the version: the plugin header in jquest-plugin.php.
+define(
+	'JQUEST_PLUGIN_VERSION',
+	get_file_data( __DIR__ . '/jquest-plugin.php', array( 'Version' => 'Version' ) )['Version']
+);

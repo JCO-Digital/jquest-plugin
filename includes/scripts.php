@@ -14,28 +14,21 @@ namespace jQuestPlugin\Scripts;
  *
  * @return void
  */
-function insert_jquest_script(string $url): void
-{
-	static $inserted = false;
+ function insert_jquest_script(string $url): void
+ {
+     // Extract a unique handle from the URL (e.g., 'jquest-stable' or 'jquest-latest')
+     $handle = str_contains($url, 'latest') ? 'jquest-latest' : 'jquest-stable';
 
-	if ($inserted) {
-		return;
-	}
+     // Register and enqueue it using WordPress's native Module API
+     wp_register_script_module(
+         $handle,
+         $url,
+         array(),
+         \JQUEST_PLUGIN_VERSION
+     );
 
-	$inserted = true;
-	// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-	?>
-	<script
-		data-cookieconsent="ignore"
-		data-ot-ignore
-		data-cookieyes="ignore"
-		type="module"
-		src="<?php echo esc_url($url); ?>"></script>
-	<?php
-	// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
-
-
-}
+     wp_enqueue_script_module($handle);
+ }
 
 /**
  * Checks the post content for JQUEST blocks and inserts the script if found.
@@ -88,15 +81,13 @@ function contains_jquest_insterter($block): array
 	if ('jquest-inserter/jquest-inserter' === $block['blockName']) {
 		$return_value['has_jquest_blocks'] = true;
 		if (false === $return_value['version']) {
-			// Unfortunately, this is the only way to get the default attributes from the block...
-			// This could be avoided by just assuming the default value, but then we would need to keep the block.json in sync with this.
-			$rendered_block = apply_filters('the_content', render_block($block));
-			if (strpos($rendered_block, 'data-version="stable"') !== false) {
-				$return_value['version'] = 'stable';
-			}
-			if (strpos($rendered_block, 'data-version="latest"') !== false) {
-				$return_value['version'] = 'latest';
-			}
+			// Read the attribute directly. WordPress omits attributes equal to
+			// their default from the block comment, so fall back to the block's
+			// registered default (kept in sync with block.json automatically).
+			$block_type = \WP_Block_Type_Registry::get_instance()
+				->get_registered('jquest-inserter/jquest-inserter');
+			$default_version = $block_type->attributes['version']['default'] ?? 'stable';
+			$return_value['version'] = $block['attrs']['version'] ?? $default_version;
 		}
 	}
 
@@ -106,7 +97,9 @@ function contains_jquest_insterter($block): array
 
 			$return_value['has_jquest_blocks'] =
 				$return_value['has_jquest_blocks'] || $inner_values['has_jquest_blocks'];
-			$return_value['version'] = $return_value['version'];
+			if (false === $return_value['version']) {
+				$return_value['version'] = $inner_values['version'];
+			}
 		}
 	}
 
