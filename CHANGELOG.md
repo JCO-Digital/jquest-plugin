@@ -1,4 +1,11 @@
-# [1.5.0](https://github.com/JCO-Digital/jquest-plugin/compare/v1.4.0...v1.5.0) (2026-04-22)
+## [1.5.1](https://github.com/JCO-Digital/jquest-plugin/compare/v1.5.0...v1.5.1) (2026-06-16)
+
+
+### Bug Fixes
+
+* fixed way jquest script is loaded into site ([5ba9b8f](https://github.com/JCO-Digital/jquest-plugin/commit/5ba9b8ffdc503f7b7c2faddacc6a9f6f95660a6c))
+
+# [1.4.0](https://github.com/JCO-Digital/jquest-plugin/compare/v1.3.1...v1.4.0) (2026-03-18)
 
 ## [1.3.1](https://github.com/JCO-Digital/jquest-plugin/compare/v1.3.0...v1.3.1) (2026-03-18)
 
