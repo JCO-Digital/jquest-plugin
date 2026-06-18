@@ -2,7 +2,7 @@
 
 all: install build
 
-check:
+check: install
 	pnpm run check
 
 dev: install watch
