@@ -1,98 +1,339 @@
-## [1.5.1](https://github.com/JCO-Digital/jquest-plugin/compare/v1.5.0...v1.5.1) (2026-06-16)
+# Changelog
 
+## 1.6.0 (2026-06-18)
 
-### Bug Fixes
+#### Features
 
-* fixed way jquest script is loaded into site ([5ba9b8f](https://github.com/JCO-Digital/jquest-plugin/commit/5ba9b8ffdc503f7b7c2faddacc6a9f6f95660a6c))
+- plugin: add update mechanism and remove dev dependencies (269faee)
 
-# [1.4.0](https://github.com/JCO-Digital/jquest-plugin/compare/v1.3.1...v1.4.0) (2026-03-18)
+#### Styles
 
-## [1.3.1](https://github.com/JCO-Digital/jquest-plugin/compare/v1.3.0...v1.3.1) (2026-03-18)
+- scripts: apply WordPress coding standards to script functions (3140e39)
 
+#### Build System
 
-### Features
+- ci: update release workflow and environment configuration (4a3a20f)
 
-* **changelog:** automate generation via conventional-changelog ([d6ffbf6](https://github.com/JCO-Digital/jquest-plugin/commit/d6ffbf6f9a05021265d7bbbad2e937819c0bb236))
+#### Continuous Integration
 
-# [1.3.0](https://github.com/JCO-Digital/jquest-plugin/compare/v1.2.4...v1.3.0) (2026-03-14)
+- github: add composer to release workflow and update check dependency (cfe398a)
 
-## [1.2.4](https://github.com/JCO-Digital/jquest-plugin/compare/v1.2.3...v1.2.4) (2026-03-14)
+#### Maintenance
 
-## [1.2.3](https://github.com/JCO-Digital/jquest-plugin/compare/v1.1.2...v1.2.3) (2026-03-14)
+- config: add and configure phpcs.xml ruleset (1f671fc)
+- build: setup linting, add checks, and clean up files (610277c)
+- languages: remove outdated pot file (2a3faf4)
+- vendor: remove composer autoloader files (64569b7)
+- build: rename exclusion file and remove redundant documentation (22aca6b)
 
-## [1.1.2](https://github.com/JCO-Digital/jquest-plugin/compare/v1.1.0...v1.1.2) (2026-01-11)
+### v1.5.1 (2026-06-16)
 
-# [1.1.0](https://github.com/JCO-Digital/jquest-plugin/compare/v1.0.0...v1.1.0) (2025-12-04)
+#### Bug Fixes
 
-# [1.0.0](https://github.com/JCO-Digital/jquest-plugin/compare/v0.5.6...v1.0.0) (2025-11-17)
+- fixed way jquest script is loaded into site (5ba9b8f)
 
-## [0.5.6](https://github.com/JCO-Digital/jquest-plugin/compare/v0.5.5...v0.5.6) (2025-09-22)
+## v1.5.0 (2026-04-22)
 
+#### Features
 
-### Bug Fixes
+- minimization behavior (35eab82)
+- able to add individual trigger buttons from jquest gutenberg block (ff8645d)
 
-* dont crash on maybe_insert_jquest_scripts ([3042978](https://github.com/JCO-Digital/jquest-plugin/commit/304297875dc891880220c1998c03ee1dea67695a))
+## v1.4.0 (2026-03-18)
 
-## [0.5.5](https://github.com/JCO-Digital/jquest-plugin/compare/v0.5.2...v0.5.5) (2025-06-06)
+#### Features
 
-## [0.5.2](https://github.com/JCO-Digital/jquest-plugin/compare/v0.5.1...v0.5.2) (2025-05-16)
+- preview area in settings (4537647)
+- More customization settings (ed4ecbb)
 
-## [0.5.1](https://github.com/JCO-Digital/jquest-plugin/compare/v0.5.0...v0.5.1) (2025-05-16)
+#### Bug Fixes
 
-# [0.5.0](https://github.com/JCO-Digital/jquest-plugin/compare/v0.4.7...v0.5.0) (2025-05-16)
+- cookieyes cookie ignore attribute (d587da9)
 
+### v1.3.1 (2026-03-18)
 
-### Features
+#### Features
 
-* rework script handling for JQUEST blocks, move the script from the block to the head. ✨ ([b9a8acc](https://github.com/JCO-Digital/jquest-plugin/commit/b9a8acc866aad7f4d645286e90b620ef9a705aeb))
+- changelog: automate generation via conventional-changelog (d6ffbf6)
 
-## [0.4.7](https://github.com/JCO-Digital/jquest-plugin/compare/v0.4.5...v0.4.7) (2025-05-15)
+#### Bug Fixes
 
+- test? (b975691)
+- cookiesYes ignore support (a5afdf6)
 
-### Bug Fixes
+#### Build System
 
-* correct filename ([fa99088](https://github.com/JCO-Digital/jquest-plugin/commit/fa99088737df42ded78425dfbd477dde8abfd13f))
-* update version script to include pnpm start ([38222e8](https://github.com/JCO-Digital/jquest-plugin/commit/38222e842e92b74600b6af7dd8a44a0119d7f071))
+- makefile: remove vendor directory in clean target (63eba5e)
+- release: Add makefile and scripts to create a release on github. (e4787a3)
 
-## [0.4.5](https://github.com/JCO-Digital/jquest-plugin/compare/v0.4.4...v0.4.5) (2025-05-15)
+#### Maintenance
 
+- clean vendor folder (e1acf7e)
 
-### Features
+## v1.3.0 (2026-03-14)
 
-* Add versionSync script to update plugin version in files ✨ ([2cda367](https://github.com/JCO-Digital/jquest-plugin/commit/2cda3673bfea38f9650618411c481f21db8ef633))
+#### Bug Fixes
 
-## [0.4.4](https://github.com/JCO-Digital/jquest-plugin/compare/v0.4.3...v0.4.4) (2025-05-13)
+- styling changes + sectioned trigger colors (82ca356)
 
-## [0.4.3](https://github.com/JCO-Digital/jquest-plugin/compare/v0.4.1...v0.4.3) (2025-05-12)
+### v1.2.4 (2026-03-14)
 
+#### Bug Fixes
 
-### Bug Fixes
+- no polylang (19d36f8)
 
-* Fixed a typo in link to settings page. 🐛 ✏ ([0dbb734](https://github.com/JCO-Digital/jquest-plugin/commit/0dbb7340ea0ed9f6f7ed2257092d53fff73e67b3))
+#### Maintenance
 
+- pot? (66dc825)
 
-### Features
+### v1.2.3 (2026-03-14)
 
-* edit in dash button added ([b314910](https://github.com/JCO-Digital/jquest-plugin/commit/b31491094af49a729a4652c0234870d69077c311))
-* Set correct version in package.json ([7fc609f](https://github.com/JCO-Digital/jquest-plugin/commit/7fc609fd5d286cbeb578d9f2741f90d95e1682b2))
+#### Features
 
-## [0.3.6](https://github.com/JCO-Digital/jquest-plugin/compare/v0.3.5...v0.3.6) (2024-10-12)
+- Trigger customization added (0f3700f)
+- popup settings (b4ea751)
 
-## [0.3.5](https://github.com/JCO-Digital/jquest-plugin/compare/v0.3.4...v0.3.5) (2024-10-01)
+#### Styles
 
-## [0.3.4](https://github.com/JCO-Digital/jquest-plugin/compare/v0.3.3...v0.3.4) (2024-09-24)
+- added styles to admin (7282adc)
 
-## [0.3.1](https://github.com/JCO-Digital/jquest-plugin/compare/v0.2.0...v0.3.1) (2024-08-08)
+#### Maintenance
 
-# [0.2.0](https://github.com/JCO-Digital/jquest-plugin/compare/v0.1.3...v0.2.0) (2024-06-04)
+- gitignore change (4cba845)
+- removed deprecated file (2330871)
 
-## [0.1.3](https://github.com/JCO-Digital/jquest-plugin/compare/v0.1.2...v0.1.3) (2024-02-08)
+### Vibe
+- cleanup (eca2ec2)
 
-## [0.1.2](https://github.com/JCO-Digital/jquest-plugin/compare/v0.1.1...v0.1.2) (2024-02-07)
+### v1.1.2 (2026-01-11)
 
+#### Bug Fixes
 
-### Bug Fixes
+- changed cookieconsent attribute on script element (75f687a)
 
-* changed type to wordpress-plugin and modified authors 🩹 ([81ea793](https://github.com/JCO-Digital/jquest-plugin/commit/81ea7931972360a7b898f899448370e2c4cd3db2))
+#### Maintenance
 
-## 0.1.1 (2024-02-07)
+- patch (688bc77)
+
+## v1.1.0 (2025-12-04)
+
+#### Features
+
+- added more data attributes + fixed slight bug in script insertion (e341bad)
+
+## v1.0.0 (2025-11-17)
+
+#### Features
+
+- new functions (ac6c17f)
+
+#### Bug Fixes
+
+- removed print (ea1d22a)
+
+### v0.5.6 (2025-09-22)
+
+#### Bug Fixes
+
+- dont crash on maybe_insert_jquest_scripts (3042978)
+
+### v0.5.5 (2025-06-06)
+
+#### Bug Fixes
+
+- fixed bug where script didnt load (c462723)
+
+#### Maintenance
+
+- ? (0fd8793)
+- version (7e4369a)
+
+### v0.5.2 (2025-05-16)
+
+#### Maintenance
+
+- include vendor folder (77af58b)
+
+### Hotfix
+- include vendor file for the time being. 🚑 (e131317)
+
+### v0.5.1 (2025-05-16)
+
+#### Maintenance
+
+- add .history directory to Gruntfile exclusion list (1749f71)
+- update Gruntfile to exclude .history directory from processing (e195570)
+
+### Chose
+- add comment to clarify default attribute handling in JQUEST block rendering (d5b5a64)
+
+## v0.5.0 (2025-05-16)
+
+#### Features
+
+- rework script handling for JQUEST blocks, move the script from the block to the head. ✨ (b9a8acc)
+
+#### Refactor
+
+- clean up code formatting and improve consistency in consts, options, and table classes ♻️ (b7789e0)
+
+#### Maintenance
+
+- update .gitignore to include /vendor/ directory (d9736e8)
+- remove vendor from git and remove unused deps (0e57cbb)
+
+### v0.4.7 (2025-05-15)
+
+#### Bug Fixes
+
+- update version script to include pnpm start (38222e8)
+- correct filename (fa99088)
+
+#### Maintenance
+
+- bump version to 0.4.6 and update readme filename (b25ab48)
+
+### v0.4.5 (2025-05-15)
+
+#### Features
+
+- Add versionSync script to update plugin version in files ✨ (2cda367)
+
+### v0.4.4 (2025-05-13)
+
+#### Styles
+
+- fix styles (feed887)
+
+### v0.4.3 (2025-05-12)
+
+#### Features
+
+- edit in dash button added (b314910)
+
+#### Styles
+
+- logo and colors to match branding (1fafdb5)
+
+#### Build System
+
+- Add postVersion script to npm scripts. (8c32b95)
+
+### v0.4.1 (2025-01-17)
+
+#### Features
+
+- Set correct version in package.json (7fc609f)
+
+#### Bug Fixes
+
+- Fixed a typo in link to settings page. 🐛 ✏ (0dbb734)
+
+## v0.4.0 (2025-01-13)
+
+#### Features
+
+- Removed Strauss & vendor prefixed. (c09724c)
+- Removed Strauss & vendor prefixed. (5c65d24)
+- WP_List_Table (05439a4)
+- Refresh quest list functionality added. (8b32b2f)
+- jquest inserter block changed to support new styles & staging. (0aaee40)
+- Added checkboxes to block editor. (256de4d)
+- Display games (af4612c)
+- Functionality to set org id (6209a7e)
+- Started reworking plugin without timber. (da60df5)
+
+#### Bug Fixes
+
+- rekai -> jquest (212b9ed)
+
+#### Maintenance
+
+- removed space from package.json (3a01f5a)
+- Removed more stuff I think isnt needed. (c8ddaf8)
+- Removing bloat that made me confused that I dont think is needed. (fbc038a)
+- I dont think these are required.. SO REMOVEEEE 2.0 Electric boogaloo (c561f08)
+- I dont think these are required.. SO REMOVEEEE (4ada121)
+
+### v0.3.6 (2024-10-12)
+
+#### Features
+
+- refesh quest button (305b56c)
+
+#### Bug Fixes
+
+- I think these files should be added? As vendor is wanted? (8afc73b)
+- Trying to get plugins to work 5.5 (237fbaf)
+
+### Stash
+- SO I can access from laptop. (598d0b7)
+
+### v0.3.5 (2024-10-01)
+
+### Misc
+- removed vendor prefixed, its buggy (e4197a7)
+
+### v0.3.4 (2024-09-24)
+
+#### Bug Fixes
+
+- Vendor (c21ac4d)
+
+### v0.3.3 (2024-08-08)
+
+### v0.3.2 (2024-08-08)
+
+#### Bug Fixes
+
+- ??? test (might be bad code) (913be11)
+
+### v0.3.1 (2024-08-08)
+
+#### Bug Fixes
+
+- circumvent cookiebot as no cookies are stored by script. (304b1d7)
+
+## v0.3.0 (2024-06-04)
+
+#### Refactor
+
+- firebase: Fixed an issue where the organization games were not being updated ♻️ (3a93551)
+
+#### Maintenance
+
+- release: version 0.3.0 🔖 (6e8ab91)
+- Config stuff 🔧 (9fcfdeb)
+
+## v0.2.0 (2024-06-04)
+
+#### Refactor
+
+- updated the loading of JQUEST to work correctly. ♻ (178cfe2)
+
+#### Maintenance
+
+- clean up (9b88fb1)
+- project settings and config updated 🔧 (4f18c45)
+
+### v0.1.3 (2024-02-08)
+
+#### Maintenance
+
+- added vendor and vendor-prefixed folders to repo (0b51a2b)
+
+### v0.1.2 (2024-02-07)
+
+#### Bug Fixes
+
+- changed type to wordpress-plugin and modified authors 🩹 (81ea793)
+
+### v0.1.1 (2024-02-07)
+
+#### Maintenance
+
+- change name to jquest-plugin 🔧 (46e9f7b)
+
+### Misc
+- Initial commit (f05b54d)
+
