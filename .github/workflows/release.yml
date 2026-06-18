@@ -70,7 +70,7 @@ jobs:
       release_notes: ${{ needs.release.outputs.release_notes }}
       plugin_file: "jquest-plugin.php"
       dist_repo: "git@git.jcore.fi:/srv/git/jquest-plugin.git"
-      slack_channel: "#jquest_dev"
+      slack_channel: "#jquest-dev"
     secrets:
       UPDATE_API_KEY: ${{ secrets.UPDATE_API_KEY }}
       DIST_REPO_SSH_KEY: ${{ secrets.DIST_REPO_SSH_KEY }}

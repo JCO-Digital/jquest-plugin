@@ -11,14 +11,14 @@
 .gitlab-ci.yml
 .travis.yml
 .DS_Store
+.zipexclude
 .*~
 Thumbs.db
 behat.yml
 bitbucket-pipelines.yml
 bin
 .circleci/config.yml
-composer.json
-composer.lock
+blocks/src
 dependencies.yml
 Gruntfile.js
 package.json
