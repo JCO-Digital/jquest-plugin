@@ -5,7 +5,7 @@
  * Description:     A plugin for inserting JQUESTs into your site.
  * Author:          J&Co Digital Oy
  * Author URI:      https://jco.fi
- * Text Domain:     jquest-
+ * Text Domain:     jquest
  * Domain Path:     /languages
  * Version: 1.5.1
  *

@@ -84,8 +84,8 @@ class OptionsPage extends Singleton {
 
 		add_submenu_page(
 			'jquest-options',
-			__( 'General', 'jquest-' ),
-			__( 'General', 'jquest-' ),
+			__( 'General', 'jquest' ),
+			__( 'General', 'jquest' ),
 			'manage_options',
 			'jquest-options',
 			array( $this, 'render_page' )
@@ -93,8 +93,8 @@ class OptionsPage extends Singleton {
 
 		add_submenu_page(
 			'jquest-options',
-			__( 'Popup', 'jquest-' ),
-			__( 'Popup', 'jquest-' ),
+			__( 'Popup', 'jquest' ),
+			__( 'Popup', 'jquest' ),
 			'manage_options',
 			'jquest-popup',
 			array( $this, 'render_popup_page' )
@@ -173,11 +173,38 @@ class OptionsPage extends Singleton {
 
 		// Trigger settings — global (not per-language).
 		$svg_kses = array(
-			'svg'    => array( 'xmlns' => true, 'viewBox' => true, 'width' => true, 'height' => true, 'fill' => true ),
-			'path'   => array( 'd' => true, 'fill' => true, 'fill-rule' => true, 'clip-rule' => true, 'stroke' => true, 'stroke-width' => true ),
+			'svg'    => array(
+				'xmlns'   => true,
+				'viewBox' => true,
+				'width'   => true,
+				'height'  => true,
+				'fill'    => true,
+			),
+			'path'   => array(
+				'd'            => true,
+				'fill'         => true,
+				'fill-rule'    => true,
+				'clip-rule'    => true,
+				'stroke'       => true,
+				'stroke-width' => true,
+			),
 			'g'      => array( 'fill' => true ),
-			'circle' => array( 'cx' => true, 'cy' => true, 'r' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true ),
-			'rect'   => array( 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'fill' => true, 'rx' => true ),
+			'circle' => array(
+				'cx'           => true,
+				'cy'           => true,
+				'r'            => true,
+				'fill'         => true,
+				'stroke'       => true,
+				'stroke-width' => true,
+			),
+			'rect'   => array(
+				'x'      => true,
+				'y'      => true,
+				'width'  => true,
+				'height' => true,
+				'fill'   => true,
+				'rx'     => true,
+			),
 		);
 
 		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_enabled', array( 'sanitize_callback' => 'absint' ) );
@@ -214,7 +241,7 @@ class OptionsPage extends Singleton {
 			'jquest-popup-trigger',
 			'jquest_popup_trigger_icon_custom',
 			array(
-				'sanitize_callback' => function( $input ) use ( $svg_kses ) {
+				'sanitize_callback' => function ( $input ) use ( $svg_kses ) {
 					return wp_kses( $input, $svg_kses );
 				},
 			)
@@ -223,14 +250,14 @@ class OptionsPage extends Singleton {
 		// Settings sections.
 		add_settings_section(
 			'jquest-general',
-			__( 'General', 'jquest-' ),
+			__( 'General', 'jquest' ),
 			array( $this, 'render_general_section' ),
 			'jquest-options-general',
 		);
 
 		add_settings_field(
 			'jquest_org_id',
-			__( 'Organisation ID', 'jquest-' ),
+			__( 'Organisation ID', 'jquest' ),
 			array( $this, 'render_id_field' ),
 			'jquest-options-general',
 			'jquest-general',
@@ -246,7 +273,7 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	final public function render_general_section(): void {
-		echo '<p>' . esc_html__( 'General settings required for jQuest integration.', 'jquest-' ) . '</p>';
+		echo '<p>' . esc_html__( 'General settings required for jQuest integration.', 'jquest' ) . '</p>';
 	}
 
 
@@ -260,7 +287,7 @@ class OptionsPage extends Singleton {
 			array(
 				'id'          => 'jquest_org_id',
 				'value'       => get_option( 'jquest_org_id', '' ),
-				'placeholder' => __( 'Organisation ID', 'jquest-' ),
+				'placeholder' => __( 'Organisation ID', 'jquest' ),
 			)
 		);
 	}
@@ -298,7 +325,7 @@ class OptionsPage extends Singleton {
 	final public function render_popup_page(): void {
 		$tabs = array(
 			'trigger' => array(
-				'label' => __( 'Trigger', 'jquest-' ),
+				'label' => __( 'Trigger', 'jquest' ),
 				'url'   => add_query_arg( array( 'tab' => 'trigger' ), admin_url( 'admin.php?page=jquest-popup' ) ),
 			),
 		);
@@ -312,7 +339,7 @@ class OptionsPage extends Singleton {
 			}
 		} else {
 			$tabs['default'] = array(
-				'label' => __( 'Popup', 'jquest-' ),
+				'label' => __( 'Popup', 'jquest' ),
 				'url'   => add_query_arg( array( 'tab' => 'default' ), admin_url( 'admin.php?page=jquest-popup' ) ),
 			);
 		}
@@ -343,7 +370,7 @@ class OptionsPage extends Singleton {
 		$data = array(
 			'tabs'       => array(
 				'general' => array(
-					'label' => __( 'General', 'jquest-' ),
+					'label' => __( 'General', 'jquest' ),
 					'url'   => add_query_arg( array( 'tab' => 'general' ), admin_url( 'admin.php?page=jquest-options' ) ),
 				),
 			),

@@ -56,7 +56,7 @@ export default function Edit({ attributes, setAttributes }) {
 
 	// Initialize the state for the games and text.
 	const [games, setGames] = useState([]);
-	const [text, setText] = useState(__("", "jquest-inserter"));
+	const [text, setText] = useState(__("", "jquest"));
 
 	const versions = ["stable", "latest"];
 
@@ -75,13 +75,13 @@ export default function Edit({ attributes, setAttributes }) {
 				setText(
 					__(
 						"Organization not set. Set organization in JQUEST settings",
-						"jquest-inserter",
+						"jquest",
 					),
 				);
 				return;
 			}
 			if (!data.games) {
-				setText(__("No games found for organization.", "jquest-inserter"));
+				setText(__("No games found for organization.", "jquest"));
 				return;
 			}
 
@@ -105,7 +105,7 @@ export default function Edit({ attributes, setAttributes }) {
 	useEffect(() => {
 		games.find((game) => {
 			if (game.value === selectedGame) {
-				setText(__(game.label, "jquest-inserter"));
+				setText(__(game.label, "jquest"));
 			}
 		});
 	}, [selectedGame, organization, games]);
@@ -143,13 +143,13 @@ export default function Edit({ attributes, setAttributes }) {
 						onChange={onChangeGame}
 					/>
 					<SelectControl
-						label={__("Script Version", "jquest-inserter")}
+						label={__("Script Version", "jquest")}
 						value={version}
 						options={versionOptions}
 						onChange={(newVersion) => setAttributes({ version: newVersion })}
 						help={__(
 							"Choose which jQuest script version to load.",
-							"jquest-inserter",
+							"jquest",
 						)}
 					/>
 					<ToggleControl

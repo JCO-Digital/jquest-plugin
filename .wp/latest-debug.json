@@ -20,6 +20,13 @@
       }
     },
     {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "loco-translate"
+      }
+    },
+    {
       "step": "login",
       "username": "admin"
     }

@@ -7,7 +7,7 @@ module.exports = function (grunt) {
 
     addtextdomain: {
       options: {
-        textdomain: "jquest-",
+        textdomain: "jquest",
       },
       update_all_domains: {
         options: {
@@ -49,7 +49,7 @@ module.exports = function (grunt) {
             ".history/*",
           ],
           mainFile: "jquest-plugin.php",
-          potFilename: "jquest-plugin.pot",
+          potFilename: "jquest.pot",
           potHeaders: {
             poedit: true,
             "x-poedit-keywordslist": true,

@@ -11,14 +11,13 @@
     "build-blocks": "wp-scripts build --webpack-src-dir=blocks/src --output-path=blocks/build",
     "version": "node versionSync.mjs && pnpm start && pnpm changelog && git add -A",
     "postversion": "git push && git push --tags",
-    "changelog": "conventional-changelog -p angular -r 0",
-    "wp:start": "pnpm dlx @wp-now/wp-now start --php=8.2 --blueprint=.wp/latest-debug.json",
-    "wp:reset": "pnpm dlx @wp-now/wp-now start --php=8.2 --reset --blueprint=.wp/latest-debug.json"
+    "wp:start": "wp-playground-cli start --php=8.2 --port=8881 --blueprint=.wp/latest-debug.json",
+    "wp:stop": "fuser -k 8881/tcp || true",
+    "wp:reset": "wp-playground-cli start --php=8.2 --port=8881 --reset --blueprint=.wp/latest-debug.json"
   },
   "devDependencies": {
     "@wordpress/scripts": "^26.19.0",
-    "conventional-changelog": "^7.2.0",
-    "conventional-changelog-angular": "^8.3.0",
+    "@wp-playground/cli": "^3.1.39",
     "grunt": "~1.6.1",
     "grunt-wp-i18n": "~1.0.3",
     "grunt-wp-readme-to-markdown": "~2.1.0",

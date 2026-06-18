@@ -19,7 +19,7 @@ class JQuest_table extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'Title' => __( 'Title', 'jquest-' ),
+			'Title' => __( 'Title', 'jquest' ),
 			'ID'    => 'ID',
 		);
 	}
