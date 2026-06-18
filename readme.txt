@@ -1,5 +1,5 @@
 === JQUEST Plugin ===
-Contributors: (this should be a list of wordpress.org userid's)
+Contributors: jcodigital
 Donate link: https://jco.fi/
 Tags: jquest, games, gamification, learning, education, quiz, quizzes, learn
 Requires at least: 6.0

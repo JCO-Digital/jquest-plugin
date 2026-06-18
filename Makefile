@@ -20,7 +20,7 @@ build:
 
 release: ci
 	mkdir -p build
-	zip build/jquest.zip -r * -x @zip_exclude.txt
+	zip build/jquest.zip -r * -x@.zipexclude
 
 watch:
 	pnpm run watch
