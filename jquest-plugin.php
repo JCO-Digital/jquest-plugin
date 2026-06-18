@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+
 require_once __DIR__ . '/consts.php';
 
 // Load regular composer autoloader.
@@ -29,11 +30,24 @@ if ( is_readable( __DIR__ . JQUEST_COMPOSER_AUTOLOADER ) ) {
 	require_once ABSPATH . JQUEST_COMPOSER_AUTOLOADER;
 }
 
+use Jcore\Update\Config\UpdateConfig;
+use Jcore\Update\Hooks\PluginUpdateHooks;
+use Jcore\Update\Support\PluginHelper;
+
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/includes/blocks.php';
 require_once __DIR__ . '/includes/fields.php';
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/scripts.php';
+
+$config = new UpdateConfig(
+	pluginFile: __FILE__,
+	slug: 'jquest-plugin',
+	version: PluginHelper::getVersion( __FILE__ ),
+	apiBaseUrl: 'https://update.jcore.fi/v1',
+);
+( new PluginUpdateHooks( $config ) )->register();
+
 
 /**
  * Checks the prerequisites for the plugin.
