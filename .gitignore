@@ -15,5 +15,6 @@ wp-cli.local.yml
 /.history/
 .phpactor.json
 /build/
+/blocks/build/
 README.md
 *~

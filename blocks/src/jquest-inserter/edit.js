@@ -3,15 +3,15 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
-import { __ } from "@wordpress/i18n";
+import { __ } from '@wordpress/i18n';
 import {
 	SelectControl,
 	PanelBody,
 	ToggleControl,
 	TextControl,
-} from "@wordpress/components";
-import apiFetch from "@wordpress/api-fetch";
-import { useEffect, useState } from "@wordpress/element";
+} from '@wordpress/components';
+import apiFetch from '@wordpress/api-fetch';
+import { useEffect, useState } from '@wordpress/element';
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -19,7 +19,7 @@ import { useEffect, useState } from "@wordpress/element";
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, InspectorControls } from "@wordpress/block-editor";
+import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -27,17 +27,20 @@ import { useBlockProps, InspectorControls } from "@wordpress/block-editor";
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
-import "./editor.scss";
+import './editor.scss';
 
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
  *
+ * @param {Object}   root0               Component props.
+ * @param {Object}   root0.attributes    Block attributes.
+ * @param {Function} root0.setAttributes Attribute setter.
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  *
  * @return {JSX.Element} Element to render.
  */
-export default function Edit({ attributes, setAttributes }) {
+export default function Edit( { attributes, setAttributes } ) {
 	const {
 		selectedGame,
 		organization,
@@ -51,64 +54,66 @@ export default function Edit({ attributes, setAttributes }) {
 		popupAttach,
 		popupTriggerButton,
 		popupTriggerButtonLabel,
-		popupTriggerButtonLabelMobile
+		popupTriggerButtonLabelMobile,
 	} = attributes;
 
 	// Initialize the state for the games and text.
-	const [games, setGames] = useState([]);
-	const [text, setText] = useState(__("", "jquest"));
+	const [ games, setGames ] = useState( [] );
+	const [ text, setText ] = useState( __( '', 'jquest' ) );
 
-	const versions = ["stable", "latest"];
+	const versions = [ 'stable', 'latest' ];
 
-	const versionOptions = versions.map((version) => ({
-		label: version.charAt(0).toUpperCase() + version.slice(1),
-		value: version,
-	}));
+	const versionOptions = versions.map( ( v ) => ( {
+		label: v.charAt( 0 ).toUpperCase() + v.slice( 1 ),
+		value: v,
+	} ) );
 
 	// Use the useEffect hook to fetch the games when the component mounts.
-	useEffect(() => {
-		apiFetch({
-			path: "/jquest/v1/games",
-		}).then((data) => {
+	useEffect( () => {
+		apiFetch( {
+			path: '/jquest/v1/games',
+		} ).then( ( data ) => {
 			// Set information texts if no games or organization is found.
-			if (!data.organization) {
+			if ( ! data.organization ) {
 				setText(
 					__(
-						"Organization not set. Set organization in JQUEST settings",
-						"jquest",
-					),
+						'Organization not set. Set organization in JQUEST settings',
+						'jquest'
+					)
 				);
 				return;
 			}
-			if (!data.games) {
-				setText(__("No games found for organization.", "jquest"));
+			if ( ! data.games ) {
+				setText( __( 'No games found for organization.', 'jquest' ) );
 				return;
 			}
 
 			// Map the games to an array of objects with value and label properties.
 			setGames(
-				data.games.map((game) => ({
+				data.games.map( ( game ) => ( {
 					value: game.id,
 					label: game.title,
-				})),
+				} ) )
 			);
 			// If there is no selected game, set the selected game to the first game.
-			if (!selectedGame) {
-				setAttributes({ selectedGame: data.games[0].id });
+			if ( ! selectedGame ) {
+				setAttributes( { selectedGame: data.games[ 0 ].id } );
 			}
 			// Set the organization attribute.
-			setAttributes({ organization: data.organization });
-		});
-	}, []);
+			setAttributes( { organization: data.organization } );
+		} );
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [] );
 
 	// Show the selected game label in the block.
-	useEffect(() => {
-		games.find((game) => {
-			if (game.value === selectedGame) {
-				setText(__(game.label, "jquest"));
+	useEffect( () => {
+		games.forEach( ( game ) => {
+			if ( game.value === selectedGame ) {
+				// eslint-disable-next-line @wordpress/i18n-no-variables
+				setText( __( game.label, 'jquest' ) );
 			}
-		});
-	}, [selectedGame, organization, games]);
+		} );
+	}, [ selectedGame, organization, games ] );
 
 	/**
 	 * The `onChangeGame` function is called when the selected game changes.
@@ -116,18 +121,18 @@ export default function Edit({ attributes, setAttributes }) {
 	 *
 	 * @param {string} newGame - The new selected game.
 	 */
-	const onChangeGame = (newGame) => {
-		setAttributes({ selectedGame: newGame });
+	const onChangeGame = ( newGame ) => {
+		setAttributes( { selectedGame: newGame } );
 	};
 
-	const openDashboard = (state) => {
+	const openDashboard = () => {
 		// go to dashboard
 		window.open(
-			"https://dashboard.jquest.fi/#/dashboard/" +
-			organization +
-			"/" +
-			selectedGame,
-			"_blank",
+			'https://dashboard.jquest.fi/#/dashboard/' +
+				organization +
+				'/' +
+				selectedGame,
+			'_blank'
 		);
 	};
 
@@ -138,107 +143,149 @@ export default function Edit({ attributes, setAttributes }) {
 				<PanelBody title="Settings">
 					<SelectControl
 						label="Select a game"
-						value={selectedGame}
-						options={games}
-						onChange={onChangeGame}
+						value={ selectedGame }
+						options={ games }
+						onChange={ onChangeGame }
 					/>
 					<SelectControl
-						label={__("Script Version", "jquest")}
-						value={version}
-						options={versionOptions}
-						onChange={(newVersion) => setAttributes({ version: newVersion })}
-						help={__(
-							"Choose which jQuest script version to load.",
-							"jquest",
-						)}
+						label={ __( 'Script Version', 'jquest' ) }
+						value={ version }
+						options={ versionOptions }
+						onChange={ ( newVersion ) =>
+							setAttributes( { version: newVersion } )
+						}
+						help={ __(
+							'Choose which jQuest script version to load.',
+							'jquest'
+						) }
 					/>
 					<ToggleControl
-						label={"Run as Popup"}
-						checked={!!popup}
-						onChange={(val) => setAttributes({ popup: val })}
-						help={"If enabled, the quest will run as a popup."}
+						label={ 'Run as Popup' }
+						checked={ !! popup }
+						onChange={ ( val ) => setAttributes( { popup: val } ) }
+						help={ 'If enabled, the quest will run as a popup.' }
 					/>
-					{popup && (
+					{ popup && (
 						<>
 							<TextControl
-								label={"Attach popup to"}
-								value={popupAttach}
-								onChange={(val) =>
-									setAttributes({ popupAttach: val })
+								label={ 'Attach popup to' }
+								value={ popupAttach }
+								onChange={ ( val ) =>
+									setAttributes( { popupAttach: val } )
 								}
-								help={"Insert querySelector query for which element to attach popup to (Default 'body')"}
-							/>
-							<ToggleControl
-								label={"Disable no scroll"}
-								checked={!!popupDisableNoscroll}
-								onChange={(val) => setAttributes({ popupDisableNoscroll: val })}
 								help={
-									"If enabled, no scroll effect will not be applied to body when popup open."
+									"Insert querySelector query for which element to attach popup to (Default 'body')"
 								}
 							/>
 							<ToggleControl
-								label={"Disable dismiss"}
-								checked={!!popupDisableDismiss}
-								onChange={(val) => setAttributes({ popupDisableDismiss: val })}
+								label={ 'Disable no scroll' }
+								checked={ !! popupDisableNoscroll }
+								onChange={ ( val ) =>
+									setAttributes( {
+										popupDisableNoscroll: val,
+									} )
+								}
 								help={
-									"If enabled, dismiss effect when clicking outside popup will be disabled."
+									'If enabled, no scroll effect will not be applied to body when popup open.'
 								}
 							/>
 							<ToggleControl
-								label={"Open Automatically"}
-								checked={!!popupAuto}
-								onChange={(val) => setAttributes({ popupAuto: val })}
+								label={ 'Disable dismiss' }
+								checked={ !! popupDisableDismiss }
+								onChange={ ( val ) =>
+									setAttributes( {
+										popupDisableDismiss: val,
+									} )
+								}
 								help={
-									"If enabled, the popup will open automatically on page load."
+									'If enabled, dismiss effect when clicking outside popup will be disabled.'
 								}
 							/>
-							{!popupAuto && (
+							<ToggleControl
+								label={ 'Open Automatically' }
+								checked={ !! popupAuto }
+								onChange={ ( val ) =>
+									setAttributes( { popupAuto: val } )
+								}
+								help={
+									'If enabled, the popup will open automatically on page load.'
+								}
+							/>
+							{ ! popupAuto && (
 								<>
 									<ToggleControl
-										label={"Add trigger button"}
-										checked={!!popupTriggerButton}
-										onChange={(val) => setAttributes({ popupTriggerButton: val })}
-										help={"Trigger button styling comes from global trigger styles set in jQuest settings"}
+										label={ 'Add trigger button' }
+										checked={ !! popupTriggerButton }
+										onChange={ ( val ) =>
+											setAttributes( {
+												popupTriggerButton: val,
+											} )
+										}
+										help={
+											'Trigger button styling comes from global trigger styles set in jQuest settings'
+										}
 									/>
-									{popupTriggerButton && (
+									{ popupTriggerButton && (
 										<>
 											<TextControl
-												label={"Trigger button label"}
-												value={popupTriggerButtonLabel}
-												onChange={(val) => setAttributes({ popupTriggerButtonLabel: val })}
+												label={ 'Trigger button label' }
+												value={
+													popupTriggerButtonLabel
+												}
+												onChange={ ( val ) =>
+													setAttributes( {
+														popupTriggerButtonLabel:
+															val,
+													} )
+												}
 											/>
 											<TextControl
-												label={"Trigger button label mobile"}
-												value={popupTriggerButtonLabelMobile}
-												onChange={(val) => setAttributes({ popupTriggerButtonLabelMobile: val })}
+												label={
+													'Trigger button label mobile'
+												}
+												value={
+													popupTriggerButtonLabelMobile
+												}
+												onChange={ ( val ) =>
+													setAttributes( {
+														popupTriggerButtonLabelMobile:
+															val,
+													} )
+												}
 											/>
 										</>
-									)}
+									) }
 								</>
-							)}
-							{popupAuto && (
+							) }
+							{ popupAuto && (
 								<>
 									<TextControl
-										label={"Popup Delay (milliseconds)"}
+										label={ 'Popup Delay (milliseconds)' }
 										type="number"
-										value={popupDelay || 0}
-										onChange={(val) =>
-											setAttributes({
-												popupDelay: val ? parseInt(val, 10) : 5000,
-											})
+										value={ popupDelay || 0 }
+										onChange={ ( val ) =>
+											setAttributes( {
+												popupDelay: val
+													? parseInt( val, 10 )
+													: 5000,
+											} )
 										}
-										help={"Delay before auto-popup opens."}
+										help={
+											'Delay before auto-popup opens.'
+										}
 										step="1"
 										min="0"
 									/>
 									<TextControl
-										label={"Popup Limit (times)"}
+										label={ 'Popup Limit (times)' }
 										type="number"
-										value={popupLimit || 0}
-										onChange={(val) =>
-											setAttributes({
-												popupLimit: val ? parseInt(val, 10) : 0,
-											})
+										value={ popupLimit || 0 }
+										onChange={ ( val ) =>
+											setAttributes( {
+												popupLimit: val
+													? parseInt( val, 10 )
+													: 0,
+											} )
 										}
 										help={
 											"Max times the auto-popup will open. '0' for no limit."
@@ -247,30 +294,32 @@ export default function Edit({ attributes, setAttributes }) {
 										min="0"
 									/>
 								</>
-							)}
+							) }
 						</>
-					)}
+					) }
 				</PanelBody>
 			</InspectorControls>
 			<div
-				{...useBlockProps({
-					"data-version": version,
-				})}
+				{ ...useBlockProps( {
+					'data-version': version,
+				} ) }
 			>
 				<div
 					className="jquest-app"
-					data-org-id={organization}
-					data-game-id={selectedGame}
-					data-popup={popup ? "true" : "false"}
-					data-popup-auto={popupAuto ? "true" : "false"}
-					data-popup-delay={popupDelay}
-					data-popup-limit={popupLimit}
+					data-org-id={ organization }
+					data-game-id={ selectedGame }
+					data-popup={ popup ? 'true' : 'false' }
+					data-popup-auto={ popupAuto ? 'true' : 'false' }
+					data-popup-delay={ popupDelay }
+					data-popup-limit={ popupLimit }
 					data-new-styles="true"
 				>
-					{text}
-					{organization !== "" && selectedGame !== "" && (
-						<button onClick={openDashboard}>Edit in dashboard</button>
-					)}
+					{ text }
+					{ organization !== '' && selectedGame !== '' && (
+						<button onClick={ openDashboard }>
+							Edit in dashboard
+						</button>
+					) }
 				</div>
 			</div>
 		</>

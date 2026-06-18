@@ -1,6 +1,6 @@
 <?php // phpcs:ignore Squiz.Commenting.FileComment.Missing
 
-use jQuestPlugin\JQuest_table;
+use jQuestPlugin\JQuest_Table;
 
 ?>
 <div class="wrap jquest-wrap">
@@ -44,7 +44,7 @@ use jQuestPlugin\JQuest_table;
 	<div class="jquest-games-section">
 		<h2><?php esc_html_e( 'Organisation Games', 'jquest' ); ?></h2>
 		<?php
-		$table = new JQuest_table();
+		$table = new JQuest_Table();
 		$table->prepare_items();
 		$table->display();
 		?>

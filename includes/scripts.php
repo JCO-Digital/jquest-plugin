@@ -15,10 +15,10 @@ namespace jQuestPlugin\Scripts;
  * @return void
  */
 function insert_jquest_script( string $url ): void {
-	// Extract a unique handle from the URL (e.g., 'jquest-stable' or 'jquest-latest')
+	// Extract a unique handle from the URL (e.g., 'jquest-stable' or 'jquest-latest').
 	$handle = str_contains( $url, 'latest' ) ? 'jquest-latest' : 'jquest-stable';
 
-	// Register and enqueue it using WordPress's native Module API
+	// Register and enqueue it using WordPress's native Module API.
 	wp_register_script_module(
 		$handle,
 		$url,
@@ -58,9 +58,9 @@ function maybe_insert_jquest_script() {
 		}
 	}
 	if ( $has_jquest_blocks ) {
-		if ( $version == 'stable' ) {
+		if ( 'stable' === $version ) {
 			$url = 'https://files.jquest.fi/jquest/stable/jquest-stable.js';
-		} elseif ( $version == 'latest' ) {
+		} elseif ( 'latest' === $version ) {
 			$url = 'https://files.jquest.fi/jquest/latest/jquest-latest.js';
 		}
 		if ( isset( $url ) ) {
@@ -69,6 +69,13 @@ function maybe_insert_jquest_script() {
 	}
 }
 
+/**
+ * Recursively checks if a block or its inner blocks contain the jquest-inserter.
+ *
+ * @param array $block The block object to check.
+ *
+ * @return array
+ */
 function contains_jquest_insterter( $block ): array {
 	$return_value = array(
 		'has_jquest_blocks' => false,
@@ -233,7 +240,7 @@ function output_popup_trigger_styles(): void {
 				border-radius: <?php echo esc_attr( $border_radius ); ?>px;
 				text-decoration: none;
 				color: <?php echo esc_attr( $text_color ); ?>;
-				padding: <?php echo esc_attr( $padding_top ); ?>px 
+				padding: <?php echo esc_attr( $padding_top ); ?>px
 				<?php
 				echo esc_attr(
 					$padding_right,
@@ -245,7 +252,7 @@ function output_popup_trigger_styles(): void {
 					?>
 					font-size: <?php echo esc_attr( $font_size ); ?>px;<?php endif; ?>
 				font-weight: <?php echo esc_attr( $font_weight ); ?>;
-				border-bottom: <?php echo esc_attr( $underline_width ); ?>px solid 
+				border-bottom: <?php echo esc_attr( $underline_width ); ?>px solid
 				<?php
 				echo '' !== $underline_color
 				? esc_attr( $underline_color )
@@ -265,7 +272,7 @@ function output_popup_trigger_styles(): void {
 		.jquest-popup-toggle a:hover {
 			background-color: <?php echo esc_attr( $bg_hover_color ); ?>;
 			color: <?php echo esc_attr( $text_hover_color ); ?>;
-			border-bottom-color: 
+			border-bottom-color:
 			<?php
 			echo '' !== $underline_hover_color
 			? esc_attr( $underline_hover_color )
@@ -291,7 +298,7 @@ function output_popup_trigger_styles(): void {
 				color: <?php echo esc_attr( $icon_color ); ?>;<?php endif; ?>
 		}
 		<?php if ( '' !== $icon_bg_hover_color ) : ?>
-		.jquest-popup-toggle a:hover .icon-container { background-color: 
+		.jquest-popup-toggle a:hover .icon-container { background-color:
 			<?php
 			echo esc_attr(
 				$icon_bg_hover_color,
@@ -300,7 +307,7 @@ function output_popup_trigger_styles(): void {
 	; }
 		<?php endif; ?>
 		<?php if ( '' !== $icon_hover_color ) : ?>
-		.jquest-popup-toggle a:hover .icon-container svg { color: 
+		.jquest-popup-toggle a:hover .icon-container svg { color:
 			<?php
 			echo esc_attr(
 				$icon_hover_color,
@@ -427,7 +434,7 @@ function maybe_insert_popup_trigger(): void {
 	output_popup_trigger_styles();
 	// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 	?>
-	<div class="jquest-popup-toggle 
+	<div class="jquest-popup-toggle
 	<?php
 	echo isset( $icon ) && '' !== $icon
 	? 'has-icon'
@@ -477,12 +484,13 @@ function maybe_insert_block_trigger_styles(): void {
 	}
 }
 
-/**
- * Recursively checks whether any jquest-inserter block has the trigger button enabled.
- *
- * @param array $blocks
- * @return bool
- */
+	/**
+	 * Recursively checks whether any jquest-inserter block has the trigger button enabled.
+	 *
+	 * @param array $blocks The blocks to check.
+	 *
+	 * @return bool
+	 */
 function block_has_trigger_button( array $blocks ): bool {
 	foreach ( $blocks as $block ) {
 		if (
@@ -502,22 +510,23 @@ function block_has_trigger_button( array $blocks ): bool {
 
 add_action( 'wp_footer', __NAMESPACE__ . '\maybe_insert_block_trigger_styles' );
 
-/**
- * Injects the trigger icon (from global settings) into jquest-inserter block output.
- *
- * @param string $content
- * @param array  $block
- * @return string
- */
+	/**
+	 * Injects the trigger icon (from global settings) into jquest-inserter block output.
+	 *
+	 * @param string $content The block content.
+	 * @param array  $block   The block object.
+	 *
+	 * @return string
+	 */
 function inject_block_trigger_icon( string $content, array $block ): string {
 	if ( 'jquest-inserter/jquest-inserter' !== $block['blockName'] ) {
 		return $content;
 	}
 
 	if (
-		empty( $block['attrs']['popup'] ) ||
-		! empty( $block['attrs']['popupAuto'] ) ||
-		empty( $block['attrs']['popupTriggerButton'] )
+	empty( $block['attrs']['popup'] ) ||
+	! empty( $block['attrs']['popupAuto'] ) ||
+	empty( $block['attrs']['popupTriggerButton'] )
 	) {
 		return $content;
 	}

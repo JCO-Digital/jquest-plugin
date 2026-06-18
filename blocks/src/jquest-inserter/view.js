@@ -22,6 +22,6 @@
 
 /* eslint-disable no-console */
 console.log(
-	"Hello World! (from jquest-inserter-jquest-inserter block, testing)",
+	'Hello World! (from jquest-inserter-jquest-inserter block, testing)'
 );
 /* eslint-enable no-console */

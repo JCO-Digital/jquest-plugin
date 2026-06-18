@@ -1,4 +1,9 @@
 <?php
+/**
+ * Helper functions for the plugin.
+ *
+ * @package jQuestPlugin
+ */
 
 namespace jQuestPlugin;
 

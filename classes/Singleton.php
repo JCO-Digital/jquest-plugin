@@ -16,7 +16,9 @@ use RuntimeException;
  */
 abstract class Singleton {
 	/**
-	 * The singleton instance
+	 * The singleton instances.
+	 *
+	 * @var array
 	 */
 	public static $instances = array();
 

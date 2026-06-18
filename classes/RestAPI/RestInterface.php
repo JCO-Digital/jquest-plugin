@@ -1,4 +1,9 @@
 <?php
+/**
+ * REST API interface.
+ *
+ * @package jQuestPlugin\RestAPI
+ */
 
 namespace jQuestPlugin\RestAPI;
 

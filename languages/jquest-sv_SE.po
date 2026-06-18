@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JQUEST Plugin 1.5.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/jquest-plugin\n"
-"POT-Creation-Date: 2026-06-18 10:56:09+00:00\n"
+"POT-Creation-Date: 2026-06-18 11:16:40+00:00\n"
 "PO-Revision-Date: 2026-06-18 10:59+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Swedish\n"
@@ -24,33 +24,33 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.8.5; wp-7.0; php-8.2.31\n"
 
-#: classes/JQuest_table.php:22
+#: classes/JQuest_Table.php:22
 msgid "Title"
 msgstr "Titel"
 
-#: classes/Options/OptionsPage.php:87 classes/Options/OptionsPage.php:88
-#: classes/Options/OptionsPage.php:253 classes/Options/OptionsPage.php:373
+#: classes/Options/OptionsPage.php:91 classes/Options/OptionsPage.php:92
+#: classes/Options/OptionsPage.php:257 classes/Options/OptionsPage.php:377
 msgid "General"
 msgstr "Allmänt"
 
-#: classes/Options/OptionsPage.php:96 classes/Options/OptionsPage.php:97
-#: classes/Options/OptionsPage.php:342
+#: classes/Options/OptionsPage.php:100 classes/Options/OptionsPage.php:101
+#: classes/Options/OptionsPage.php:346
 msgid "Popup"
 msgstr "Popup-fönster"
 
-#: classes/Options/OptionsPage.php:260 classes/Options/OptionsPage.php:290
+#: classes/Options/OptionsPage.php:264 classes/Options/OptionsPage.php:294
 msgid "Organisation ID"
 msgstr "Organisations-ID"
 
-#: classes/Options/OptionsPage.php:276
+#: classes/Options/OptionsPage.php:280
 msgid "General settings required for jQuest integration."
 msgstr "Allmänna inställningar som krävs för jQuest-integration."
 
-#: classes/Options/OptionsPage.php:328
+#: classes/Options/OptionsPage.php:332
 msgid "Trigger"
 msgstr "Trigger"
 
-#: helpers.php:13
+#: helpers.php:18
 msgid ""
 "The plugin \"JQUEST Plugin\" could not be activated because it is missing "
 "dependencies. Please install the dependencies and try again."
@@ -72,230 +72,230 @@ msgstr "Organisationsspel"
 msgid "jQuest Popup"
 msgstr "jQuest-popup"
 
-#: views/popup-settings.php:26
+#: views/popup-settings.php:32
 msgid "Preview"
 msgstr "Förhandsvisning"
 
-#: views/popup-settings.php:29
+#: views/popup-settings.php:39
 msgid "(hover to see hover state)"
 msgstr "(hovra för att se hovringsläge)"
 
-#: views/popup-settings.php:50 views/popup-settings.php:688
+#: views/popup-settings.php:62 views/popup-settings.php:716
 msgid "Enabled"
 msgstr "Aktiverad"
 
-#: views/popup-settings.php:58
+#: views/popup-settings.php:70
 msgid "Enable trigger button"
 msgstr "Aktivera triggerknapp"
 
-#: views/popup-settings.php:63
+#: views/popup-settings.php:75
 msgid "Minimize trigger"
 msgstr "Minimera trigger"
 
-#: views/popup-settings.php:71
+#: views/popup-settings.php:83
 msgid "Minimizes trigger at bottom of screen"
 msgstr ""
 
-#: views/popup-settings.php:78
+#: views/popup-settings.php:90
 msgid "Watch selector"
 msgstr ""
 
-#: views/popup-settings.php:87
+#: views/popup-settings.php:99
 msgid "CSS selector of element to watch (querySelector)"
 msgstr ""
 
-#: views/popup-settings.php:93
+#: views/popup-settings.php:105
 msgid "Visibility threshold (%)"
 msgstr ""
 
-#: views/popup-settings.php:104
+#: views/popup-settings.php:116
 msgid ""
 "How much of the watched element must be visible (0–100%) before the trigger "
 "minimizes"
 msgstr ""
 
-#: views/popup-settings.php:109
+#: views/popup-settings.php:121
 msgid "Position"
 msgstr ""
 
-#: views/popup-settings.php:114
+#: views/popup-settings.php:126
 msgid "Side"
 msgstr ""
 
-#: views/popup-settings.php:120
+#: views/popup-settings.php:132
 msgid "Right"
 msgstr ""
 
-#: views/popup-settings.php:123
+#: views/popup-settings.php:135
 msgid "Left"
 msgstr ""
 
-#: views/popup-settings.php:131
+#: views/popup-settings.php:143
 msgid "X offset (px)"
 msgstr ""
 
-#: views/popup-settings.php:146
+#: views/popup-settings.php:158
 msgid "Y offset (px)"
 msgstr ""
 
-#: views/popup-settings.php:160
+#: views/popup-settings.php:172
 msgid "Layout"
 msgstr ""
 
-#: views/popup-settings.php:165
+#: views/popup-settings.php:177
 msgid "Border radius (px)"
 msgstr ""
 
-#: views/popup-settings.php:180
+#: views/popup-settings.php:192
 msgid "Padding top (px)"
 msgstr ""
 
-#: views/popup-settings.php:195
+#: views/popup-settings.php:207
 msgid "Padding right (px)"
 msgstr ""
 
-#: views/popup-settings.php:210
+#: views/popup-settings.php:222
 msgid "Padding bottom (px)"
 msgstr ""
 
-#: views/popup-settings.php:225
+#: views/popup-settings.php:237
 msgid "Padding left (px)"
 msgstr ""
 
-#: views/popup-settings.php:240
+#: views/popup-settings.php:252
 msgid "Items gap (px)"
 msgstr ""
 
-#: views/popup-settings.php:254
+#: views/popup-settings.php:266
 msgid "Typography"
 msgstr ""
 
-#: views/popup-settings.php:259
+#: views/popup-settings.php:271
 msgid "Font size (px)"
 msgstr ""
 
-#: views/popup-settings.php:274
+#: views/popup-settings.php:286
 msgid "Font weight"
 msgstr ""
 
-#: views/popup-settings.php:290
+#: views/popup-settings.php:302
 msgid "Colors"
 msgstr ""
 
-#: views/popup-settings.php:295 views/popup-settings.php:384
+#: views/popup-settings.php:307 views/popup-settings.php:396
 msgid "Text"
 msgstr ""
 
-#: views/popup-settings.php:309 views/popup-settings.php:398
+#: views/popup-settings.php:321 views/popup-settings.php:410
 msgid "Background"
 msgstr ""
 
-#: views/popup-settings.php:323 views/popup-settings.php:412
+#: views/popup-settings.php:335 views/popup-settings.php:424
 msgid "Underline"
 msgstr ""
 
-#: views/popup-settings.php:337
+#: views/popup-settings.php:349
 msgid "Underline width (px)"
 msgstr ""
 
-#: views/popup-settings.php:352 views/popup-settings.php:426
-#: views/popup-settings.php:453 views/popup-settings.php:458
+#: views/popup-settings.php:364 views/popup-settings.php:438
+#: views/popup-settings.php:465 views/popup-settings.php:470
 msgid "Icon"
 msgstr ""
 
-#: views/popup-settings.php:366 views/popup-settings.php:440
+#: views/popup-settings.php:378 views/popup-settings.php:452
 msgid "Icon container"
 msgstr ""
 
-#: views/popup-settings.php:379
+#: views/popup-settings.php:391
 msgid "Colors: Hover"
 msgstr ""
 
-#: views/popup-settings.php:467
+#: views/popup-settings.php:483
 msgid "Default"
 msgstr ""
 
-#: views/popup-settings.php:473
+#: views/popup-settings.php:493
 msgid "None"
 msgstr ""
 
-#: views/popup-settings.php:479
+#: views/popup-settings.php:503
 msgid "Custom"
 msgstr ""
 
-#: views/popup-settings.php:487
+#: views/popup-settings.php:511
 msgid "Custom icon SVG"
 msgstr ""
 
-#: views/popup-settings.php:503
+#: views/popup-settings.php:531
 msgid "Icon size (px)"
 msgstr ""
 
-#: views/popup-settings.php:518
+#: views/popup-settings.php:546
 msgid "Container size (px)"
 msgstr ""
 
-#: views/popup-settings.php:533
+#: views/popup-settings.php:561
 msgid "Container border radius (px)"
 msgstr ""
 
-#: views/popup-settings.php:696
+#: views/popup-settings.php:724
 msgid "Enable popup"
 msgstr ""
 
-#: views/popup-settings.php:703
+#: views/popup-settings.php:731
 msgid "Quest"
 msgstr ""
 
-#: views/popup-settings.php:709
+#: views/popup-settings.php:737
 msgid "— Select a quest —"
 msgstr ""
 
-#: views/popup-settings.php:722
+#: views/popup-settings.php:750
 msgid "Desktop label"
 msgstr ""
 
-#: views/popup-settings.php:736
+#: views/popup-settings.php:764
 msgid "Mobile label"
 msgstr ""
 
-#: views/popup-settings.php:748
+#: views/popup-settings.php:776
 msgid "Advanced"
 msgstr ""
 
-#: views/popup-settings.php:753
+#: views/popup-settings.php:781
 msgid "Attach"
 msgstr ""
 
-#: views/popup-settings.php:765
+#: views/popup-settings.php:793
 msgid "Auto"
 msgstr ""
 
-#: views/popup-settings.php:773
+#: views/popup-settings.php:801
 msgid "Automatically open popup"
 msgstr ""
 
-#: views/popup-settings.php:780
+#: views/popup-settings.php:808
 msgid "Limit"
 msgstr ""
 
-#: views/popup-settings.php:793
+#: views/popup-settings.php:821
 msgid "Disable dismiss"
 msgstr ""
 
-#: views/popup-settings.php:801
+#: views/popup-settings.php:829
 msgid "Disable dismiss on click outside"
 msgstr ""
 
-#: views/popup-settings.php:806
+#: views/popup-settings.php:834
 msgid "Disable noscroll"
 msgstr ""
 
-#: views/popup-settings.php:814
+#: views/popup-settings.php:842
 msgid "Disable noscroll on body"
 msgstr ""
 
-#: views/popup-settings.php:819 views/popup-settings.php:827
+#: views/popup-settings.php:847 views/popup-settings.php:855
 msgid "Use latest script version"
 msgstr ""
 

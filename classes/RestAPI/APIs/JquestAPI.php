@@ -24,6 +24,8 @@ class JquestAPI extends RestAPI {
 	public static string $namespace = 'jquest/v1';
 
 	/**
+	 * Registers the API endpoints.
+	 *
 	 * @inheritDoc
 	 */
 	public static function register_endpoints(): void {

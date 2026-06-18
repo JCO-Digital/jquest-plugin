@@ -10,7 +10,7 @@ namespace jQuestPlugin;
 /**
  * Displays the jQuest games in a WP_List_Table.
  */
-class JQuest_table extends \WP_List_Table {
+class JQuest_Table extends \WP_List_Table {
 
 	/**
 	 * Returns the columns for the table.

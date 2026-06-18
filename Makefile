@@ -1,6 +1,9 @@
-.PHONY: all dev ci ci-install install build release watch start stop clean
+.PHONY: all dev ci ci-install install build release watch start stop clean check
 
 all: install build
+
+check:
+	pnpm run check
 
 dev: install watch
 

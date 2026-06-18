@@ -26,6 +26,8 @@ abstract class RestAPI implements RestInterface {
 	}
 
 	/**
+	 * Initializes the REST API class.
+	 *
 	 * @inheritDoc
 	 */
 	public static function init(): void {

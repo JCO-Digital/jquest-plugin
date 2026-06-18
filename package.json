@@ -9,8 +9,9 @@
     "i18n": "grunt i18n",
     "start-blocks": "wp-scripts start --webpack-src-dir=blocks/src --output-path=blocks/build",
     "build-blocks": "wp-scripts build --webpack-src-dir=blocks/src --output-path=blocks/build",
-    "version": "node versionSync.mjs && pnpm start && pnpm changelog && git add -A",
-    "postversion": "git push && git push --tags",
+    "lint:js": "wp-scripts lint-js blocks/src",
+    "lint:php": "./vendor/bin/phpcs",
+    "check": "pnpm run lint:js && pnpm run lint:php && composer validate --strict",
     "wp:start": "wp-playground-cli start --php=8.2 --port=8881 --blueprint=.wp/latest-debug.json",
     "wp:stop": "fuser -k 8881/tcp || true",
     "wp:reset": "wp-playground-cli start --php=8.2 --port=8881 --reset --blueprint=.wp/latest-debug.json"

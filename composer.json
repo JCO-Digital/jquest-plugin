@@ -1,6 +1,7 @@
 {
   "name": "jcodigital/jquest-plugin",
   "description": "JQUEST Plugin",
+  "license": "GPL-2.0-or-later",
   "type": "wordpress-plugin",
   "autoload": {
     "psr-4": {
