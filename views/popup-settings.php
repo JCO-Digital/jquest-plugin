@@ -9,6 +9,39 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 		<h1><?php esc_html_e( 'jQuest Popup', 'jquest' ); ?></h1>
 	</div>
 
+	<?php
+		// Global (not per-language) script version. The one-time migration in
+		// migrate_popup_version() has already run on admin_init by this point.
+		$jquest_version = get_option( \jQuestPlugin\Scripts\POPUP_VERSION_OPTION, \jQuestPlugin\Scripts\DEFAULT_VERSION );
+	?>
+	<div class="jquest-card">
+		<form method="post" action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>">
+			<?php settings_fields( 'jquest-popup-general' ); ?>
+			<table class="form-table">
+				<tr>
+					<th scope="row">
+						<label for="<?php echo esc_attr( \jQuestPlugin\Scripts\POPUP_VERSION_OPTION ); ?>">
+							<?php esc_html_e( 'Script version', 'jquest' ); ?>
+						</label>
+					</th>
+					<td>
+						<select name="<?php echo esc_attr( \jQuestPlugin\Scripts\POPUP_VERSION_OPTION ); ?>"
+							id="<?php echo esc_attr( \jQuestPlugin\Scripts\POPUP_VERSION_OPTION ); ?>">
+							<?php foreach ( \jQuestPlugin\Scripts\VERSIONS as $jquest_version_choice ) : ?>
+								<option value="<?php echo esc_attr( $jquest_version_choice ); ?>"
+									<?php selected( $jquest_version, $jquest_version_choice ); ?>>
+									<?php echo esc_html( ucfirst( $jquest_version_choice ) ); ?>
+								</option>
+							<?php endforeach; ?>
+						</select>
+						<p class="description"><?php esc_html_e( 'Which jQuest script version the loader should use. Applies to all popups, across every language.', 'jquest' ); ?></p>
+					</td>
+				</tr>
+			</table>
+			<?php submit_button(); ?>
+		</form>
+	</div>
+
 	<?php if ( ! empty( $jquest_tabs ) ) : ?>
 		<div class="nav-tab-wrapper">
 			<?php foreach ( $jquest_tabs as $jquest_tab => $tab_data ) : ?>
@@ -840,19 +873,6 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 							value="1"
 							<?php checked( get_option( $jquest_prefix . 'disable_noscroll', 1 ), 1 ); ?>>
 						<?php esc_html_e( 'Disable noscroll on body', 'jquest' ); ?>
-					</label>
-				</td>
-			</tr>
-			<tr>
-				<th scope="row"><?php esc_html_e( 'Use latest script version', 'jquest' ); ?></th>
-				<td>
-					<input type="hidden" name="<?php echo esc_attr( $jquest_prefix . 'latest_script' ); ?>" value="0">
-					<label>
-						<input type="checkbox"
-							name="<?php echo esc_attr( $jquest_prefix . 'latest_script' ); ?>"
-							value="1"
-							<?php checked( get_option( $jquest_prefix . 'latest_script', 0 ), 1 ); ?>>
-						<?php esc_html_e( 'Use latest script version', 'jquest' ); ?>
 					</label>
 				</td>
 			</tr>

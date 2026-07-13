@@ -172,8 +172,11 @@ class OptionsPage extends Singleton {
 			register_setting( $group, $prefix . 'limit', array( 'sanitize_callback' => 'absint' ) );
 			register_setting( $group, $prefix . 'disable_dismiss', array( 'sanitize_callback' => 'absint' ) );
 			register_setting( $group, $prefix . 'disable_noscroll', array( 'sanitize_callback' => 'absint' ) );
-			register_setting( $group, $prefix . 'latest_script', array( 'sanitize_callback' => 'absint' ) );
 		}
+
+		// Popup script version — a single global setting, saved from its own
+		// form at the top of the popup page (not tied to any language).
+		register_setting( 'jquest-popup-general', \jQuestPlugin\Scripts\POPUP_VERSION_OPTION, array( 'sanitize_callback' => 'jQuestPlugin\Scripts\sanitize_version' ) );
 
 		// Trigger settings — global (not per-language).
 		$svg_kses = array(

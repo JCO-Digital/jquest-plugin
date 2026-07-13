@@ -122,7 +122,6 @@ function render_template( string $template, array $data = array() ): string {
  * @return void
  */
 function fetch_jquests( $value ) {
-
 	$api_url           = 'https://europe-north1-jquest-e67dc.cloudfunctions.net/organizationGames-getorganizationgames?orgId=' . $value;
 	$api_response      = wp_remote_get(
 		$api_url,

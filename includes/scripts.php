@@ -8,25 +8,69 @@
 namespace jQuestPlugin\Scripts;
 
 /**
- * Outputs a jQuest script tag, ensuring each URL is only output once per page load.
+ * URL of the jQuest loader. The loader decides which build to fetch based on
+ * the window.__JQUEST_VERSION global set below.
+ */
+const LOADER_URL = 'https://files.jquest.fi/jquest/jquest-loader.js';
+
+/**
+ * Version channel used when none is selected or an unknown one is requested.
+ */
+const DEFAULT_VERSION = 'stable';
+
+/**
+ * Version channels the loader understands.
+ */
+const VERSIONS = array( 'stable', 'latest', 'v2' );
+
+/**
+ * Option holding the popup version channel. Global (shared across languages),
+ * since the version is a technical concern rather than per-language content.
+ */
+const POPUP_VERSION_OPTION = 'jquest_popup_version';
+
+/**
+ * Flag option marking that the one-time popup version migration has run.
+ */
+const VERSION_MIGRATION_FLAG = 'jquest_popup_version_migrated';
+
+/**
+ * Normalises a version channel to one the loader understands.
  *
- * @param string $url The script URL to insert.
+ * @param mixed $version The requested version.
+ *
+ * @return string A value from VERSIONS, or DEFAULT_VERSION when unrecognised.
+ */
+function sanitize_version( $version ): string {
+	return in_array( $version, VERSIONS, true ) ? (string) $version : DEFAULT_VERSION;
+}
+
+/**
+ * Loads the jQuest loader once per page and tells it which version to fetch
+ * via the window.__JQUEST_VERSION global.
+ *
+ * @param string $version The version channel to load (see VERSIONS).
  *
  * @return void
  */
-function insert_jquest_script( string $url ): void {
-	// Extract a unique handle from the URL (e.g., 'jquest-stable' or 'jquest-latest').
-	$handle = str_contains( $url, 'latest' ) ? 'jquest-latest' : 'jquest-stable';
+function insert_jquest_script( string $version = DEFAULT_VERSION ): void {
+	static $inserted = false;
+	if ( $inserted ) {
+		return;
+	}
+	$inserted = true;
 
-	// Register and enqueue it using WordPress's native Module API.
-	wp_register_script_module(
-		$handle,
-		$url,
-		array(),
-		\JQUEST_PLUGIN_VERSION
-	);
+	// Fall back to the default channel for anything unrecognised.
+	$version = sanitize_version( $version );
 
-	wp_enqueue_script_module( $handle );
+	// The loader is a module, which always executes deferred, so set the
+	// version global from a classic inline script first — it runs during
+	// parsing, well before the loader module executes.
+	echo "<script>window.__JQUEST_VERSION = '" . esc_js( $version ) . "';</script>\n";
+
+	// Register and enqueue the loader using WordPress's native Module API.
+	wp_register_script_module( 'jquest-loader', LOADER_URL, array(), \JQUEST_PLUGIN_VERSION );
+	wp_enqueue_script_module( 'jquest-loader' );
 }
 
 /**
@@ -58,14 +102,7 @@ function maybe_insert_jquest_script() {
 		}
 	}
 	if ( $has_jquest_blocks ) {
-		if ( 'stable' === $version ) {
-			$url = 'https://files.jquest.fi/jquest/stable/jquest-stable.js';
-		} elseif ( 'latest' === $version ) {
-			$url = 'https://files.jquest.fi/jquest/latest/jquest-latest.js';
-		}
-		if ( isset( $url ) ) {
-			insert_jquest_script( $url );
-		}
+		insert_jquest_script( $version ? $version : DEFAULT_VERSION );
 	}
 }
 
@@ -125,14 +162,61 @@ function maybe_insert_popup_script(): void {
 		return;
 	}
 
-	$url = get_option( $prefix . 'latest_script', 0 )
-		? 'https://files.jquest.fi/jquest/latest/jquest-latest.js'
-		: 'https://files.jquest.fi/jquest/stable/jquest-stable.js';
+	$version = get_option( POPUP_VERSION_OPTION, '' );
+	if ( '' === $version ) {
+		// Back-compat for the window before migrate_popup_version() runs: fall
+		// back to this language's legacy boolean "use latest script" option.
+		$version = get_option( $prefix . 'latest_script', 0 ) ? 'latest' : DEFAULT_VERSION;
+	}
 
-	insert_jquest_script( $url );
+	insert_jquest_script( $version );
 }
 
 add_action( 'wp_head', __NAMESPACE__ . '\maybe_insert_popup_script' );
+
+/**
+ * One-time migration from the legacy per-language boolean `latest_script`
+ * options to the single global version option. It consolidates every
+ * language's value (any "latest" wins), then removes the legacy options and
+ * sets a flag so it never runs again.
+ *
+ * @return void
+ */
+function migrate_popup_version(): void {
+	if ( get_option( VERSION_MIGRATION_FLAG ) ) {
+		return;
+	}
+
+	global $wpdb;
+	// Find every language's legacy option, e.g. jquest_popup_en_latest_script.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$legacy_options = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+			$wpdb->esc_like( 'jquest_popup_' ) . '%' . $wpdb->esc_like( '_latest_script' )
+		)
+	);
+
+	// Only seed the global version if it has not been set explicitly already.
+	if ( ! empty( $legacy_options ) && '' === (string) get_option( POPUP_VERSION_OPTION, '' ) ) {
+		$use_latest = false;
+		foreach ( $legacy_options as $legacy_option ) {
+			if ( get_option( $legacy_option, 0 ) ) {
+				$use_latest = true;
+				break;
+			}
+		}
+		update_option( POPUP_VERSION_OPTION, $use_latest ? 'latest' : DEFAULT_VERSION );
+	}
+
+	foreach ( $legacy_options as $legacy_option ) {
+		delete_option( $legacy_option );
+	}
+
+	update_option( VERSION_MIGRATION_FLAG, 1 );
+}
+
+add_action( 'admin_init', __NAMESPACE__ . '\migrate_popup_version' );
 
 /**
  * Outputs the jQuest popup div into the footer when the popup is enabled for the current language.
@@ -147,29 +231,34 @@ function maybe_insert_popup_div(): void {
 		return;
 	}
 
-	$org_id           = get_option( 'jquest_org_id', '' );
-	$quest_id         = get_option( $prefix . 'quest_id', '' );
+	// Prepare every value as a finished, escaped string so the markup below
+	// stays a plain template with no inline PHP.
+	$org_id           = esc_attr( get_option( 'jquest_org_id', '' ) );
+	$quest_id         = esc_attr( get_option( $prefix . 'quest_id', '' ) );
 	$auto             = get_option( $prefix . 'auto', 0 ) ? 'true' : 'false';
 	$limit            = (int) get_option( $prefix . 'limit', 0 );
-	$attach           = get_option( $prefix . 'attach', 'body' );
+	$attach           = esc_attr( get_option( $prefix . 'attach', 'body' ) );
 	$disable_dismiss  = get_option( $prefix . 'disable_dismiss', 1 ) ? 'true' : 'false';
 	$disable_noscroll = get_option( $prefix . 'disable_noscroll', 1 ) ? 'true' : 'false';
-	$locale           = $lang === 'default' ? '' : $lang;
-	?>
+	$locale           = 'default' === $lang ? '' : esc_attr( $lang );
+
+	// phpcs:disable WordPress.Security.EscapeOutput -- values are escaped/int-cast above.
+	echo <<<HTML
 	<div
 		class="jquest-app"
 		data-new-styles="true"
-		data-locale="<?php echo esc_attr( $locale ); ?>"
-		data-org-id="<?php echo esc_attr( $org_id ); ?>"
-		data-game-id="<?php echo esc_attr( $quest_id ); ?>"
+		data-locale="{$locale}"
+		data-org-id="{$org_id}"
+		data-game-id="{$quest_id}"
 		data-popup="true"
-		data-popup-auto="<?php echo esc_attr( $auto ); ?>"
-		data-popup-limit="<?php echo esc_attr( $limit ); ?>"
-		data-popup-attach="<?php echo esc_attr( $attach ); ?>"
-		data-popup-disable-dismiss="<?php echo esc_attr( $disable_dismiss ); ?>"
-		data-popup-disable-noscroll="<?php echo esc_attr( $disable_noscroll ); ?>"
+		data-popup-auto="{$auto}"
+		data-popup-limit="{$limit}"
+		data-popup-attach="{$attach}"
+		data-popup-disable-dismiss="{$disable_dismiss}"
+		data-popup-disable-noscroll="{$disable_noscroll}"
 	></div>
-	<?php
+	HTML;
+	// phpcs:enable WordPress.Security.EscapeOutput
 }
 
 add_action( 'wp_footer', __NAMESPACE__ . '\maybe_insert_popup_div' );
@@ -217,125 +306,111 @@ function output_popup_trigger_styles(): void {
 	$minimized                    = (bool) get_option( 'jquest_popup_trigger_minimized', 0 );
 	$watch_selector               = get_option( 'jquest_popup_trigger_watch_selector', 'footer' );
 	$watch_threshold              = (int) get_option( 'jquest_popup_trigger_watch_threshold', 10 );
-	// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-	?>
+	// Build every dynamic value as a finished string first. Keeping the CSS
+	// template free of inline PHP makes it readable and stops the formatter
+	// from splitting a value across lines, which previously produced broken
+	// CSS such as "23 px" in the padding shorthand.
+	$side                  = esc_attr( $side );
+	$text_color            = esc_attr( $text_color );
+	$bg_color              = esc_attr( $bg_color );
+	$text_hover_color      = esc_attr( $text_hover_color );
+	$bg_hover_color        = esc_attr( $bg_hover_color );
+	$icon_bg_color         = esc_attr( $icon_bg_color );
+	$font_weight           = esc_attr( $font_weight );
+	$padding               = sprintf( '%dpx %dpx %dpx %dpx', $padding_top, $padding_right, $padding_bottom, $padding_left );
+	$underline_color       = '' !== $underline_color ? esc_attr( $underline_color ) : 'transparent';
+	$underline_hover_color = '' !== $underline_hover_color ? esc_attr( $underline_hover_color ) : 'transparent';
+
+	// Optional rules, emitted only when their source value is set.
+	$font_size_rule  = $font_size > 0 ? "font-size: {$font_size}px;" : '';
+	$icon_color_rule = '' !== $icon_color ? 'color: ' . esc_attr( $icon_color ) . ';' : '';
+
+	$icon_bg_hover_rule = '' !== $icon_bg_hover_color
+		? '.jquest-popup-toggle a:hover .icon-container { background-color: ' . esc_attr( $icon_bg_hover_color ) . '; }'
+		: '';
+	$icon_hover_rule    = '' !== $icon_hover_color
+		? '.jquest-popup-toggle a:hover .icon-container svg { color: ' . esc_attr( $icon_hover_color ) . '; }'
+		: '';
+
+	$minimized_rule = $minimized ? sprintf(
+		'.jquest-popup-toggle.is-minimized a { border-radius: 50%%; padding: %dpx; } .jquest-popup-toggle.is-minimized .label { display: none; }',
+		$padding_top
+	) : '';
+
+	// phpcs:disable WordPress.Security.EscapeOutput -- values are escaped/int-cast above.
+	echo <<<CSS
 	<style>
 		.jquest-app[data-popup='true'] { display: none; }
+
 		.jquest-popup-toggle {
 			position: fixed;
-			bottom: <?php echo esc_attr( $offset_y ); ?>px;
-			<?php echo esc_attr( $side ); ?>: <?php echo esc_attr( $offset_x ); ?>px;
+			bottom: {$offset_y}px;
+			{$side}: {$offset_x}px;
 			z-index: 99;
 			max-width: 100%;
 			transition: all .3s;
-			* {
-				transition: all .3s;
-			}
+		}
+		.jquest-popup-toggle * { transition: all .3s; }
 
-			a {
-				align-items: center;
-				position: relative;
-				background-color: <?php echo esc_attr( $bg_color ); ?>;
-				cursor: pointer;
-				border-radius: <?php echo esc_attr( $border_radius ); ?>px;
-				text-decoration: none;
-				color: <?php echo esc_attr( $text_color ); ?>;
-				padding: <?php echo esc_attr( $padding_top ); ?>px
-				<?php
-				echo esc_attr(
-					$padding_right,
-				);
-				?>
-							px <?php echo esc_attr( $padding_bottom ); ?>px <?php echo esc_attr( $padding_left ); ?>px;
-				<?php
-				if ( $font_size > 0 ) :
-					?>
-					font-size: <?php echo esc_attr( $font_size ); ?>px;<?php endif; ?>
-				font-weight: <?php echo esc_attr( $font_weight ); ?>;
-				border-bottom: <?php echo esc_attr( $underline_width ); ?>px solid
-				<?php
-				echo '' !== $underline_color
-				? esc_attr( $underline_color )
-				: 'transparent';
-				?>
-	;
-				display: flex;
-				gap: <?php echo esc_attr( $items_gap ); ?>px;
-				height: 100%;
-					.label{
-						margin-top: auto;
-						margin-bottom: auto;
-						line-height: 18px;
-					}
-			}
+		.jquest-popup-toggle a {
+			display: flex;
+			align-items: center;
+			position: relative;
+			height: 100%;
+			gap: {$items_gap}px;
+			padding: {$padding};
+			background-color: {$bg_color};
+			color: {$text_color};
+			border-radius: {$border_radius}px;
+			border-bottom: {$underline_width}px solid {$underline_color};
+			text-decoration: none;
+			cursor: pointer;
+			font-weight: {$font_weight};
+			{$font_size_rule}
 		}
+		.jquest-popup-toggle a .label {
+			margin-top: auto;
+			margin-bottom: auto;
+			line-height: 18px;
+		}
+
 		.jquest-popup-toggle a:hover {
-			background-color: <?php echo esc_attr( $bg_hover_color ); ?>;
-			color: <?php echo esc_attr( $text_hover_color ); ?>;
-			border-bottom-color:
-			<?php
-			echo '' !== $underline_hover_color
-			? esc_attr( $underline_hover_color )
-			: 'transparent';
-			?>
-	;
+			background-color: {$bg_hover_color};
+			color: {$text_hover_color};
+			border-bottom-color: {$underline_hover_color};
 		}
+
 		.jquest-popup-toggle a .icon-container {
-			border-radius: <?php echo esc_attr( $icon_container_border_radius ); ?>px;
-			background-color: <?php echo esc_attr( $icon_bg_color ); ?>;
-			height: <?php echo esc_attr( $icon_container_size ); ?>px;
-			width: <?php echo esc_attr( $icon_container_size ); ?>px;
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			width: {$icon_container_size}px;
+			height: {$icon_container_size}px;
+			border-radius: {$icon_container_border_radius}px;
+			background-color: {$icon_bg_color};
 		}
 		.jquest-popup-toggle a .icon-container svg {
-			width: <?php echo esc_attr( $icon_size ); ?>px;
-			height: <?php echo esc_attr( $icon_size ); ?>px;
-			<?php
-			if ( '' !== $icon_color ) :
-				?>
-				color: <?php echo esc_attr( $icon_color ); ?>;<?php endif; ?>
+			width: {$icon_size}px;
+			height: {$icon_size}px;
+			{$icon_color_rule}
 		}
-		<?php if ( '' !== $icon_bg_hover_color ) : ?>
-		.jquest-popup-toggle a:hover .icon-container { background-color:
-			<?php
-			echo esc_attr(
-				$icon_bg_hover_color,
-			);
-			?>
-	; }
-		<?php endif; ?>
-		<?php if ( '' !== $icon_hover_color ) : ?>
-		.jquest-popup-toggle a:hover .icon-container svg { color:
-			<?php
-			echo esc_attr(
-				$icon_hover_color,
-			);
-			?>
-	; }
-		<?php endif; ?>
+
+		{$icon_bg_hover_rule}
+		{$icon_hover_rule}
+
 		@media (width >= 1024px) {
-			.jquest-popup-toggle .mobile-only {
-				display: none !important;
-			}
+			.jquest-popup-toggle .mobile-only { display: none !important; }
 		}
 		@media (width < 1024px) {
-			.jquest-popup-toggle .desktop-only {
-				display: none !important;
-			}
+			.jquest-popup-toggle .desktop-only { display: none !important; }
 		}
-		<?php if ( $minimized ) : ?>
-		.jquest-popup-toggle.is-minimized a {
-			border-radius: 50%;
-			padding: <?php echo esc_attr( $padding_top ); ?>px;
-		}
-		.jquest-popup-toggle.is-minimized .label {
-			display: none;
-		}
-		<?php endif; ?>
+
+		{$minimized_rule}
 	</style>
-	<?php if ( $minimized ) : ?>
+	CSS;
+
+	if ( $minimized ) :
+		?>
 	<script>
 	(function () {
 		var selector  = <?php echo wp_json_encode( $watch_selector ); ?>;
@@ -359,7 +434,7 @@ function output_popup_trigger_styles(): void {
 	</script>
 	<?php endif; ?>
 	<?php
-	// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
+	// phpcs:enable WordPress.Security.EscapeOutput
 }
 
 /**
@@ -432,33 +507,37 @@ function maybe_insert_popup_trigger(): void {
 		$icon = '';
 	}
 	output_popup_trigger_styles();
-	// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-	?>
-	<div class="jquest-popup-toggle
-	<?php
-	echo isset( $icon ) && '' !== $icon
-	? 'has-icon'
-	: 'no-icon';
-	?>
-	">
-		<a href="#jquest-popup-<?php echo esc_attr( $quest_id ); ?>">
-			<?php if ( '' !== $label || '' !== $label_mobile ) : ?>
-				<span class="label">
-					<?php if ( '' !== $label ) : ?>
-					<span class="desktop-only"><?php echo esc_html( $label ); ?></span>
-					<?php endif; ?>
-					<?php if ( '' !== $label_mobile ) : ?>
-					<span class="mobile-only"><?php echo esc_html( $label_mobile ); ?></span>
-					<?php endif; ?>
-				</span>
-			<?php endif; ?>
-			<?php if ( '' !== $icon ) : ?>
-			<span class="icon-container"><?php echo $icon; ?></span>
-			<?php endif; ?>
+
+	// Build the markup fragments up front so the template stays a plain
+	// heredoc with no inline PHP or conditionals.
+	$toggle_class = '' !== $icon ? 'has-icon' : 'no-icon';
+	$quest_id     = esc_attr( $quest_id );
+
+	$label_html = '';
+	if ( '' !== $label || '' !== $label_mobile ) {
+		$label_parts = '';
+		if ( '' !== $label ) {
+			$label_parts .= '<span class="desktop-only">' . esc_html( $label ) . '</span>';
+		}
+		if ( '' !== $label_mobile ) {
+			$label_parts .= '<span class="mobile-only">' . esc_html( $label_mobile ) . '</span>';
+		}
+		$label_html = '<span class="label">' . $label_parts . '</span>';
+	}
+
+	// $icon is either a trusted literal or already run through wp_kses().
+	$icon_html = '' !== $icon ? '<span class="icon-container">' . $icon . '</span>' : '';
+
+	// phpcs:disable WordPress.Security.EscapeOutput -- values are escaped / wp_kses'd above.
+	echo <<<HTML
+	<div class="jquest-popup-toggle {$toggle_class}" data-jq-load="hover">
+		<a href="#jquest-popup-{$quest_id}">
+			{$label_html}
+			{$icon_html}
 		</a>
 	</div>
-	<?php
-	// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
+	HTML;
+	// phpcs:enable WordPress.Security.EscapeOutput
 }
 
 add_action( 'wp_footer', __NAMESPACE__ . '\maybe_insert_popup_trigger' );

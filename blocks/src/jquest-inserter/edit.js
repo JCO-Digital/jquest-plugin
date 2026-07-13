@@ -61,7 +61,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	const [ games, setGames ] = useState( [] );
 	const [ text, setText ] = useState( __( '', 'jquest' ) );
 
-	const versions = [ 'stable', 'latest' ];
+	const versions = [ 'stable', 'latest', 'v2' ];
 
 	const versionOptions = versions.map( ( v ) => ( {
 		label: v.charAt( 0 ).toUpperCase() + v.slice( 1 ),
