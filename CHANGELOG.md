@@ -1,6 +1,16 @@
 # Changelog
 
-### 1.6.1 (2026-06-18)
+## 1.7.0 (2026-07-13)
+
+#### Features
+
+- jquest-inserter: This is a feat to bump version correctly, fixed lint stuff (91b20f1)
+
+#### Refactor
+
+- scripts: consolidate script versioning to global setting (7a3a049)
+
+### v1.6.1 (2026-06-18)
 
 #### Maintenance
 
