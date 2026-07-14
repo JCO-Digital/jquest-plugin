@@ -175,18 +175,20 @@ export default function Edit( { attributes, setAttributes } ) {
 						options={ games }
 						onChange={ onChangeGame }
 					/>
-					<SelectControl
-						label={ __( 'Script Version', 'jquest' ) }
-						value={ version }
-						options={ versionOptions }
-						onChange={ ( newVersion ) =>
-							setAttributes( { version: newVersion } )
-						}
-						help={ __(
-							'Choose which jQuest script version to load.',
-							'jquest'
-						) }
-					/>
+					{ questVersion !== 'v2' && (
+						<SelectControl
+							label={ __( 'Script Version', 'jquest' ) }
+							value={ version }
+							options={ versionOptions }
+							onChange={ ( newVersion ) =>
+								setAttributes( { version: newVersion } )
+							}
+							help={ __(
+								'Choose which jQuest script version to load.',
+								'jquest'
+							) }
+						/>
+					) }
 					<ToggleControl
 						label={ 'Run as Popup' }
 						checked={ !! popup }
