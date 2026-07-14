@@ -114,6 +114,55 @@ function render_template( string $template, array $data = array() ): string {
 }
 
 /**
+ * Adds the API generation to every valid quest in a collection.
+ *
+ * @param mixed  $quests  Quest collection returned by the API.
+ * @param string $version Quest generation.
+ *
+ * @return array
+ */
+function add_jquest_versions( $quests, string $version ): array {
+	if ( ! is_array( $quests ) ) {
+		return array();
+	}
+
+	$versioned_quests = array();
+	foreach ( $quests as $quest ) {
+		if ( is_array( $quest ) ) {
+			$quest = (object) $quest;
+		}
+		if ( ! is_object( $quest ) ) {
+			continue;
+		}
+
+		$quest->version     = $version;
+		$versioned_quests[] = $quest;
+	}
+
+	return $versioned_quests;
+}
+
+/**
+ * Gets the generation of a stored quest.
+ *
+ * @param string     $quest_id Quest ID.
+ * @param array|null $quests   Optional quest collection. Uses the stored quests by default.
+ *
+ * @return string
+ */
+function get_jquest_version( string $quest_id, ?array $quests = null ): string {
+	$quests = $quests ?? get_option( 'jquest_org_games', array() );
+
+	foreach ( $quests as $quest ) {
+		if ( is_object( $quest ) && isset( $quest->id ) && $quest_id === $quest->id ) {
+			return isset( $quest->version ) && 'v2' === $quest->version ? 'v2' : 'v1';
+		}
+	}
+
+	return 'v1';
+}
+
+/**
  * Fetch the JQUESTs from Firestore.
  * This function is called when the 'jquest__organization_id' option is updated.
  *
@@ -122,7 +171,7 @@ function render_template( string $template, array $data = array() ): string {
  * @return void
  */
 function fetch_jquests( $value ) {
-	$api_url           = 'https://europe-north1-jquest-e67dc.cloudfunctions.net/organizationGames-getorganizationgames?orgId=' . $value;
+	$api_url           = 'https://api.jquest.fi/organizationGames-getorganizationgames?v2=true&orgId=' . $value;
 	$api_response      = wp_remote_get(
 		$api_url,
 		array(
@@ -133,15 +182,20 @@ function fetch_jquests( $value ) {
 	$decoded_response  = json_decode( $api_response_body, false );
 	if ( is_null( $decoded_response ) ) {
 		update_option( 'jquest_org_message', 'Failed to fetch JQUESTs from Firestore.' );
+		update_option( 'jquest_org_games', array() );
+		return;
 	}
 
 	$message = $decoded_response->message ?? '';
 	update_option( 'jquest_org_message', $message );
 
-	if ( ! $decoded_response->success === true ) {
+	if ( ! isset( $decoded_response->success ) || true !== $decoded_response->success ) {
 		update_option( 'jquest_org_games', array() );
 		return;
 	}
 
-	update_option( 'jquest_org_games', $decoded_response->data );
+	$v1_quests = add_jquest_versions( $decoded_response->data ?? array(), 'v1' );
+	$v2_quests = add_jquest_versions( $decoded_response->quests ?? array(), 'v2' );
+
+	update_option( 'jquest_org_games', array_merge( $v1_quests, $v2_quests ) );
 }

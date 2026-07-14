@@ -34,6 +34,10 @@
     "selectedGame": {
       "type": "string"
     },
+    "questVersion": {
+      "type": "string",
+      "default": "v1"
+    },
     "organization": {
       "type": "string"
     },

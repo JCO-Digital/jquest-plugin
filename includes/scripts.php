@@ -234,13 +234,16 @@ function maybe_insert_popup_div(): void {
 	// Prepare every value as a finished, escaped string so the markup below
 	// stays a plain template with no inline PHP.
 	$org_id           = esc_attr( get_option( 'jquest_org_id', '' ) );
-	$quest_id         = esc_attr( get_option( $prefix . 'quest_id', '' ) );
+	$quest_id         = get_option( $prefix . 'quest_id', '' );
+	$quest_version    = \jQuestPlugin\get_jquest_version( $quest_id );
+	$quest_id         = esc_attr( $quest_id );
 	$auto             = get_option( $prefix . 'auto', 0 ) ? 'true' : 'false';
 	$limit            = (int) get_option( $prefix . 'limit', 0 );
 	$attach           = esc_attr( get_option( $prefix . 'attach', 'body' ) );
 	$disable_dismiss  = get_option( $prefix . 'disable_dismiss', 1 ) ? 'true' : 'false';
 	$disable_noscroll = get_option( $prefix . 'disable_noscroll', 1 ) ? 'true' : 'false';
 	$locale           = 'default' === $lang ? '' : esc_attr( $lang );
+	$version_attr     = 'v2' === $quest_version ? "\n\t\tdata-jq-version=\"v2\"" : '';
 
 	// phpcs:disable WordPress.Security.EscapeOutput -- values are escaped/int-cast above.
 	echo <<<HTML
@@ -249,7 +252,7 @@ function maybe_insert_popup_div(): void {
 		data-new-styles="true"
 		data-locale="{$locale}"
 		data-org-id="{$org_id}"
-		data-game-id="{$quest_id}"
+		data-game-id="{$quest_id}"{$version_attr}
 		data-popup="true"
 		data-popup-auto="{$auto}"
 		data-popup-limit="{$limit}"

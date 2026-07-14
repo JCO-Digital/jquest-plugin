@@ -35,9 +35,13 @@ class JQuest_Table extends \WP_List_Table {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'ID':
-				return $item->id;
+				return esc_html( $item->id );
 			case 'Title':
-				return $item->title;
+				$title = esc_html( $item->title );
+				if ( isset( $item->version ) && 'v2' === $item->version ) {
+					$title .= ' <span class="jquest-version-badge">v2</span>';
+				}
+				return $title;
 			default:
 				return '';
 		}

@@ -765,16 +765,20 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 					</label>
 				</th>
 				<td>
+					<?php $jquest_selected_quest_id = get_option( $jquest_prefix . 'quest_id', '' ); ?>
 					<select name="<?php echo esc_attr( $jquest_prefix . 'quest_id' ); ?>"
 						id="<?php echo esc_attr( $jquest_prefix . 'quest_id' ); ?>">
 						<option value=""><?php esc_html_e( '— Select a quest —', 'jquest' ); ?></option>
 						<?php foreach ( $jquest_games as $game ) : ?>
 							<option value="<?php echo esc_attr( $game->id ); ?>"
-								<?php selected( get_option( $jquest_prefix . 'quest_id', '' ), $game->id ); ?>>
-								<?php echo esc_html( $game->title ); ?>
+								<?php selected( $jquest_selected_quest_id, $game->id ); ?>>
+								<?php echo esc_html( $game->title . ( isset( $game->version ) && 'v2' === $game->version ? ' [v2]' : '' ) ); ?>
 							</option>
 						<?php endforeach; ?>
 					</select>
+					<?php if ( 'v2' === \jQuestPlugin\get_jquest_version( $jquest_selected_quest_id, $jquest_games ) ) : ?>
+						<span class="jquest-version-badge">v2</span>
+					<?php endif; ?>
 				</td>
 			</tr>
 			<tr>

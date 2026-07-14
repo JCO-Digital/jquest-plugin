@@ -43,6 +43,7 @@ import './editor.scss';
 export default function Edit( { attributes, setAttributes } ) {
 	const {
 		selectedGame,
+		questVersion,
 		organization,
 		version,
 		popup,
@@ -83,21 +84,42 @@ export default function Edit( { attributes, setAttributes } ) {
 				);
 				return;
 			}
-			if ( ! data.games ) {
+			if ( ! data.games?.length ) {
 				setText( __( 'No games found for organization.', 'jquest' ) );
 				return;
 			}
 
 			// Map the games to an array of objects with value and label properties.
-			setGames(
-				data.games.map( ( game ) => ( {
+			const gameOptions = data.games.map( ( game ) => {
+				const gameVersion = game.version === 'v2' ? 'v2' : 'v1';
+
+				return {
 					value: game.id,
-					label: game.title,
-				} ) )
-			);
+					label:
+						gameVersion === 'v2'
+							? `${ game.title } [v2]`
+							: game.title,
+					title: game.title,
+					version: gameVersion,
+				};
+			} );
+			setGames( gameOptions );
+
 			// If there is no selected game, set the selected game to the first game.
 			if ( ! selectedGame ) {
-				setAttributes( { selectedGame: data.games[ 0 ].id } );
+				setAttributes( {
+					selectedGame: gameOptions[ 0 ].value,
+					questVersion: gameOptions[ 0 ].version,
+				} );
+			} else {
+				const selectedGameOption = gameOptions.find(
+					( game ) => game.value === selectedGame
+				);
+				if ( selectedGameOption ) {
+					setAttributes( {
+						questVersion: selectedGameOption.version,
+					} );
+				}
 			}
 			// Set the organization attribute.
 			setAttributes( { organization: data.organization } );
@@ -110,7 +132,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		games.forEach( ( game ) => {
 			if ( game.value === selectedGame ) {
 				// eslint-disable-next-line @wordpress/i18n-no-variables
-				setText( __( game.label, 'jquest' ) );
+				setText( __( game.title, 'jquest' ) );
 			}
 		} );
 	}, [ selectedGame, organization, games ] );
@@ -122,7 +144,13 @@ export default function Edit( { attributes, setAttributes } ) {
 	 * @param {string} newGame - The new selected game.
 	 */
 	const onChangeGame = ( newGame ) => {
-		setAttributes( { selectedGame: newGame } );
+		const selectedGameOption = games.find(
+			( game ) => game.value === newGame
+		);
+		setAttributes( {
+			selectedGame: newGame,
+			questVersion: selectedGameOption?.version || 'v1',
+		} );
 	};
 
 	const openDashboard = () => {
@@ -308,6 +336,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					className="jquest-app"
 					data-org-id={ organization }
 					data-game-id={ selectedGame }
+					data-jq-version={ questVersion === 'v2' ? 'v2' : undefined }
 					data-popup={ popup ? 'true' : 'false' }
 					data-popup-auto={ popupAuto ? 'true' : 'false' }
 					data-popup-delay={ popupDelay }
@@ -315,6 +344,9 @@ export default function Edit( { attributes, setAttributes } ) {
 					data-new-styles="true"
 				>
 					{ text }
+					{ questVersion === 'v2' && (
+						<span className="jquest-version-badge">v2</span>
+					) }
 					{ organization !== '' && selectedGame !== '' && (
 						<button onClick={ openDashboard }>
 							Edit in dashboard

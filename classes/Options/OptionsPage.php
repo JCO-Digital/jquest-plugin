@@ -136,15 +136,21 @@ class OptionsPage extends Singleton {
 					if ( is_array( $input ) ) {
 						return array_map(
 							function ( $item ) {
-								if ( is_object( $item ) ) {
-									$item->title = isset( $item->title ) ? sanitize_text_field( $item->title ) : '';
-									$item->ID = isset( $item->ID ) ? sanitize_text_field( $item->ID ) : '';
-									return $item;
+								if ( is_array( $item ) ) {
+									$item = (object) $item;
 								}
-								return (object) array(
-									'title' => '',
-									'id'    => '',
-								);
+								if ( ! is_object( $item ) ) {
+									return (object) array(
+										'title'   => '',
+										'id'      => '',
+										'version' => 'v1',
+									);
+								}
+
+								$item->title   = isset( $item->title ) ? sanitize_text_field( $item->title ) : '';
+								$item->id      = isset( $item->id ) ? sanitize_text_field( $item->id ) : '';
+								$item->version = isset( $item->version ) && 'v2' === $item->version ? 'v2' : 'v1';
+								return $item;
 							},
 							$input
 						);
