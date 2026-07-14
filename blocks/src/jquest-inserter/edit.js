@@ -163,12 +163,11 @@ export default function Edit( { attributes, setAttributes } ) {
 	};
 
 	const openDashboard = () => {
-		// go to dashboard
+		const buildUrl = (org, quest, version) => {
+			return `https://dashboard.jquest.fi/#/dashboard/${org}/${version === 'v2' ? 'quests/' : ''}${quest}`;
+		};
 		window.open(
-			'https://dashboard.jquest.fi/#/dashboard/' +
-				organization +
-				'/' +
-				selectedGame,
+			buildUrl(organization, selectedGame, questVersion),
 			'_blank'
 		);
 	};
