@@ -1,6 +1,12 @@
 # Changelog
 
-## 1.8.0 (2026-07-14)
+### 1.8.1 (2026-07-14)
+
+#### Bug Fixes
+
+- inserter: rename data-jq-version to data-version (73a4bfe)
+
+## v1.8.0 (2026-07-14)
 
 #### Features
 
