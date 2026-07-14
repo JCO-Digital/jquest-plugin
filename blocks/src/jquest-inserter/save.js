@@ -47,7 +47,7 @@ export default function save( { attributes } ) {
 				className="jquest-app"
 				data-org-id={ organization }
 				data-game-id={ selectedGame }
-				data-jq-version={ questVersion === 'v2' ? 'v2' : undefined }
+				data-version={ questVersion === 'v2' ? 'v2' : undefined }
 				data-popup={ popup ? 'true' : 'false' }
 				data-popup-auto={ popupAuto ? 'true' : 'false' }
 				data-popup-delay={ popupDelay }

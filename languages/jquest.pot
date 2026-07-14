@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the JQUEST Plugin package.
 msgid ""
 msgstr ""
-"Project-Id-Version: JQUEST Plugin 1.7.0\n"
+"Project-Id-Version: JQUEST Plugin 1.8.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/jquest-plugin\n"
-"POT-Creation-Date: 2026-07-14 06:12:34+00:00\n"
+"POT-Creation-Date: 2026-07-14 07:16:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -29,24 +29,24 @@ msgid "Title"
 msgstr ""
 
 #: classes/Options/OptionsPage.php:91 classes/Options/OptionsPage.php:92
-#: classes/Options/OptionsPage.php:260 classes/Options/OptionsPage.php:380
+#: classes/Options/OptionsPage.php:266 classes/Options/OptionsPage.php:386
 msgid "General"
 msgstr ""
 
 #: classes/Options/OptionsPage.php:100 classes/Options/OptionsPage.php:101
-#: classes/Options/OptionsPage.php:349
+#: classes/Options/OptionsPage.php:355
 msgid "Popup"
 msgstr ""
 
-#: classes/Options/OptionsPage.php:267 classes/Options/OptionsPage.php:297
+#: classes/Options/OptionsPage.php:273 classes/Options/OptionsPage.php:303
 msgid "Organisation ID"
 msgstr ""
 
-#: classes/Options/OptionsPage.php:283
+#: classes/Options/OptionsPage.php:289
 msgid "General settings required for jQuest integration."
 msgstr ""
 
-#: classes/Options/OptionsPage.php:335
+#: classes/Options/OptionsPage.php:341
 msgid "Trigger"
 msgstr ""
 
@@ -257,51 +257,51 @@ msgstr ""
 msgid "Quest"
 msgstr ""
 
-#: views/popup-settings.php:770
+#: views/popup-settings.php:771
 msgid "— Select a quest —"
 msgstr ""
 
-#: views/popup-settings.php:783
+#: views/popup-settings.php:787
 msgid "Desktop label"
 msgstr ""
 
-#: views/popup-settings.php:797
+#: views/popup-settings.php:801
 msgid "Mobile label"
 msgstr ""
 
-#: views/popup-settings.php:809
+#: views/popup-settings.php:813
 msgid "Advanced"
 msgstr ""
 
-#: views/popup-settings.php:814
+#: views/popup-settings.php:818
 msgid "Attach"
 msgstr ""
 
-#: views/popup-settings.php:826
+#: views/popup-settings.php:830
 msgid "Auto"
 msgstr ""
 
-#: views/popup-settings.php:834
+#: views/popup-settings.php:838
 msgid "Automatically open popup"
 msgstr ""
 
-#: views/popup-settings.php:841
+#: views/popup-settings.php:845
 msgid "Limit"
 msgstr ""
 
-#: views/popup-settings.php:854
+#: views/popup-settings.php:858
 msgid "Disable dismiss"
 msgstr ""
 
-#: views/popup-settings.php:862
+#: views/popup-settings.php:866
 msgid "Disable dismiss on click outside"
 msgstr ""
 
-#: views/popup-settings.php:867
+#: views/popup-settings.php:871
 msgid "Disable noscroll"
 msgstr ""
 
-#: views/popup-settings.php:875
+#: views/popup-settings.php:879
 msgid "Disable noscroll on body"
 msgstr ""
 
