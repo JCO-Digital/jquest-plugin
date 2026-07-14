@@ -110,6 +110,9 @@ export default function Edit( { attributes, setAttributes } ) {
 				setAttributes( {
 					selectedGame: gameOptions[ 0 ].value,
 					questVersion: gameOptions[ 0 ].version,
+					...( gameOptions[ 0 ].version === 'v2' && {
+						version: 'v2',
+					} ),
 				} );
 			} else {
 				const selectedGameOption = gameOptions.find(
@@ -118,6 +121,9 @@ export default function Edit( { attributes, setAttributes } ) {
 				if ( selectedGameOption ) {
 					setAttributes( {
 						questVersion: selectedGameOption.version,
+						...( selectedGameOption.version === 'v2' && {
+							version: 'v2',
+						} ),
 					} );
 				}
 			}
@@ -150,6 +156,9 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( {
 			selectedGame: newGame,
 			questVersion: selectedGameOption?.version || 'v1',
+			...( selectedGameOption?.version === 'v2' && {
+				version: 'v2',
+			} ),
 		} );
 	};
 
