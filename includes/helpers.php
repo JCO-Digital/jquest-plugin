@@ -171,7 +171,7 @@ function get_jquest_version( string $quest_id, ?array $quests = null ): string {
  * @return void
  */
 function fetch_jquests( $value ) {
-	$api_url           = 'https://api.jquest.fi/organizationGames-getorganizationgames?v2=true&orgId=' . $value;
+	$api_url           = 'https://api.jquest.fi/organizationgames-getorganizationgames?v2=true&orgId=' . $value;
 	$api_response      = wp_remote_get(
 		$api_url,
 		array(

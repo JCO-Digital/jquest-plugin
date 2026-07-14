@@ -69,7 +69,7 @@ function insert_jquest_script( string $version = DEFAULT_VERSION ): void {
 	echo "<script>window.__JQUEST_VERSION = '" . esc_js( $version ) . "';</script>\n";
 
 	// Register and enqueue the loader using WordPress's native Module API.
-	wp_register_script_module( 'jquest-loader', LOADER_URL, array(), \JQUEST_PLUGIN_VERSION );
+	wp_register_script_module( 'jquest-loader', LOADER_URL, array(), null );
 	wp_enqueue_script_module( 'jquest-loader' );
 }
 
