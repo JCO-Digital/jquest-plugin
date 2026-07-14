@@ -202,22 +202,25 @@ export default function Edit( { attributes, setAttributes } ) {
 		<>
 			<InspectorControls>
 				<PanelBody title="Settings">
-					<SelectControl
-						label="Select a game"
-						value={ selectedGame }
-						options={ games }
-						onChange={ onChangeGame }
-					/>
-					<Button
-						variant="secondary"
-						isBusy={ isRefreshing }
-						disabled={ isRefreshing }
-						onClick={ refreshGames }
-					>
-						{ isRefreshing
-							? __( 'Refreshing quests…', 'jquest' )
-							: __( 'Refresh quests', 'jquest' ) }
-					</Button>
+					<div className="jquest-inserter-quest-picker">
+						<SelectControl
+							label="Select a game"
+							value={ selectedGame }
+							options={ games }
+							onChange={ onChangeGame }
+						/>
+						<Button
+							className="jquest-inserter-refresh-button"
+							variant="secondary"
+							isBusy={ isRefreshing }
+							disabled={ isRefreshing }
+							onClick={ refreshGames }
+						>
+							{ isRefreshing
+								? __( 'Refreshing quests…', 'jquest' )
+								: __( 'Refresh quests', 'jquest' ) }
+						</Button>
+					</div>
 					{ questVersion !== 'v2' && (
 						<SelectControl
 							label={ __( 'Script Version', 'jquest' ) }
