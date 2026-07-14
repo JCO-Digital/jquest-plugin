@@ -5,6 +5,7 @@
  */
 import { __ } from '@wordpress/i18n';
 import {
+	Button,
 	SelectControl,
 	PanelBody,
 	ToggleControl,
@@ -61,6 +62,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	// Initialize the state for the games and text.
 	const [ games, setGames ] = useState( [] );
 	const [ text, setText ] = useState( __( '', 'jquest' ) );
+	const [ isRefreshing, setIsRefreshing ] = useState( false );
 
 	const versions = [ 'stable', 'latest', 'v2' ];
 
@@ -69,69 +71,90 @@ export default function Edit( { attributes, setAttributes } ) {
 		value: v,
 	} ) );
 
+	/**
+	 * Updates the block with a games API response.
+	 *
+	 * @param {Object} data Games API response.
+	 */
+	const updateGames = ( data ) => {
+		// Set information texts if no games or organization is found.
+		if ( ! data.organization ) {
+			setGames( [] );
+			setText(
+				__(
+					'Organization not set. Set organization in JQUEST settings',
+					'jquest'
+				)
+			);
+			return;
+		}
+
+		setAttributes( { organization: data.organization } );
+
+		if ( ! data.games?.length ) {
+			setGames( [] );
+			setText( __( 'No games found for organization.', 'jquest' ) );
+			return;
+		}
+
+		// Map the games to an array of objects with value and label properties.
+		const gameOptions = data.games.map( ( game ) => {
+			const gameVersion = game.version === 'v2' ? 'v2' : 'v1';
+
+			return {
+				value: game.id,
+				label:
+					gameVersion === 'v2' ? `${ game.title } [v2]` : game.title,
+				title: game.title,
+				version: gameVersion,
+			};
+		} );
+		setGames( gameOptions );
+
+		const selectedGameOption =
+			gameOptions.find( ( game ) => game.value === selectedGame ) ||
+			gameOptions[ 0 ];
+
+		setAttributes( {
+			...( selectedGameOption.value !== selectedGame && {
+				selectedGame: selectedGameOption.value,
+			} ),
+			questVersion: selectedGameOption.version,
+			...( selectedGameOption.version === 'v2' && {
+				version: 'v2',
+			} ),
+		} );
+	};
+
 	// Use the useEffect hook to fetch the games when the component mounts.
 	useEffect( () => {
 		apiFetch( {
 			path: '/jquest/v1/games',
-		} ).then( ( data ) => {
-			// Set information texts if no games or organization is found.
-			if ( ! data.organization ) {
-				setText(
-					__(
-						'Organization not set. Set organization in JQUEST settings',
-						'jquest'
-					)
-				);
-				return;
-			}
-			if ( ! data.games?.length ) {
-				setText( __( 'No games found for organization.', 'jquest' ) );
-				return;
-			}
-
-			// Map the games to an array of objects with value and label properties.
-			const gameOptions = data.games.map( ( game ) => {
-				const gameVersion = game.version === 'v2' ? 'v2' : 'v1';
-
-				return {
-					value: game.id,
-					label:
-						gameVersion === 'v2'
-							? `${ game.title } [v2]`
-							: game.title,
-					title: game.title,
-					version: gameVersion,
-				};
+		} )
+			.then( updateGames )
+			.catch( () => {
+				setText( __( 'Unable to load quests.', 'jquest' ) );
 			} );
-			setGames( gameOptions );
-
-			// If there is no selected game, set the selected game to the first game.
-			if ( ! selectedGame ) {
-				setAttributes( {
-					selectedGame: gameOptions[ 0 ].value,
-					questVersion: gameOptions[ 0 ].version,
-					...( gameOptions[ 0 ].version === 'v2' && {
-						version: 'v2',
-					} ),
-				} );
-			} else {
-				const selectedGameOption = gameOptions.find(
-					( game ) => game.value === selectedGame
-				);
-				if ( selectedGameOption ) {
-					setAttributes( {
-						questVersion: selectedGameOption.version,
-						...( selectedGameOption.version === 'v2' && {
-							version: 'v2',
-						} ),
-					} );
-				}
-			}
-			// Set the organization attribute.
-			setAttributes( { organization: data.organization } );
-		} );
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [] );
+
+	/**
+	 * Refreshes the organization's quests from the jQuest API.
+	 */
+	const refreshGames = () => {
+		setIsRefreshing( true );
+		apiFetch( {
+			path: '/jquest/v1/games/refresh',
+			method: 'POST',
+		} )
+			.then( updateGames )
+			.catch( () => {
+				setText( __( 'Unable to refresh quests.', 'jquest' ) );
+			} )
+			.finally( () => {
+				setIsRefreshing( false );
+			} );
+	};
 
 	// Show the selected game label in the block.
 	useEffect( () => {
@@ -163,11 +186,13 @@ export default function Edit( { attributes, setAttributes } ) {
 	};
 
 	const openDashboard = () => {
-		const buildUrl = (org, quest, version) => {
-			return `https://dashboard.jquest.fi/#/dashboard/${org}/${version === 'v2' ? 'quests/' : ''}${quest}`;
+		const buildUrl = ( org, quest, selectedQuestVersion ) => {
+			return `https://dashboard.jquest.fi/#/dashboard/${ org }/${
+				selectedQuestVersion === 'v2' ? 'quests/' : ''
+			}${ quest }`;
 		};
 		window.open(
-			buildUrl(organization, selectedGame, questVersion),
+			buildUrl( organization, selectedGame, questVersion ),
 			'_blank'
 		);
 	};
@@ -183,6 +208,16 @@ export default function Edit( { attributes, setAttributes } ) {
 						options={ games }
 						onChange={ onChangeGame }
 					/>
+					<Button
+						variant="secondary"
+						isBusy={ isRefreshing }
+						disabled={ isRefreshing }
+						onClick={ refreshGames }
+					>
+						{ isRefreshing
+							? __( 'Refreshing quests…', 'jquest' )
+							: __( 'Refresh quests', 'jquest' ) }
+					</Button>
 					{ questVersion !== 'v2' && (
 						<SelectControl
 							label={ __( 'Script Version', 'jquest' ) }

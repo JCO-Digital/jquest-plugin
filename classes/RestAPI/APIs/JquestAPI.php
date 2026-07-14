@@ -2,11 +2,11 @@
 
 namespace jQuestPlugin\RestAPI\APIs;
 
-use jQuestPlugin\Options\Option;
 use jQuestPlugin\RestAPI\RestAPI;
 use jQuestPlugin\RestAPI\RestAPIHelpers;
 use WP_REST_Request;
 use WP_REST_Response;
+use function jQuestPlugin\fetch_jquests;
 
 /**
  * Example API class.
@@ -38,6 +38,16 @@ class JquestAPI extends RestAPI {
 				'permission_callback' => array( RestAPIHelpers::class, 'is_user_logged_in' ),
 			)
 		);
+
+		register_rest_route(
+			self::$namespace,
+			'/games/refresh',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'refresh_games' ),
+				'permission_callback' => array( RestAPIHelpers::class, 'is_user_logged_in' ),
+			)
+		);
 	}
 
 	/**
@@ -57,5 +67,20 @@ class JquestAPI extends RestAPI {
 		return new WP_REST_Response(
 			$data
 		);
+	}
+
+	/**
+	 * Refreshes the stored quests and returns the updated collection.
+	 *
+	 * @param WP_REST_Request $request The request object.
+	 * @return WP_REST_Response
+	 */
+	public static function refresh_games( WP_REST_Request $request ): WP_REST_Response {
+		$organization = trim( (string) get_option( 'jquest_org_id', '' ) );
+		if ( '' !== $organization ) {
+			fetch_jquests( $organization );
+		}
+
+		return self::get_games( $request );
 	}
 }
