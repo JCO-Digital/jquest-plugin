@@ -1,6 +1,24 @@
 # Changelog
 
-## 1.7.0 (2026-07-13)
+## 1.8.0 (2026-07-14)
+
+#### Features
+
+- refresh quests from inserter block (44f6f9d)
+- api: update organization games endpoint and loader versioning (575297e)
+- support v2 quests in selectors and embeds (3f04c39)
+
+#### Bug Fixes
+
+- jquest-inserter: update dashboard URL generation logic (4de07cf)
+- sync script version with v2 quests (2a158cd)
+- hide script version for v2 quests (db24779)
+
+#### Styles
+
+- polish inserter quest controls (ac3bea6)
+
+## v1.7.0 (2026-07-13)
 
 #### Features
 
