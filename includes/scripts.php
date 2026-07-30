@@ -35,6 +35,35 @@ const POPUP_VERSION_OPTION = 'jquest_popup_version';
 const VERSION_MIGRATION_FLAG = 'jquest_popup_version_migrated';
 
 /**
+ * Option loading the loader on every front-end page, whether or not a jQuest
+ * block or popup is present. Global, since it is a technical concern.
+ */
+const ALWAYS_LOAD_OPTION = 'jquest_always_load_loader';
+
+/**
+ * Returns the current language slug, or 'default' when Polylang is inactive or
+ * has no language for this request.
+ *
+ * @return string
+ */
+function current_language(): string {
+	$lang = function_exists( 'pll_current_language' ) ? pll_current_language() : '';
+
+	return $lang ? (string) $lang : 'default';
+}
+
+/**
+ * Option prefix for the Popup v2 settings of a language.
+ *
+ * @param string|null $lang Language slug. Defaults to the current language.
+ *
+ * @return string
+ */
+function popup_v2_prefix( ?string $lang = null ): string {
+	return 'jquest_popup_v2_' . ( $lang ?? current_language() ) . '_';
+}
+
+/**
  * Normalises a version channel to one the loader understands.
  *
  * @param mixed $version The requested version.
@@ -74,105 +103,200 @@ function insert_jquest_script( string $version = DEFAULT_VERSION ): void {
 }
 
 /**
- * Checks the post content for JQUEST blocks and inserts the script if found.
+ * An empty loader request, i.e. a source that needs no loader at all.
  *
- * @return void
+ * @return array{present: bool, version: string|null, has_v2_quest: bool}
  */
-function maybe_insert_jquest_script() {
-	if ( ! has_blocks() || ! has_block( 'jquest-inserter/jquest-inserter' ) ) {
-		return;
-	}
-
-	$has_jquest_blocks = false;
-	$version           = false;
-
-	$post = get_post();
-	if ( ! $post ) {
-		return;
-	}
-
-	$blocks = parse_blocks( $post->post_content );
-	foreach ( $blocks as $block ) {
-		$results = contains_jquest_insterter( $block );
-
-		$has_jquest_blocks = $results['has_jquest_blocks'];
-		$version           = $results['version'];
-		if ( (bool) $version ) {
-			break;
-		}
-	}
-	if ( $has_jquest_blocks ) {
-		insert_jquest_script( $version ? $version : DEFAULT_VERSION );
-	}
+function empty_loader_request(): array {
+	return array(
+		'present'      => false,
+		'version'      => null,
+		'has_v2_quest' => false,
+	);
 }
 
 /**
- * Recursively checks if a block or its inner blocks contain the jquest-inserter.
+ * Recursively collects what the jquest-inserter blocks in a block tree need:
+ * whether any is present, the first requested channel, and whether any of them
+ * renders a v2 quest.
  *
- * @param array $block The block object to check.
+ * @param array $blocks The blocks to scan.
  *
- * @return array
+ * @return array{present: bool, version: string|null, has_v2_quest: bool}
  */
-function contains_jquest_insterter( $block ): array {
-	$return_value = array(
-		'has_jquest_blocks' => false,
-		'version'           => false,
-	);
+function scan_jquest_blocks( array $blocks ): array {
+	$request = empty_loader_request();
 
-	if ( 'jquest-inserter/jquest-inserter' === $block['blockName'] ) {
-		$return_value['has_jquest_blocks'] = true;
-		if ( false === $return_value['version'] ) {
+	foreach ( $blocks as $block ) {
+		if ( 'jquest-inserter/jquest-inserter' === $block['blockName'] ) {
+			$request['present'] = true;
+
 			// Read the attribute directly. WordPress omits attributes equal to
 			// their default from the block comment, so fall back to the block's
 			// registered default (kept in sync with block.json automatically).
-			$block_type              = \WP_Block_Type_Registry::get_instance()
+			$block_type      = \WP_Block_Type_Registry::get_instance()
 				->get_registered( 'jquest-inserter/jquest-inserter' );
-			$default_version         = $block_type->attributes['version']['default'] ?? 'stable';
-			$return_value['version'] = $block['attrs']['version'] ?? $default_version;
-		}
-	}
+			$default_version = $block_type->attributes['version']['default'] ?? DEFAULT_VERSION;
+			$version         = (string) ( $block['attrs']['version'] ?? $default_version );
 
-	if ( array_key_exists( 'innerBlocks', $block ) ) {
-		foreach ( $block['innerBlocks'] as $inner_block ) {
-			$inner_values = contains_jquest_insterter( $inner_block );
+			if ( null === $request['version'] && '' !== $version ) {
+				$request['version'] = $version;
+			}
 
-			$return_value['has_jquest_blocks'] =
-				$return_value['has_jquest_blocks'] || $inner_values['has_jquest_blocks'];
-			if ( false === $return_value['version'] ) {
-				$return_value['version'] = $inner_values['version'];
+			// The editor pins the channel to v2 when a v2 quest is picked, but
+			// check the quest generation too so content saved before that
+			// behaviour landed is still recognised.
+			if ( 'v2' === ( $block['attrs']['questVersion'] ?? '' ) || 'v2' === $version ) {
+				$request['has_v2_quest'] = true;
 			}
 		}
+
+		if ( empty( $block['innerBlocks'] ) ) {
+			continue;
+		}
+
+		$inner                   = scan_jquest_blocks( $block['innerBlocks'] );
+		$request['present']      = $request['present'] || $inner['present'];
+		$request['has_v2_quest'] = $request['has_v2_quest'] || $inner['has_v2_quest'];
+		$request['version']    ??= $inner['version'];
 	}
 
-	return $return_value;
+	return $request;
 }
 
-add_action( 'wp_head', __NAMESPACE__ . '\maybe_insert_jquest_script' );
-
 /**
- * Inserts the jQuest popup script when the popup is enabled for the current language.
+ * What the jQuest blocks in the current post content need from the loader.
  *
- * @return void
+ * @return array{present: bool, version: string|null, has_v2_quest: bool}
  */
-function maybe_insert_popup_script(): void {
-	$lang   = function_exists( 'pll_current_language' ) ? pll_current_language() : 'default';
-	$prefix = 'jquest_popup_' . $lang . '_';
-
-	if ( ! get_option( $prefix . 'enabled', 0 ) ) {
-		return;
+function block_loader_request(): array {
+	if ( ! has_blocks() || ! has_block( 'jquest-inserter/jquest-inserter' ) ) {
+		return empty_loader_request();
 	}
 
-	$version = get_option( POPUP_VERSION_OPTION, '' );
+	$post = get_post();
+	if ( ! $post ) {
+		return empty_loader_request();
+	}
+
+	return scan_jquest_blocks( parse_blocks( $post->post_content ) );
+}
+
+/**
+ * What the popup configured for the current language needs from the loader.
+ *
+ * @return array{present: bool, version: string|null, has_v2_quest: bool}
+ */
+function popup_loader_request(): array {
+	$prefix = 'jquest_popup_' . current_language() . '_';
+
+	if ( ! get_option( $prefix . 'enabled', 0 ) ) {
+		return empty_loader_request();
+	}
+
+	$version = (string) get_option( POPUP_VERSION_OPTION, '' );
 	if ( '' === $version ) {
 		// Back-compat for the window before migrate_popup_version() runs: fall
 		// back to this language's legacy boolean "use latest script" option.
 		$version = get_option( $prefix . 'latest_script', 0 ) ? 'latest' : DEFAULT_VERSION;
 	}
 
-	insert_jquest_script( $version );
+	$quest_id = (string) get_option( $prefix . 'quest_id', '' );
+
+	return array(
+		'present'      => true,
+		'version'      => $version,
+		'has_v2_quest' => 'v2' === \jQuestPlugin\get_jquest_version( $quest_id ),
+	);
 }
 
-add_action( 'wp_head', __NAMESPACE__ . '\maybe_insert_popup_script' );
+/**
+ * Whether this language has a Popup v2 quest to render above the footer.
+ *
+ * @return bool
+ */
+function popup_v2_enabled(): bool {
+	$prefix = popup_v2_prefix();
+
+	return (bool) get_option( $prefix . 'enabled', 0 )
+		&& '' !== (string) get_option( $prefix . 'quest_id', '' );
+}
+
+/**
+ * Loads the one loader this page needs.
+ *
+ * Only a single loader can run per page, so every source — blocks, the popup,
+ * Popup v2 and the always-load setting — is resolved here in one place instead
+ * of racing to be the first to call insert_jquest_script(). A v2 quest anywhere
+ * on the page pins the channel to v2, since v2 quests cannot run on the other
+ * channels; otherwise a block on the page decides, then the global setting.
+ *
+ * @return void
+ */
+function maybe_insert_loader(): void {
+	$block_request = block_loader_request();
+	$popup_request = popup_loader_request();
+	$popup_v2      = popup_v2_enabled();
+
+	$needed = $block_request['present']
+		|| $popup_request['present']
+		|| $popup_v2
+		|| (bool) get_option( ALWAYS_LOAD_OPTION, 0 );
+
+	if ( ! $needed ) {
+		return;
+	}
+
+	if ( $block_request['has_v2_quest'] || $popup_request['has_v2_quest'] || $popup_v2 ) {
+		insert_jquest_script( 'v2' );
+		return;
+	}
+
+	insert_jquest_script(
+		$block_request['version']
+			?? $popup_request['version']
+			?? (string) get_option( POPUP_VERSION_OPTION, DEFAULT_VERSION )
+	);
+}
+
+add_action( 'wp_head', __NAMESPACE__ . '\maybe_insert_loader' );
+
+/**
+ * Outputs the Popup v2 quest div at the top of the footer, i.e. just above
+ * everything else hooked to wp_footer.
+ *
+ * @return void
+ */
+function maybe_insert_popup_v2_div(): void {
+	if ( ! popup_v2_enabled() ) {
+		return;
+	}
+
+	// Prepare every value as a finished, escaped string so the markup below
+	// stays a plain template with no inline PHP. The quest is always a v2 one —
+	// the settings page only offers v2 quests — so the version is hard-coded
+	// rather than looked up, which keeps it right even when the stored quest
+	// list is stale or empty.
+	$lang     = current_language();
+	$quest_id = esc_attr( get_option( popup_v2_prefix( $lang ) . 'quest_id', '' ) );
+	$org_id   = esc_attr( get_option( 'jquest_org_id', '' ) );
+	$locale   = 'default' === $lang ? '' : esc_attr( $lang );
+
+	// phpcs:disable WordPress.Security.EscapeOutput -- values are escaped above.
+	echo <<<HTML
+	<div
+		class="jquest-app"
+		data-new-styles="true"
+		data-locale="{$locale}"
+		data-org-id="{$org_id}"
+		data-game-id="{$quest_id}"
+		data-version="v2"
+	></div>
+	HTML;
+	// phpcs:enable WordPress.Security.EscapeOutput
+}
+
+add_action( 'wp_footer', __NAMESPACE__ . '\maybe_insert_popup_v2_div', 0 );
 
 /**
  * One-time migration from the legacy per-language boolean `latest_script`
@@ -224,7 +348,7 @@ add_action( 'admin_init', __NAMESPACE__ . '\migrate_popup_version' );
  * @return void
  */
 function maybe_insert_popup_div(): void {
-	$lang   = function_exists( 'pll_current_language' ) ? pll_current_language() : 'default';
+	$lang   = current_language();
 	$prefix = 'jquest_popup_' . $lang . '_';
 
 	if ( ! get_option( $prefix . 'enabled', 0 ) ) {
@@ -450,8 +574,7 @@ function maybe_insert_popup_trigger(): void {
 		return;
 	}
 
-	$lang   = function_exists( 'pll_current_language' ) ? pll_current_language() : 'default';
-	$prefix = 'jquest_popup_' . $lang . '_';
+	$prefix = 'jquest_popup_' . current_language() . '_';
 
 	if ( ! get_option( $prefix . 'enabled', 0 ) ) {
 		return;

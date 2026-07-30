@@ -103,6 +103,28 @@ class OptionsPage extends Singleton {
 			'jquest-popup',
 			array( $this, 'render_popup_page' )
 		);
+
+		add_submenu_page(
+			'jquest-options',
+			__( 'Popup v2', 'jquest' ),
+			__( 'Popup v2', 'jquest' ),
+			'manage_options',
+			'jquest-popup-v2',
+			array( $this, 'render_popup_v2_page' )
+		);
+	}
+
+	/**
+	 * Language slugs the per-language settings are registered for.
+	 *
+	 * @return array
+	 */
+	private function popup_languages(): array {
+		$langs = function_exists( 'pll_languages_list' )
+			? pll_languages_list( array( 'fields' => 'slug' ) )
+			: array();
+
+		return empty( $langs ) ? array( 'default' ) : $langs;
 	}
 
 	/**
@@ -161,13 +183,18 @@ class OptionsPage extends Singleton {
 		);
 
 		// Popup settings — one group per language (or 'default' when Polylang is inactive).
-		$popup_langs = function_exists( 'pll_languages_list' )
-			? pll_languages_list( array( 'fields' => 'slug' ) )
-			: array( 'default' );
+		$popup_langs = $this->popup_languages();
 
 		foreach ( $popup_langs as $lang ) {
 			$prefix = 'jquest_popup_' . $lang . '_';
 			$group  = 'jquest-popup-' . $lang;
+
+			// Popup v2 — a quest rendered above the footer on every page.
+			$v2_prefix = \jQuestPlugin\Scripts\popup_v2_prefix( $lang );
+			$v2_group  = 'jquest-popup-v2-' . $lang;
+
+			register_setting( $v2_group, $v2_prefix . 'enabled', array( 'sanitize_callback' => 'absint' ) );
+			register_setting( $v2_group, $v2_prefix . 'quest_id', array( 'sanitize_callback' => 'sanitize_text_field' ) );
 
 			register_setting( $group, $prefix . 'enabled', array( 'sanitize_callback' => 'absint' ) );
 			register_setting( $group, $prefix . 'quest_id', array( 'sanitize_callback' => 'sanitize_text_field' ) );
@@ -183,6 +210,9 @@ class OptionsPage extends Singleton {
 		// Popup script version — a single global setting, saved from its own
 		// form at the top of the popup page (not tied to any language).
 		register_setting( 'jquest-popup-general', \jQuestPlugin\Scripts\POPUP_VERSION_OPTION, array( 'sanitize_callback' => 'jQuestPlugin\Scripts\sanitize_version' ) );
+
+		// Loading the loader on every page — global, saved from the Popup v2 page.
+		register_setting( 'jquest-loader', \jQuestPlugin\Scripts\ALWAYS_LOAD_OPTION, array( 'sanitize_callback' => 'absint' ) );
 
 		// Trigger settings — global (not per-language).
 		$svg_kses = array(
@@ -361,14 +391,70 @@ class OptionsPage extends Singleton {
 
 		$lang_key = $active_tab ? $active_tab : 'default';
 
+		// This popup only handles v1 quests — v2 quests belong on the Popup v2
+		// page. An already-saved v2 quest stays in the list so that saving the
+		// form cannot silently clear a live configuration.
+		$selected = (string) get_option( 'jquest_popup_' . $lang_key . '_quest_id', '' );
+		$games    = array_values(
+			array_filter(
+				get_option( 'jquest_org_games', array() ),
+				function ( $game ) use ( $selected ) {
+					if ( ! is_object( $game ) ) {
+						return false;
+					}
+					if ( ! isset( $game->version ) || 'v2' !== $game->version ) {
+						return true;
+					}
+					return '' !== $selected && $selected === ( $game->id ?? '' );
+				}
+			)
+		);
+
 		$data = array(
 			'tabs'       => $tabs,
 			'active_tab' => $active_tab,
 			'lang_key'   => $lang_key,
-			'games'      => get_option( 'jquest_org_games', array() ),
+			'games'      => $games,
 		);
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo render_template( 'popup-settings', $data );
+	}
+
+	/**
+	 * Handles the rendering of the Popup v2 settings page.
+	 *
+	 * @return void
+	 */
+	final public function render_popup_v2_page(): void {
+		$tabs = array();
+		foreach ( $this->popup_languages() as $slug ) {
+			$tabs[ $slug ] = array(
+				'label' => 'default' === $slug ? __( 'Popup v2', 'jquest' ) : strtoupper( $slug ),
+				'url'   => add_query_arg( array( 'tab' => $slug ), admin_url( 'admin.php?page=jquest-popup-v2' ) ),
+			);
+		}
+
+		$requested  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$active_tab = isset( $tabs[ $requested ] ) ? $requested : (string) array_key_first( $tabs );
+
+		// Popup v2 only supports v2 quests, so never offer a v1 one.
+		$games = array_values(
+			array_filter(
+				get_option( 'jquest_org_games', array() ),
+				function ( $game ) {
+					return is_object( $game ) && isset( $game->version ) && 'v2' === $game->version;
+				}
+			)
+		);
+
+		$data = array(
+			'tabs'       => $tabs,
+			'active_tab' => $active_tab,
+			'lang_key'   => $active_tab,
+			'games'      => $games,
+		);
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo render_template( 'popup-v2-settings', $data );
 	}
 
 	/**

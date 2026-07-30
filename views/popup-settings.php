@@ -778,6 +778,25 @@ $jquest_group  = 'jquest-popup-' . $jquest_lang_key;
 					</select>
 					<?php if ( 'v2' === \jQuestPlugin\get_jquest_version( $jquest_selected_quest_id, $jquest_games ) ) : ?>
 						<span class="jquest-version-badge">v2</span>
+						<p class="description">
+							<?php
+							printf(
+								/* translators: %s: link to the Popup v2 settings page. */
+								esc_html__( 'This is a v2 quest. v2 quests are handled by the %s page — move it there.', 'jquest' ),
+								'<a href="' . esc_url( admin_url( 'admin.php?page=jquest-popup-v2' ) ) . '">' . esc_html__( 'Popup v2', 'jquest' ) . '</a>'
+							);
+							?>
+						</p>
+					<?php else : ?>
+						<p class="description">
+							<?php
+							printf(
+								/* translators: %s: link to the Popup v2 settings page. */
+								esc_html__( 'Only v1 quests can be used here. v2 quests are configured on the %s page.', 'jquest' ),
+								'<a href="' . esc_url( admin_url( 'admin.php?page=jquest-popup-v2' ) ) . '">' . esc_html__( 'Popup v2', 'jquest' ) . '</a>'
+							);
+							?>
+						</p>
 					<?php endif; ?>
 				</td>
 			</tr>
