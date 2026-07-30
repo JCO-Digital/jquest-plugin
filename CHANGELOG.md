@@ -1,6 +1,12 @@
 # Changelog
 
-## 1.9.0 (2026-07-30)
+### 1.9.1 (2026-07-30)
+
+#### Bug Fixes
+
+- scripts: update data attribute for version loader (b420d4e)
+
+## v1.9.0 (2026-07-30)
 
 #### Features
 
