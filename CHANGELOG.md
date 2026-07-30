@@ -1,6 +1,12 @@
 # Changelog
 
-### 1.9.1 (2026-07-30)
+### 1.9.2 (2026-07-30)
+
+#### Bug Fixes
+
+- scripts: load the app bundle eagerly for popups (5385aaf)
+
+### v1.9.1 (2026-07-30)
 
 #### Bug Fixes
 
