@@ -356,7 +356,9 @@ function maybe_insert_popup_div(): void {
 	}
 
 	// Prepare every value as a finished, escaped string so the markup below
-	// stays a plain template with no inline PHP.
+	// stays a plain template with no inline PHP. The version goes out as
+	// data-version because that is what the loader reads (dataset.version) —
+	// a widget declaring v2 forces the v2 bundle for the whole page.
 	$org_id           = esc_attr( get_option( 'jquest_org_id', '' ) );
 	$quest_id         = get_option( $prefix . 'quest_id', '' );
 	$quest_version    = \jQuestPlugin\get_jquest_version( $quest_id );
@@ -367,7 +369,7 @@ function maybe_insert_popup_div(): void {
 	$disable_dismiss  = get_option( $prefix . 'disable_dismiss', 1 ) ? 'true' : 'false';
 	$disable_noscroll = get_option( $prefix . 'disable_noscroll', 1 ) ? 'true' : 'false';
 	$locale           = 'default' === $lang ? '' : esc_attr( $lang );
-	$version_attr     = 'v2' === $quest_version ? "\n\t\tdata-jq-version=\"v2\"" : '';
+	$version_attr     = 'v2' === $quest_version ? "\n\tdata-version=\"v2\"" : '';
 
 	// phpcs:disable WordPress.Security.EscapeOutput -- values are escaped/int-cast above.
 	echo <<<HTML
