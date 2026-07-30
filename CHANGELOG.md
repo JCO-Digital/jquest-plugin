@@ -1,6 +1,12 @@
 # Changelog
 
-### 1.8.1 (2026-07-14)
+## 1.9.0 (2026-07-30)
+
+#### Features
+
+- add Popup v2 with always-on loader and footer quest (b472f5a)
+
+### v1.8.1 (2026-07-14)
 
 #### Bug Fixes
 
