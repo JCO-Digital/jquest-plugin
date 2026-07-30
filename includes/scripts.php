@@ -282,6 +282,11 @@ function maybe_insert_popup_v2_div(): void {
 	$org_id   = esc_attr( get_option( 'jquest_org_id', '' ) );
 	$locale   = 'default' === $lang ? '' : esc_attr( $lang );
 
+	// data-jq-load="eager" opts this widget out of the loader's viewport gate.
+	// The loader only fetches the app bundle once a .jquest-app approaches the
+	// viewport, but this div sits at the very bottom of the document and renders
+	// a floating popup, so it would only load once the visitor scrolled all the
+	// way down — by which point the popup has missed its chance to appear.
 	// phpcs:disable WordPress.Security.EscapeOutput -- values are escaped above.
 	echo <<<HTML
 	<div
@@ -291,6 +296,7 @@ function maybe_insert_popup_v2_div(): void {
 		data-org-id="{$org_id}"
 		data-game-id="{$quest_id}"
 		data-version="v2"
+		data-jq-load="eager"
 	></div>
 	HTML;
 	// phpcs:enable WordPress.Security.EscapeOutput
@@ -371,6 +377,13 @@ function maybe_insert_popup_div(): void {
 	$locale           = 'default' === $lang ? '' : esc_attr( $lang );
 	$version_attr     = 'v2' === $quest_version ? "\n\tdata-version=\"v2\"" : '';
 
+	// The popup div is hidden by CSS, so the loader's viewport observer can never
+	// fire for it — something has to tell the loader when to fetch the bundle. A
+	// popup the visitor opens gets that from the trigger button's
+	// data-jq-load="hover", but an auto popup opens with no interaction at all,
+	// so it has to declare itself eager.
+	$load_attr = get_option( $prefix . 'auto', 0 ) ? "\n\tdata-jq-load=\"eager\"" : '';
+
 	// phpcs:disable WordPress.Security.EscapeOutput -- values are escaped/int-cast above.
 	echo <<<HTML
 	<div
@@ -384,7 +397,7 @@ function maybe_insert_popup_div(): void {
 		data-popup-limit="{$limit}"
 		data-popup-attach="{$attach}"
 		data-popup-disable-dismiss="{$disable_dismiss}"
-		data-popup-disable-noscroll="{$disable_noscroll}"
+		data-popup-disable-noscroll="{$disable_noscroll}"{$load_attr}
 	></div>
 	HTML;
 	// phpcs:enable WordPress.Security.EscapeOutput
