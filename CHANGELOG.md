@@ -1,6 +1,17 @@
 # Changelog
 
-### 1.9.2 (2026-07-30)
+### 1.9.4 (2026-08-05)
+
+#### Bug Fixes
+
+- version number in file 2.0 (5d44186)
+- version number in php file (0298f71)
+
+#### Maintenance
+
+- anti-cookie blocking technology (ab1cc29)
+
+### v1.9.2 (2026-07-30)
 
 #### Bug Fixes
 
