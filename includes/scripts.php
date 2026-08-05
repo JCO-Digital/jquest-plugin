@@ -75,6 +75,21 @@ function sanitize_version( $version ): string {
 }
 
 /**
+ * Attributes telling consent managers not to gate the loader. The loader sets
+ * no cookies and stores nothing, so blocking it until consent only breaks
+ * quests. Covers Cookiebot, OneTrust and CookieYes.
+ *
+ * @return array<string, string|bool> Attribute map for wp_print_script_tag() et al.
+ */
+function consent_attributes(): array {
+	return array(
+		'data-cookieconsent' => 'ignore',
+		'data-ot-ignore'     => true,
+		'data-cookieyes'     => 'ignore',
+	);
+}
+
+/**
  * Loads the jQuest loader once per page and tells it which version to fetch
  * via the window.__JQUEST_VERSION global.
  *
@@ -95,7 +110,27 @@ function insert_jquest_script( string $version = DEFAULT_VERSION ): void {
 	// The loader is a module, which always executes deferred, so set the
 	// version global from a classic inline script first — it runs during
 	// parsing, well before the loader module executes.
-	echo "<script>window.__JQUEST_VERSION = '" . esc_js( $version ) . "';</script>\n";
+	wp_print_inline_script_tag(
+		"window.__JQUEST_VERSION = '" . esc_js( $version ) . "';",
+		consent_attributes()
+	);
+
+	// The Module API prints the script tag itself, so the consent attributes
+	// have to be filtered in. Script modules are printed through
+	// wp_print_script_tag(), which applies wp_script_attributes with the tag's
+	// id set to "<handle>-js-module". Registering the filter here — rather than
+	// at load — keeps it off pages with no loader, and is still well before the
+	// tag is printed (wp_head for block themes, wp_footer for classic ones).
+	add_filter(
+		'wp_script_attributes',
+		function ( array $attributes ): array {
+			if ( 'jquest-loader-js-module' === ( $attributes['id'] ?? '' ) ) {
+				$attributes = array_merge( $attributes, consent_attributes() );
+			}
+
+			return $attributes;
+		}
+	);
 
 	// Register and enqueue the loader using WordPress's native Module API.
 	wp_register_script_module( 'jquest-loader', LOADER_URL, array(), null );
