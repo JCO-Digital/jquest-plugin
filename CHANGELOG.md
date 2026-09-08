@@ -1,6 +1,13 @@
 # Changelog
 
-### 1.9.4 (2026-08-05)
+## 1.10.0 (2026-09-08)
+
+#### Features
+
+- multiple v2 quests per page (1c340a0)
+- exclusion list (ec22ff4)
+
+### v1.9.4 (2026-08-05)
 
 #### Bug Fixes
 
