@@ -41,6 +41,19 @@ const VERSION_MIGRATION_FLAG = 'jquest_popup_version_migrated';
 const ALWAYS_LOAD_OPTION = 'jquest_always_load_loader';
 
 /**
+ * Option holding the pages every Popup v2 quest is left off. Global, since a
+ * page's script channel is a technical concern rather than per-language
+ * content, and post IDs never collide between languages.
+ */
+const POPUP_V2_EXCLUDE_OPTION = 'jquest_popup_v2_exclude_ids';
+
+/**
+ * Flag option marking that the one-time migration from a single Popup v2 quest
+ * per language to a list of them has run.
+ */
+const POPUP_V2_MIGRATION_FLAG = 'jquest_popup_v2_quests_migrated';
+
+/**
  * Returns the current language slug, or 'default' when Polylang is inactive or
  * has no language for this request.
  *
@@ -72,7 +85,13 @@ function popup_v2_prefix( ?string $lang = null ): string {
  * @return int[] Unique, positive IDs.
  */
 function parse_id_list( $value ): array {
-	return array_values( array_filter( wp_parse_id_list( is_scalar( $value ) ? (string) $value : '' ) ) );
+	if ( is_scalar( $value ) ) {
+		$value = (string) $value;
+	} elseif ( ! is_array( $value ) ) {
+		$value = '';
+	}
+
+	return array_values( array_filter( wp_parse_id_list( $value ) ) );
 }
 
 /**
@@ -88,23 +107,129 @@ function sanitize_id_list( $value ): string {
 }
 
 /**
- * Posts the Popup v2 quest is suppressed on, for a language.
+ * Option holding a language's list of Popup v2 quests.
  *
  * @param string|null $lang Language slug. Defaults to the current language.
  *
- * @return int[]
+ * @return string
  */
-function popup_v2_excluded_ids( ?string $lang = null ): array {
-	return parse_id_list( get_option( popup_v2_prefix( $lang ) . 'exclude_ids', '' ) );
+function popup_v2_quests_option( ?string $lang = null ): string {
+	return popup_v2_prefix( $lang ) . 'quests';
 }
 
 /**
- * Whether the post being rendered is on this language's Popup v2 exclusion
- * list.
+ * Normalises one stored Popup v2 entry into a predictable shape, so neither the
+ * settings page nor the front end has to guess at what the option holds.
+ *
+ * @param mixed $entry The stored entry.
+ *
+ * @return array{enabled: bool, quest_id: string}
+ */
+function normalize_popup_v2_quest( $entry ): array {
+	$entry = is_array( $entry ) ? $entry : array();
+
+	return array(
+		'enabled'  => ! empty( $entry['enabled'] ),
+		'quest_id' => isset( $entry['quest_id'] ) && is_scalar( $entry['quest_id'] )
+			? sanitize_text_field( (string) $entry['quest_id'] )
+			: '',
+	);
+}
+
+/**
+ * The Popup v2 quests configured for a language, in the order they were added.
+ *
+ * @param string|null $lang Language slug. Defaults to the current language.
+ *
+ * @return array<int, array{enabled: bool, quest_id: string}>
+ */
+function popup_v2_quests( ?string $lang = null ): array {
+	$stored = get_option( popup_v2_quests_option( $lang ), null );
+
+	if ( ! is_array( $stored ) ) {
+		// Back-compat for the window before migrate_popup_v2_quests() runs on
+		// the next admin request: read the one legacy entry as a list of one.
+		$prefix = popup_v2_prefix( $lang );
+		$stored = array(
+			array(
+				'enabled'  => get_option( $prefix . 'enabled', 0 ),
+				'quest_id' => get_option( $prefix . 'quest_id', '' ),
+			),
+		);
+	}
+
+	// An entry without a quest cannot render anything, so it never reaches a
+	// caller — that also drops the empty legacy entry synthesised above.
+	return array_values(
+		array_filter(
+			array_map( __NAMESPACE__ . '\normalize_popup_v2_quest', $stored ),
+			function ( array $quest ): bool {
+				return '' !== $quest['quest_id'];
+			}
+		)
+	);
+}
+
+/**
+ * Sanitises the Popup v2 quest list posted from the settings page.
+ *
+ * The form carries no JavaScript, so a row is deleted either by ticking its
+ * remove box or by emptying its quest select; both are dropped here, and what
+ * is left is reindexed so the stored list stays a clean sequential array.
+ *
+ * @param mixed $value The raw field value.
+ *
+ * @return array
+ */
+function sanitize_popup_v2_quests( $value ): array {
+	if ( ! is_array( $value ) ) {
+		return array();
+	}
+
+	$quests = array();
+	foreach ( $value as $entry ) {
+		if ( ! is_array( $entry ) || ! empty( $entry['remove'] ) ) {
+			continue;
+		}
+
+		$quest = normalize_popup_v2_quest( $entry );
+		if ( '' === $quest['quest_id'] ) {
+			continue;
+		}
+
+		$quests[] = array(
+			'enabled'  => $quest['enabled'] ? 1 : 0,
+			'quest_id' => $quest['quest_id'],
+		);
+	}
+
+	return $quests;
+}
+
+/**
+ * The pages Popup v2 is left off, across every language.
+ *
+ * @return int[]
+ */
+function popup_v2_excluded_ids(): array {
+	$stored = get_option( POPUP_V2_EXCLUDE_OPTION, null );
+
+	if ( null === $stored ) {
+		// Back-compat for the window before migrate_popup_v2_quests() runs on
+		// the next admin request: read this language's legacy list, which is
+		// what the page was excluded by before the list became global.
+		$stored = get_option( popup_v2_prefix() . 'exclude_ids', '' );
+	}
+
+	return parse_id_list( $stored );
+}
+
+/**
+ * Whether the post being rendered is on the Popup v2 exclusion list.
  *
  * Only one loader can run per page and a v2 quest anywhere on it pins the whole
  * page to the v2 bundle, so a page carrying a stable/latest block cannot also
- * carry the v2 popup. Excluding the page takes the popup out of both the loader
+ * carry a v2 popup. Excluding the page takes every quest out of both the loader
  * decision and the footer markup, leaving the block's own channel to win.
  *
  * @return bool
@@ -118,6 +243,26 @@ function popup_v2_excluded(): bool {
 	$current = (int) get_queried_object_id();
 
 	return $current > 0 && in_array( $current, $excluded, true );
+}
+
+/**
+ * The quests this language shows above the footer on the post being rendered.
+ *
+ * @return string[] Quest IDs, in configured order.
+ */
+function popup_v2_active_quest_ids(): array {
+	if ( popup_v2_excluded() ) {
+		return array();
+	}
+
+	$active = array();
+	foreach ( popup_v2_quests() as $quest ) {
+		if ( $quest['enabled'] ) {
+			$active[] = $quest['quest_id'];
+		}
+	}
+
+	return $active;
 }
 
 /**
@@ -303,17 +448,13 @@ function popup_loader_request(): array {
 }
 
 /**
- * Whether this language has a Popup v2 quest to render above the footer, and
- * the page being rendered is not excluded from it.
+ * Whether this language has at least one Popup v2 quest to render above the
+ * footer on the page being rendered.
  *
  * @return bool
  */
 function popup_v2_enabled(): bool {
-	$prefix = popup_v2_prefix();
-
-	return (bool) get_option( $prefix . 'enabled', 0 )
-		&& '' !== (string) get_option( $prefix . 'quest_id', '' )
-		&& ! popup_v2_excluded();
+	return ! empty( popup_v2_active_quest_ids() );
 }
 
 /**
@@ -361,42 +502,51 @@ add_action( 'wp_head', __NAMESPACE__ . '\maybe_insert_loader' );
  *
  * @return void
  */
-function maybe_insert_popup_v2_div(): void {
-	if ( ! popup_v2_enabled() ) {
+function maybe_insert_popup_v2_divs(): void {
+	$quest_ids = popup_v2_active_quest_ids();
+	if ( empty( $quest_ids ) ) {
 		return;
 	}
 
 	// Prepare every value as a finished, escaped string so the markup below
-	// stays a plain template with no inline PHP. The quest is always a v2 one —
+	// stays a plain template with no inline PHP. The quests are always v2 ones —
 	// the settings page only offers v2 quests — so the version is hard-coded
 	// rather than looked up, which keeps it right even when the stored quest
 	// list is stale or empty.
-	$lang     = current_language();
-	$quest_id = esc_attr( get_option( popup_v2_prefix( $lang ) . 'quest_id', '' ) );
-	$org_id   = esc_attr( get_option( 'jquest_org_id', '' ) );
-	$locale   = 'default' === $lang ? '' : esc_attr( $lang );
+	$lang   = current_language();
+	$org_id = esc_attr( get_option( 'jquest_org_id', '' ) );
+	$locale = 'default' === $lang ? '' : esc_attr( $lang );
 
-	// data-jq-load="eager" opts this widget out of the loader's viewport gate.
-	// The loader only fetches the app bundle once a .jquest-app approaches the
-	// viewport, but this div sits at the very bottom of the document and renders
-	// a floating popup, so it would only load once the visitor scrolled all the
-	// way down — by which point the popup has missed its chance to appear.
-	// phpcs:disable WordPress.Security.EscapeOutput -- values are escaped above.
-	echo <<<HTML
-	<div
-		class="jquest-app"
-		data-new-styles="true"
-		data-locale="{$locale}"
-		data-org-id="{$org_id}"
-		data-game-id="{$quest_id}"
-		data-version="v2"
-		data-jq-load="eager"
-	></div>
-	HTML;
-	// phpcs:enable WordPress.Security.EscapeOutput
+	foreach ( $quest_ids as $quest_id ) {
+		$quest_id = esc_attr( $quest_id );
+
+		// data-jq-load="eager" opts this widget out of the loader's viewport
+		// gate. The loader only fetches the app bundle once a .jquest-app
+		// approaches the viewport, but these divs sit at the very bottom of the
+		// document and render floating popups, so they would only load once the
+		// visitor scrolled all the way down — by which point the popup has
+		// missed its chance to appear.
+		// phpcs:disable WordPress.Security.EscapeOutput -- values are escaped above.
+		echo <<<HTML
+		<div
+			class="jquest-app"
+			data-new-styles="true"
+			data-locale="{$locale}"
+			data-org-id="{$org_id}"
+			data-game-id="{$quest_id}"
+			data-version="v2"
+			data-jq-load="eager"
+		></div>
+		HTML;
+		// phpcs:enable WordPress.Security.EscapeOutput
+
+		// The heredoc has no trailing newline, so several quests would
+		// otherwise land on one line in the page source.
+		echo "\n";
+	}
 }
 
-add_action( 'wp_footer', __NAMESPACE__ . '\maybe_insert_popup_v2_div', 0 );
+add_action( 'wp_footer', __NAMESPACE__ . '\maybe_insert_popup_v2_divs', 0 );
 
 /**
  * One-time migration from the legacy per-language boolean `latest_script`
@@ -441,6 +591,69 @@ function migrate_popup_version(): void {
 }
 
 add_action( 'admin_init', __NAMESPACE__ . '\migrate_popup_version' );
+
+/**
+ * One-time migration from the legacy single Popup v2 quest per language to the
+ * per-language quest list. Each language's `enabled`/`quest_id`/`exclude_ids`
+ * trio becomes a list of one, the legacy options are removed, and a flag is set
+ * so it never runs again.
+ *
+ * @return void
+ */
+function migrate_popup_v2_quests(): void {
+	if ( get_option( POPUP_V2_MIGRATION_FLAG ) ) {
+		return;
+	}
+
+	global $wpdb;
+	// Find every language's legacy option, e.g. jquest_popup_v2_en_quest_id.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$legacy_options = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+			$wpdb->esc_like( 'jquest_popup_v2_' ) . '%' . $wpdb->esc_like( '_quest_id' )
+		)
+	);
+
+	$excluded = array();
+	foreach ( $legacy_options as $legacy_option ) {
+		$prefix   = substr( $legacy_option, 0, -strlen( 'quest_id' ) );
+		$quest_id = (string) get_option( $legacy_option, '' );
+
+		// Only seed the list when there is a quest to carry over and nothing has
+		// been saved through the new settings form yet, so a list a user has
+		// already edited is never overwritten.
+		if ( '' !== $quest_id && ! is_array( get_option( $prefix . 'quests', null ) ) ) {
+			update_option(
+				$prefix . 'quests',
+				array(
+					array(
+						'enabled'  => get_option( $prefix . 'enabled', 0 ) ? 1 : 0,
+						'quest_id' => $quest_id,
+					),
+				)
+			);
+		}
+
+		// The exclusion list is global now, so every language's list is folded
+		// into one. A page excluded in any language stays excluded, which is the
+		// safe direction: the alternative puts a v2 popup back onto a page whose
+		// block needs another script channel.
+		$excluded = array_merge( $excluded, parse_id_list( get_option( $prefix . 'exclude_ids', '' ) ) );
+
+		delete_option( $legacy_option );
+		delete_option( $prefix . 'enabled' );
+		delete_option( $prefix . 'exclude_ids' );
+	}
+
+	if ( ! empty( $excluded ) && null === get_option( POPUP_V2_EXCLUDE_OPTION, null ) ) {
+		update_option( POPUP_V2_EXCLUDE_OPTION, sanitize_id_list( $excluded ) );
+	}
+
+	update_option( POPUP_V2_MIGRATION_FLAG, 1 );
+}
+
+add_action( 'admin_init', __NAMESPACE__ . '\migrate_popup_v2_quests' );
 
 /**
  * Outputs the jQuest popup div into the footer when the popup is enabled for the current language.

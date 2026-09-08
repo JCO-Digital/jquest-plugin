@@ -189,13 +189,19 @@ class OptionsPage extends Singleton {
 			$prefix = 'jquest_popup_' . $lang . '_';
 			$group  = 'jquest-popup-' . $lang;
 
-			// Popup v2 — a quest rendered above the footer on every page.
-			$v2_prefix = \jQuestPlugin\Scripts\popup_v2_prefix( $lang );
-			$v2_group  = 'jquest-popup-v2-' . $lang;
+			// Popup v2 — any number of quests rendered above the footer, each
+			// with its own exclusion list, stored as one list option.
+			$v2_group = 'jquest-popup-v2-' . $lang;
 
-			register_setting( $v2_group, $v2_prefix . 'enabled', array( 'sanitize_callback' => 'absint' ) );
-			register_setting( $v2_group, $v2_prefix . 'quest_id', array( 'sanitize_callback' => 'sanitize_text_field' ) );
-			register_setting( $v2_group, $v2_prefix . 'exclude_ids', array( 'sanitize_callback' => 'jQuestPlugin\Scripts\sanitize_id_list' ) );
+			register_setting(
+				$v2_group,
+				\jQuestPlugin\Scripts\popup_v2_quests_option( $lang ),
+				array(
+					'type'              => 'array',
+					'default'           => array(),
+					'sanitize_callback' => 'jQuestPlugin\Scripts\sanitize_popup_v2_quests',
+				)
+			);
 
 			register_setting( $group, $prefix . 'enabled', array( 'sanitize_callback' => 'absint' ) );
 			register_setting( $group, $prefix . 'quest_id', array( 'sanitize_callback' => 'sanitize_text_field' ) );
@@ -212,8 +218,10 @@ class OptionsPage extends Singleton {
 		// form at the top of the popup page (not tied to any language).
 		register_setting( 'jquest-popup-general', \jQuestPlugin\Scripts\POPUP_VERSION_OPTION, array( 'sanitize_callback' => 'jQuestPlugin\Scripts\sanitize_version' ) );
 
-		// Loading the loader on every page — global, saved from the Popup v2 page.
-		register_setting( 'jquest-loader', \jQuestPlugin\Scripts\ALWAYS_LOAD_OPTION, array( 'sanitize_callback' => 'absint' ) );
+		// Popup v2 settings that are not per-language, saved from their own form
+		// above the language tabs on the Popup v2 page.
+		register_setting( 'jquest-popup-v2-global', \jQuestPlugin\Scripts\ALWAYS_LOAD_OPTION, array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'jquest-popup-v2-global', \jQuestPlugin\Scripts\POPUP_V2_EXCLUDE_OPTION, array( 'sanitize_callback' => 'jQuestPlugin\Scripts\sanitize_id_list' ) );
 
 		// Trigger settings — global (not per-language).
 		$svg_kses = array(

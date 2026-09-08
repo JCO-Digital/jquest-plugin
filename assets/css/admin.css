@@ -248,3 +248,30 @@
 .jquest-wrap .jquest-excluded-list li {
 	margin: 0;
 }
+
+/* ── Popup v2 quest entries ───────────────────── */
+.jquest-wrap .jquest-quest-entry {
+	margin: 16px 0 0;
+	padding: 4px 16px 8px;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	background: #fbfbfc;
+}
+
+.jquest-wrap .jquest-quest-entry--new {
+	border-style: dashed;
+	background: transparent;
+}
+
+.jquest-wrap .jquest-quest-entry legend {
+	padding: 0 6px;
+	color: #1a2e40;
+	font-size: 0.8rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+
+.jquest-wrap .jquest-quest-entry .form-table {
+	margin: 0;
+}
