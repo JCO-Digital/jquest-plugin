@@ -195,6 +195,7 @@ class OptionsPage extends Singleton {
 
 			register_setting( $v2_group, $v2_prefix . 'enabled', array( 'sanitize_callback' => 'absint' ) );
 			register_setting( $v2_group, $v2_prefix . 'quest_id', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+			register_setting( $v2_group, $v2_prefix . 'exclude_ids', array( 'sanitize_callback' => 'jQuestPlugin\Scripts\sanitize_id_list' ) );
 
 			register_setting( $group, $prefix . 'enabled', array( 'sanitize_callback' => 'absint' ) );
 			register_setting( $group, $prefix . 'quest_id', array( 'sanitize_callback' => 'sanitize_text_field' ) );

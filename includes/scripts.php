@@ -64,6 +64,63 @@ function popup_v2_prefix( ?string $lang = null ): string {
 }
 
 /**
+ * Parses a list of post IDs typed into a settings field: IDs separated by
+ * commas or whitespace, in any mix.
+ *
+ * @param mixed $value The raw field value.
+ *
+ * @return int[] Unique, positive IDs.
+ */
+function parse_id_list( $value ): array {
+	return array_values( array_filter( wp_parse_id_list( is_scalar( $value ) ? (string) $value : '' ) ) );
+}
+
+/**
+ * Sanitises a list of post IDs down to a comma-separated string, so the stored
+ * option reads back the same way it was typed.
+ *
+ * @param mixed $value The raw field value.
+ *
+ * @return string
+ */
+function sanitize_id_list( $value ): string {
+	return implode( ', ', parse_id_list( $value ) );
+}
+
+/**
+ * Posts the Popup v2 quest is suppressed on, for a language.
+ *
+ * @param string|null $lang Language slug. Defaults to the current language.
+ *
+ * @return int[]
+ */
+function popup_v2_excluded_ids( ?string $lang = null ): array {
+	return parse_id_list( get_option( popup_v2_prefix( $lang ) . 'exclude_ids', '' ) );
+}
+
+/**
+ * Whether the post being rendered is on this language's Popup v2 exclusion
+ * list.
+ *
+ * Only one loader can run per page and a v2 quest anywhere on it pins the whole
+ * page to the v2 bundle, so a page carrying a stable/latest block cannot also
+ * carry the v2 popup. Excluding the page takes the popup out of both the loader
+ * decision and the footer markup, leaving the block's own channel to win.
+ *
+ * @return bool
+ */
+function popup_v2_excluded(): bool {
+	$excluded = popup_v2_excluded_ids();
+	if ( empty( $excluded ) ) {
+		return false;
+	}
+
+	$current = (int) get_queried_object_id();
+
+	return $current > 0 && in_array( $current, $excluded, true );
+}
+
+/**
  * Normalises a version channel to one the loader understands.
  *
  * @param mixed $version The requested version.
@@ -246,7 +303,8 @@ function popup_loader_request(): array {
 }
 
 /**
- * Whether this language has a Popup v2 quest to render above the footer.
+ * Whether this language has a Popup v2 quest to render above the footer, and
+ * the page being rendered is not excluded from it.
  *
  * @return bool
  */
@@ -254,7 +312,8 @@ function popup_v2_enabled(): bool {
 	$prefix = popup_v2_prefix();
 
 	return (bool) get_option( $prefix . 'enabled', 0 )
-		&& '' !== (string) get_option( $prefix . 'quest_id', '' );
+		&& '' !== (string) get_option( $prefix . 'quest_id', '' )
+		&& ! popup_v2_excluded();
 }
 
 /**

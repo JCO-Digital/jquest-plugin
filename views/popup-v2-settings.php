@@ -87,6 +87,43 @@ $jquest_group  = 'jquest-popup-v2-' . $jquest_lang_key;
 						<p class="description"><?php esc_html_e( 'Only v2 quests can be used here.', 'jquest' ); ?></p>
 					</td>
 				</tr>
+				<tr>
+					<th scope="row">
+						<label for="<?php echo esc_attr( $jquest_prefix . 'exclude_ids' ); ?>">
+							<?php esc_html_e( 'Excluded pages', 'jquest' ); ?>
+						</label>
+					</th>
+					<td>
+						<?php $jquest_excluded = \jQuestPlugin\Scripts\popup_v2_excluded_ids( $jquest_lang_key ); ?>
+						<textarea name="<?php echo esc_attr( $jquest_prefix . 'exclude_ids' ); ?>"
+							id="<?php echo esc_attr( $jquest_prefix . 'exclude_ids' ); ?>"
+							rows="3"
+							class="large-text code"
+							placeholder="12, 34, 56"><?php echo esc_textarea( implode( ', ', $jquest_excluded ) ); ?></textarea>
+						<p class="description">
+							<?php esc_html_e( 'Page or post IDs this popup is left off, separated by commas or line breaks. Use this for pages that embed a jQuest block on the stable or latest script — only one script can run per page, so a v2 popup would otherwise force the whole page onto v2 and break the block.', 'jquest' ); ?>
+						</p>
+						<?php if ( ! empty( $jquest_excluded ) ) : ?>
+							<ul class="jquest-excluded-list">
+								<?php
+								// The title next to each ID makes a typo, or an ID left
+								// behind by a deleted page, obvious at a glance.
+								foreach ( $jquest_excluded as $jquest_excluded_id ) :
+									$jquest_excluded_title = get_the_title( $jquest_excluded_id );
+									?>
+									<li>
+										<?php echo esc_html( (string) $jquest_excluded_id ); ?> —
+										<?php if ( '' !== $jquest_excluded_title ) : ?>
+											<?php echo esc_html( $jquest_excluded_title ); ?>
+										<?php else : ?>
+											<em><?php esc_html_e( 'not found', 'jquest' ); ?></em>
+										<?php endif; ?>
+									</li>
+								<?php endforeach; ?>
+							</ul>
+						<?php endif; ?>
+					</td>
+				</tr>
 			</table>
 
 			<?php submit_button(); ?>

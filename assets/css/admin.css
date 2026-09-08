@@ -236,3 +236,15 @@
 	line-height: 1.2;
 	text-transform: uppercase;
 }
+
+/* ── Excluded pages list ──────────────────────── */
+.jquest-wrap .jquest-excluded-list {
+	margin: 4px 0 0;
+	color: #6b7280;
+	font-size: 0.8rem;
+	line-height: 1.6;
+}
+
+.jquest-wrap .jquest-excluded-list li {
+	margin: 0;
+}
