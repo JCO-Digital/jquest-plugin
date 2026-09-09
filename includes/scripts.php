@@ -292,14 +292,153 @@ function consent_attributes(): array {
 }
 
 /**
- * Loads the jQuest loader once per page and tells it which version to fetch
- * via the window.__JQUEST_VERSION global.
+ * Base URL of a version channel's bundle directory, holding manifest.json and
+ * the hashed chunks it lists. Mirrors the channel table inside the loader.
  *
- * @param string $version The version channel to load (see VERSIONS).
+ * @param string $version The version channel (see VERSIONS).
+ *
+ * @return string
+ */
+function channel_base_url( string $version ): string {
+	return 'https://files.jquest.fi/jquest/' . sanitize_version( $version );
+}
+
+/**
+ * How long a fetched manifest is reused before it is fetched again. The CDN
+ * serves the manifest with a 60 second max-age, so a few minutes of drift is
+ * possible; the preload hints below can then point at chunks a deploy has just
+ * replaced, which costs one wasted request and nothing else — the loader
+ * always reads the live manifest itself.
+ */
+const MANIFEST_CACHE_TTL = 5 * MINUTE_IN_SECONDS;
+
+/**
+ * Fetches and caches a channel's manifest.json.
+ *
+ * Failures are cached too, so an unreachable CDN costs one attempt per TTL
+ * rather than one per page view.
+ *
+ * @param string $version The version channel (see VERSIONS).
+ *
+ * @return array<string, mixed> Decoded manifest, or an empty array when unavailable.
+ */
+function channel_manifest( string $version ): array {
+	$version = sanitize_version( $version );
+	$key     = 'jquest_manifest_' . $version;
+
+	$cached = get_transient( $key );
+	if ( is_array( $cached ) ) {
+		return $cached;
+	}
+
+	$manifest = array();
+	$response = wp_remote_get(
+		channel_base_url( $version ) . '/manifest.json',
+		array( 'timeout' => 2 )
+	);
+
+	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+		$decoded = json_decode( wp_remote_retrieve_body( $response ), true );
+		if ( is_array( $decoded ) ) {
+			$manifest = $decoded;
+		}
+	}
+
+	set_transient( $key, $manifest, MANIFEST_CACHE_TTL );
+
+	return $manifest;
+}
+
+/**
+ * The chunks worth preloading for a channel: the entry chunk plus everything it
+ * imports statically, so the whole bundle arrives in one round trip instead of
+ * entry-then-vendors.
+ *
+ * A manifest may name them outright in a "preload" list. Without one, the
+ * vendor chunks are assumed to be static imports of the entry — which holds for
+ * every current channel — except Sentry, which the entry imports lazily.
+ * Chunks the entry loads on demand (rive, masterQuest) are left out on purpose:
+ * they are large and only some quests use them.
+ *
+ * @param string $version The version channel (see VERSIONS).
+ *
+ * @return string[] Chunk URLs, entry first.
+ */
+function channel_preload_urls( string $version ): array {
+	$manifest = channel_manifest( $version );
+	$app      = $manifest['app'] ?? '';
+	if ( ! is_string( $app ) || '' === $app ) {
+		return array();
+	}
+
+	$files = $manifest['preload'] ?? null;
+	if ( ! is_array( $files ) ) {
+		$files = array_filter(
+			(array) ( $manifest['files'] ?? array() ),
+			function ( $file ): bool {
+				return is_string( $file )
+					&& str_contains( $file, '-vendor-' )
+					&& ! str_contains( $file, '-vendor-sentry-' );
+			}
+		);
+	}
+
+	$base = channel_base_url( $version );
+	$urls = array( $base . '/' . $app );
+	foreach ( $files as $file ) {
+		if ( is_string( $file ) && '' !== $file && $app !== $file ) {
+			$urls[] = $base . '/' . $file;
+		}
+	}
+
+	return array_values( array_unique( $urls ) );
+}
+
+/**
+ * Prints the resource hints that let the browser fetch the bundle while the
+ * host page is still parsing, instead of in three serial round trips (manifest,
+ * entry chunk, vendor chunks) once the loader finally asks for it.
+ *
+ * Everything is fetched anonymously with CORS — fetch() for the manifest,
+ * module scripts for the chunks — so every hint carries crossorigin to land in
+ * the same cache and connection pool.
+ *
+ * @param string $version The version channel (see VERSIONS).
  *
  * @return void
  */
-function insert_jquest_script( string $version = DEFAULT_VERSION ): void {
+function print_bundle_preloads( string $version ): void {
+	$base = channel_base_url( $version );
+
+	printf(
+		'<link rel="preload" as="fetch" href="%s" crossorigin>' . "\n",
+		esc_url( $base . '/manifest.json' )
+	);
+
+	foreach ( channel_preload_urls( $version ) as $url ) {
+		printf( '<link rel="modulepreload" href="%s" crossorigin>' . "\n", esc_url( $url ) );
+	}
+}
+
+/**
+ * Loads the jQuest loader once per page and tells it which version to fetch
+ * via the window.__JQUEST_VERSION global.
+ *
+ * The loader is a classic IIFE, so it goes out as a classic async script: it
+ * runs the moment its bytes arrive, without blocking parsing. Shipping it as a
+ * module — as this plugin used to — deferred it until the host page finished
+ * parsing, which on heavy pages was many seconds after it had downloaded.
+ * Running early is safe: the loader itself waits for DOMContentLoaded before
+ * looking for widgets.
+ *
+ * @param string $version        The version channel to load (see VERSIONS).
+ * @param bool   $preload_bundle Whether the app bundle is certain to be needed
+ *                               without user interaction, and so worth fetching
+ *                               ahead of time.
+ *
+ * @return void
+ */
+function insert_jquest_script( string $version = DEFAULT_VERSION, bool $preload_bundle = false ): void {
 	static $inserted = false;
 	if ( $inserted ) {
 		return;
@@ -309,24 +448,12 @@ function insert_jquest_script( string $version = DEFAULT_VERSION ): void {
 	// Fall back to the default channel for anything unrecognised.
 	$version = sanitize_version( $version );
 
-	// The loader is a module, which always executes deferred, so set the
-	// version global from a classic inline script first — it runs during
-	// parsing, well before the loader module executes.
-	wp_print_inline_script_tag(
-		"window.__JQUEST_VERSION = '" . esc_js( $version ) . "';",
-		consent_attributes()
-	);
-
-	// The Module API prints the script tag itself, so the consent attributes
-	// have to be filtered in. Script modules are printed through
-	// wp_print_script_tag(), which applies wp_script_attributes with the tag's
-	// id set to "<handle>-js-module". Registering the filter here — rather than
-	// at load — keeps it off pages with no loader, and is still well before the
-	// tag is printed (wp_head for block themes, wp_footer for classic ones).
+	// The consent attributes are printed directly below, but consent managers
+	// hooked to wp_script_attributes still see the loader tag under its id.
 	add_filter(
 		'wp_script_attributes',
 		function ( array $attributes ): array {
-			if ( 'jquest-loader-js-module' === ( $attributes['id'] ?? '' ) ) {
+			if ( 'jquest-loader-js' === ( $attributes['id'] ?? '' ) ) {
 				$attributes = array_merge( $attributes, consent_attributes() );
 			}
 
@@ -334,9 +461,33 @@ function insert_jquest_script( string $version = DEFAULT_VERSION ): void {
 		}
 	);
 
-	// Register and enqueue the loader using WordPress's native Module API.
-	wp_register_script_module( 'jquest-loader', LOADER_URL, array(), null );
-	wp_enqueue_script_module( 'jquest-loader' );
+	// Every request to the CDN after the loader itself is anonymous CORS, so
+	// warm up that connection.
+	echo '<link rel="preconnect" href="https://files.jquest.fi" crossorigin>' . "\n";
+
+	// The version global has to be set before the loader runs. Both tags are
+	// printed here in order, and the inline one executes during parsing, so it
+	// always wins the race against the async loader.
+	wp_print_inline_script_tag(
+		"window.__JQUEST_VERSION = '" . esc_js( $version ) . "';",
+		consent_attributes()
+	);
+
+	wp_print_script_tag(
+		array_merge(
+			array(
+				'id'          => 'jquest-loader-js',
+				'src'         => LOADER_URL,
+				'async'       => true,
+				'crossorigin' => 'anonymous',
+			),
+			consent_attributes()
+		)
+	);
+
+	if ( $preload_bundle ) {
+		print_bundle_preloads( $version );
+	}
 }
 
 /**
@@ -422,7 +573,7 @@ function block_loader_request(): array {
 /**
  * What the popup configured for the current language needs from the loader.
  *
- * @return array{present: bool, version: string|null, has_v2_quest: bool}
+ * @return array{present: bool, version: string|null, has_v2_quest: bool, eager?: bool}
  */
 function popup_loader_request(): array {
 	$prefix = 'jquest_popup_' . current_language() . '_';
@@ -444,6 +595,9 @@ function popup_loader_request(): array {
 		'present'      => true,
 		'version'      => $version,
 		'has_v2_quest' => 'v2' === \jQuestPlugin\get_jquest_version( $quest_id ),
+		// An auto popup declares itself eager, so its bundle is fetched without
+		// any interaction; a popup the visitor opens only fetches on hover.
+		'eager'        => (bool) get_option( $prefix . 'auto', 0 ),
 	);
 }
 
@@ -482,19 +636,34 @@ function maybe_insert_loader(): void {
 		return;
 	}
 
+	// Preload the bundle only when the loader is certain to fetch it without
+	// the visitor doing anything: a block in the content (the viewport gate
+	// fires as soon as it scrolls near), an auto popup or a Popup v2 quest.
+	// A hover-opened popup or the always-load setting alone may never need
+	// the bundle, and preloading a megabyte of vendor code for nothing would
+	// only slow the host page down.
+	$preload_bundle = $block_request['present']
+		|| ( $popup_request['eager'] ?? false )
+		|| $popup_v2;
+
 	if ( $block_request['has_v2_quest'] || $popup_request['has_v2_quest'] || $popup_v2 ) {
-		insert_jquest_script( 'v2' );
+		insert_jquest_script( 'v2', $preload_bundle );
 		return;
 	}
 
 	insert_jquest_script(
 		$block_request['version']
 			?? $popup_request['version']
-			?? (string) get_option( POPUP_VERSION_OPTION, DEFAULT_VERSION )
+			?? (string) get_option( POPUP_VERSION_OPTION, DEFAULT_VERSION ),
+		$preload_bundle
 	);
 }
 
-add_action( 'wp_head', __NAMESPACE__ . '\maybe_insert_loader' );
+// Priority 2: right after wp_enqueue_scripts (1), ahead of the theme's styles
+// (8) and head scripts (9), so the loader and the preload hints are among the
+// first things the browser sees and nothing on the host page queues ahead of
+// them.
+add_action( 'wp_head', __NAMESPACE__ . '\maybe_insert_loader', 2 );
 
 /**
  * Outputs the Popup v2 quest div at the top of the footer, i.e. just above

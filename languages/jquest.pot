@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the JQUEST Plugin package.
 msgid ""
 msgstr ""
-"Project-Id-Version: JQUEST Plugin 1.8.1\n"
+"Project-Id-Version: JQUEST Plugin 1.10.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/jquest-plugin\n"
-"POT-Creation-Date: 2026-07-30 08:06:21+00:00\n"
+"POT-Creation-Date: 2026-09-09 07:36:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -29,30 +29,30 @@ msgid "Title"
 msgstr ""
 
 #: classes/Options/OptionsPage.php:91 classes/Options/OptionsPage.php:92
-#: classes/Options/OptionsPage.php:296 classes/Options/OptionsPage.php:472
+#: classes/Options/OptionsPage.php:305 classes/Options/OptionsPage.php:481
 msgid "General"
 msgstr ""
 
 #: classes/Options/OptionsPage.php:100 classes/Options/OptionsPage.php:101
-#: classes/Options/OptionsPage.php:385
+#: classes/Options/OptionsPage.php:394
 msgid "Popup"
 msgstr ""
 
 #: classes/Options/OptionsPage.php:109 classes/Options/OptionsPage.php:110
-#: classes/Options/OptionsPage.php:432 views/popup-settings.php:786
+#: classes/Options/OptionsPage.php:441 views/popup-settings.php:786
 #: views/popup-settings.php:796
 msgid "Popup v2"
 msgstr ""
 
-#: classes/Options/OptionsPage.php:303 classes/Options/OptionsPage.php:333
+#: classes/Options/OptionsPage.php:312 classes/Options/OptionsPage.php:342
 msgid "Organisation ID"
 msgstr ""
 
-#: classes/Options/OptionsPage.php:319
+#: classes/Options/OptionsPage.php:328
 msgid "General settings required for jQuest integration."
 msgstr ""
 
-#: classes/Options/OptionsPage.php:371
+#: classes/Options/OptionsPage.php:380
 msgid "Trigger"
 msgstr ""
 
@@ -97,7 +97,7 @@ msgid "(hover to see hover state)"
 msgstr ""
 
 #: views/popup-settings.php:95 views/popup-settings.php:749
-#: views/popup-v2-settings.php:56
+#: views/popup-v2-settings.php:132
 msgid "Enabled"
 msgstr ""
 
@@ -260,11 +260,11 @@ msgstr ""
 msgid "Enable popup"
 msgstr ""
 
-#: views/popup-settings.php:764 views/popup-v2-settings.php:72
+#: views/popup-settings.php:764 views/popup-v2-settings.php:151
 msgid "Quest"
 msgstr ""
 
-#: views/popup-settings.php:771 views/popup-v2-settings.php:79
+#: views/popup-settings.php:771 views/popup-v2-settings.php:157
 msgid "— Select a quest —"
 msgstr ""
 
@@ -322,36 +322,74 @@ msgstr ""
 msgid "Disable noscroll on body"
 msgstr ""
 
-#: views/popup-v2-settings.php:9
+#: views/popup-v2-settings.php:28
 msgid "jQuest Popup v2"
 msgstr ""
 
-#: views/popup-v2-settings.php:17
+#: views/popup-v2-settings.php:36
 msgid "Loader"
 msgstr ""
 
-#: views/popup-v2-settings.php:25
+#: views/popup-v2-settings.php:44
 msgid "Always load the jQuest loader"
 msgstr ""
 
-#: views/popup-v2-settings.php:27
+#: views/popup-v2-settings.php:46
 msgid ""
 "Loads the loader on every page, even ones without a jQuest block or popup. "
 "Applies to all languages."
 msgstr ""
 
-#: views/popup-v2-settings.php:64
-msgid "Insert quest above the footer"
+#: views/popup-v2-settings.php:52
+msgid "Excluded pages"
 msgstr ""
 
-#: views/popup-v2-settings.php:66
+#: views/popup-v2-settings.php:62
 msgid ""
-"Outputs the selected quest at the top of the footer on every page of this "
-"language."
+"Page or post IDs no Popup v2 quest is inserted on, separated by commas or "
+"line breaks. Applies to every quest and every language. Use this for pages "
+"that embed a jQuest block on the stable or latest script — only one script "
+"can run per page, so a v2 popup would otherwise force the whole page onto "
+"v2 and break the block."
 msgstr ""
 
-#: views/popup-v2-settings.php:87
-msgid "Only v2 quests can be used here."
+#: views/popup-v2-settings.php:77
+msgid "not found"
+msgstr ""
+
+#: views/popup-v2-settings.php:110
+msgid ""
+"Every enabled quest below is inserted at the top of the footer on every "
+"page of this language, apart from the excluded pages above. Only v2 quests "
+"can be used here."
+msgstr ""
+
+#: views/popup-v2-settings.php:124
+msgid "Add a quest"
+msgstr ""
+
+#: views/popup-v2-settings.php:126
+#. translators: %d: position of the quest in the list.
+msgid "Quest %d"
+msgstr ""
+
+#: views/popup-v2-settings.php:144
+msgid "Insert this quest above the footer"
+msgstr ""
+
+#: views/popup-v2-settings.php:170
+#. translators: %s: stored quest ID.
+msgid ""
+"The saved quest (%s) is no longer in the fetched quest list. Pick another "
+"one or remove this entry."
+msgstr ""
+
+#: views/popup-v2-settings.php:180
+msgid "Remove"
+msgstr ""
+
+#: views/popup-v2-settings.php:186
+msgid "Delete this quest when the settings are saved"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
