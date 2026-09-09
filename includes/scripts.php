@@ -304,19 +304,20 @@ function channel_base_url( string $version ): string {
 }
 
 /**
- * How long a fetched manifest is reused before it is fetched again. The CDN
- * serves the manifest with a 60 second max-age, so a few minutes of drift is
- * possible; the preload hints below can then point at chunks a deploy has just
- * replaced, which costs one wasted request and nothing else — the loader
- * always reads the live manifest itself.
+ * How long a fetched manifest is reused before it is fetched again.
+ *
+ * The CDN caches the manifest for 60 seconds, so this can lag a deploy by a few
+ * minutes. In that window the preload hints point at chunks that were just
+ * replaced. That wastes one request per chunk and breaks nothing, because the
+ * loader reads the live manifest itself.
  */
 const MANIFEST_CACHE_TTL = 5 * MINUTE_IN_SECONDS;
 
 /**
  * Fetches and caches a channel's manifest.json.
  *
- * Failures are cached too, so an unreachable CDN costs one attempt per TTL
- * rather than one per page view.
+ * Failures are cached too. An unreachable CDN then costs one attempt per TTL
+ * instead of one per page view.
  *
  * @param string $version The version channel (see VERSIONS).
  *
@@ -350,15 +351,15 @@ function channel_manifest( string $version ): array {
 }
 
 /**
- * The chunks worth preloading for a channel: the entry chunk plus everything it
- * imports statically, so the whole bundle arrives in one round trip instead of
- * entry-then-vendors.
+ * The chunks worth preloading for a channel. That is the entry chunk plus every
+ * chunk it imports statically, so the browser fetches the whole bundle in one
+ * round trip instead of entry first and vendors after.
  *
- * A manifest may name them outright in a "preload" list. Without one, the
- * vendor chunks are assumed to be static imports of the entry — which holds for
- * every current channel — except Sentry, which the entry imports lazily.
- * Chunks the entry loads on demand (rive, masterQuest) are left out on purpose:
- * they are large and only some quests use them.
+ * A manifest may name them in a "preload" list. Without one, this guesses:
+ * every vendor chunk is treated as a static import of the entry, except Sentry,
+ * which the entry imports lazily. This matches every current channel. Chunks
+ * the entry loads on demand, such as rive and masterQuest, are skipped. They
+ * are large and only some quests use them.
  *
  * @param string $version The version channel (see VERSIONS).
  *
@@ -396,12 +397,12 @@ function channel_preload_urls( string $version ): array {
 
 /**
  * Prints the resource hints that let the browser fetch the bundle while the
- * host page is still parsing, instead of in three serial round trips (manifest,
- * entry chunk, vendor chunks) once the loader finally asks for it.
+ * host page is still parsing. Without them the loader asks for the manifest,
+ * then the entry chunk, then the vendor chunks, one round trip after another.
  *
- * Everything is fetched anonymously with CORS — fetch() for the manifest,
- * module scripts for the chunks — so every hint carries crossorigin to land in
- * the same cache and connection pool.
+ * The loader fetches all of these anonymously with CORS: fetch() for the
+ * manifest, module scripts for the chunks. Every hint carries crossorigin so the
+ * preloaded response lands in the same cache and connection pool.
  *
  * @param string $version The version channel (see VERSIONS).
  *
@@ -424,16 +425,16 @@ function print_bundle_preloads( string $version ): void {
  * Loads the jQuest loader once per page and tells it which version to fetch
  * via the window.__JQUEST_VERSION global.
  *
- * The loader is a classic IIFE, so it goes out as a classic async script: it
- * runs the moment its bytes arrive, without blocking parsing. Shipping it as a
- * module — as this plugin used to — deferred it until the host page finished
- * parsing, which on heavy pages was many seconds after it had downloaded.
- * Running early is safe: the loader itself waits for DOMContentLoaded before
- * looking for widgets.
+ * The loader is a classic IIFE, so it goes out as a classic async script. It
+ * runs as soon as its bytes arrive and never blocks parsing. This plugin used to
+ * ship it as a module, which the browser defers until the host page has finished
+ * parsing. On heavy pages that was many seconds after the download. Running
+ * early is safe because the loader waits for DOMContentLoaded before it looks
+ * for widgets.
  *
  * @param string $version        The version channel to load (see VERSIONS).
- * @param bool   $preload_bundle Whether the app bundle is certain to be needed
- *                               without user interaction, and so worth fetching
+ * @param bool   $preload_bundle Whether the app bundle will be needed without
+ *                               user interaction, and so is worth fetching
  *                               ahead of time.
  *
  * @return void
@@ -448,8 +449,9 @@ function insert_jquest_script( string $version = DEFAULT_VERSION, bool $preload_
 	// Fall back to the default channel for anything unrecognised.
 	$version = sanitize_version( $version );
 
-	// The consent attributes are printed directly below, but consent managers
-	// hooked to wp_script_attributes still see the loader tag under its id.
+	// The consent attributes are printed directly below. The filter is kept so
+	// consent managers hooked to wp_script_attributes still find the loader tag
+	// under its id.
 	add_filter(
 		'wp_script_attributes',
 		function ( array $attributes ): array {
@@ -461,13 +463,13 @@ function insert_jquest_script( string $version = DEFAULT_VERSION, bool $preload_
 		}
 	);
 
-	// Every request to the CDN after the loader itself is anonymous CORS, so
-	// warm up that connection.
+	// Every request to the CDN after the loader itself is anonymous CORS. Open
+	// that connection now.
 	echo '<link rel="preconnect" href="https://files.jquest.fi" crossorigin>' . "\n";
 
-	// The version global has to be set before the loader runs. Both tags are
-	// printed here in order, and the inline one executes during parsing, so it
-	// always wins the race against the async loader.
+	// The version global has to be set before the loader runs. The inline tag
+	// comes first and executes during parsing, and the async loader cannot run
+	// before the parser has reached its own tag, so the order holds.
 	wp_print_inline_script_tag(
 		"window.__JQUEST_VERSION = '" . esc_js( $version ) . "';",
 		consent_attributes()
@@ -596,7 +598,7 @@ function popup_loader_request(): array {
 		'version'      => $version,
 		'has_v2_quest' => 'v2' === \jQuestPlugin\get_jquest_version( $quest_id ),
 		// An auto popup declares itself eager, so its bundle is fetched without
-		// any interaction; a popup the visitor opens only fetches on hover.
+		// any interaction. A popup the visitor opens only fetches on hover.
 		'eager'        => (bool) get_option( $prefix . 'auto', 0 ),
 	);
 }
@@ -636,12 +638,12 @@ function maybe_insert_loader(): void {
 		return;
 	}
 
-	// Preload the bundle only when the loader is certain to fetch it without
-	// the visitor doing anything: a block in the content (the viewport gate
-	// fires as soon as it scrolls near), an auto popup or a Popup v2 quest.
-	// A hover-opened popup or the always-load setting alone may never need
-	// the bundle, and preloading a megabyte of vendor code for nothing would
-	// only slow the host page down.
+	// Preload the bundle only when the loader will fetch it without the visitor
+	// doing anything. That is a block in the content, since the viewport gate
+	// fires as soon as it scrolls near, an auto popup, or a Popup v2 quest. A
+	// hover-opened popup or the always-load setting alone may never need the
+	// bundle. Preloading a megabyte of vendor code for nothing would only slow
+	// the host page down.
 	$preload_bundle = $block_request['present']
 		|| ( $popup_request['eager'] ?? false )
 		|| $popup_v2;
@@ -659,10 +661,10 @@ function maybe_insert_loader(): void {
 	);
 }
 
-// Priority 2: right after wp_enqueue_scripts (1), ahead of the theme's styles
-// (8) and head scripts (9), so the loader and the preload hints are among the
-// first things the browser sees and nothing on the host page queues ahead of
-// them.
+// Priority 2 runs right after wp_enqueue_scripts at 1 and ahead of the theme's
+// styles at 8 and head scripts at 9. The loader and the preload hints are then
+// among the first tags in the head, with nothing from the host page queued
+// ahead of them.
 add_action( 'wp_head', __NAMESPACE__ . '\maybe_insert_loader', 2 );
 
 /**
