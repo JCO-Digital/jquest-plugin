@@ -1,6 +1,20 @@
 # Changelog
 
-## 1.10.0 (2026-09-08)
+## 1.11.0 (2026-09-09)
+
+#### Features
+
+- scripts: add bundle preloading and conditional script injection (f8c08c1)
+
+#### Documentation
+
+- scripts: improve code comments in script loader (8d5d290)
+
+#### Maintenance
+
+- i18n: update translation template (fbcff2d)
+
+## v1.10.0 (2026-09-08)
 
 #### Features
 
