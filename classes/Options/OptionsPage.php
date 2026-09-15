@@ -115,19 +115,6 @@ class OptionsPage extends Singleton {
 	}
 
 	/**
-	 * Language slugs the per-language settings are registered for.
-	 *
-	 * @return array
-	 */
-	private function popup_languages(): array {
-		$langs = function_exists( 'pll_languages_list' )
-			? pll_languages_list( array( 'fields' => 'slug' ) )
-			: array();
-
-		return empty( $langs ) ? array( 'default' ) : $langs;
-	}
-
-	/**
 	 * Handles registering the settings.
 	 *
 	 * @return void
@@ -180,25 +167,20 @@ class OptionsPage extends Singleton {
 			)
 		);
 
-		// Popup settings — one group per language (or 'default' when Polylang is
-		// inactive). A language's quests are any number of entries rendered
-		// above the footer, stored as one list option.
-		foreach ( $this->popup_languages() as $lang ) {
-			register_setting(
-				'superquest-popup-v2-' . $lang,
-				\SuperQuestPlugin\Scripts\popup_v2_quests_option( $lang ),
-				array(
-					'type'              => 'array',
-					'default'           => array(),
-					'sanitize_callback' => 'SuperQuestPlugin\Scripts\sanitize_popup_v2_quests',
-				)
-			);
-		}
-
-		// Popup settings that are not per-language, saved from their own form
-		// above the language tabs on the popup page.
-		register_setting( 'superquest-popup-v2-global', \SuperQuestPlugin\Scripts\ALWAYS_LOAD_OPTION, array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'superquest-popup-v2-global', \SuperQuestPlugin\Scripts\POPUP_V2_EXCLUDE_OPTION, array( 'sanitize_callback' => 'SuperQuestPlugin\Scripts\sanitize_id_list' ) );
+		// Popup settings. They apply to the whole site, so they are one group
+		// saved from one form: the quests are any number of entries rendered
+		// above the footer, stored as a single list option.
+		register_setting(
+			'superquest-popup-v2',
+			\SuperQuestPlugin\Scripts\POPUP_V2_QUESTS_OPTION,
+			array(
+				'type'              => 'array',
+				'default'           => array(),
+				'sanitize_callback' => 'SuperQuestPlugin\Scripts\sanitize_popup_v2_quests',
+			)
+		);
+		register_setting( 'superquest-popup-v2', \SuperQuestPlugin\Scripts\ALWAYS_LOAD_OPTION, array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'superquest-popup-v2', \SuperQuestPlugin\Scripts\POPUP_V2_EXCLUDE_OPTION, array( 'sanitize_callback' => 'SuperQuestPlugin\Scripts\sanitize_id_list' ) );
 
 		// Settings sections.
 		add_settings_section(
@@ -265,17 +247,6 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	final public function render_popup_page(): void {
-		$tabs = array();
-		foreach ( $this->popup_languages() as $slug ) {
-			$tabs[ $slug ] = array(
-				'label' => 'default' === $slug ? __( 'Popup', 'superquest' ) : strtoupper( $slug ),
-				'url'   => add_query_arg( array( 'tab' => $slug ), admin_url( 'admin.php?page=superquest-popup-v2' ) ),
-			);
-		}
-
-		$requested  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$active_tab = isset( $tabs[ $requested ] ) ? $requested : (string) array_key_first( $tabs );
-
 		$quests = array_values(
 			array_filter(
 				get_option( 'superquest_org_quests', array() ),
@@ -284,10 +255,7 @@ class OptionsPage extends Singleton {
 		);
 
 		$data = array(
-			'tabs'       => $tabs,
-			'active_tab' => $active_tab,
-			'lang_key'   => $active_tab,
-			'quests'     => $quests,
+			'quests' => $quests,
 		);
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo render_template( 'popup-v2-settings', $data );

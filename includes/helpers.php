@@ -203,7 +203,7 @@ const OPTION_PREFIX_MIGRATION_FLAG = 'superquest_option_prefix_migrated';
  * `superquest_`.
  *
  * Done over the whole prefix rather than a list of names because the popup
- * settings are keyed per language — `jquest_popup_v2_<lang>_quests` — so the
+ * settings were keyed per language — `jquest_popup_v2_<lang>_quests` — so the
  * full set is only known at runtime, and because it then also carries the
  * legacy options the later migrations look for.
  *

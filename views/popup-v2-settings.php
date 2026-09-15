@@ -1,15 +1,17 @@
 <?php // phpcs:ignore Squiz.Commenting.FileComment.Missing
 
-$superquest_group  = 'superquest-popup-v2-' . $superquest_lang_key;
-$superquest_option = \SuperQuestPlugin\Scripts\popup_v2_quests_option( $superquest_lang_key );
-$superquest_quests = \SuperQuestPlugin\Scripts\popup_v2_quests( $superquest_lang_key );
+// $superquest_quests holds the organisation's quests, passed in by the page and
+// offered in the selects below. The configured popup entries are their own
+// list, kept under its own name so that it does not shadow them.
+$superquest_option       = \SuperQuestPlugin\Scripts\POPUP_V2_QUESTS_OPTION;
+$superquest_popup_quests = \SuperQuestPlugin\Scripts\popup_v2_quests();
 
 // The form carries no JavaScript, so a blank entry is always appended: filling
 // it in and saving adds a quest, and leaving it alone changes nothing because
 // the sanitiser drops entries without a quest. It defaults to enabled so that
 // adding a quest takes a single save.
 $superquest_entries = array_merge(
-	$superquest_quests,
+	$superquest_popup_quests,
 	array(
 		array(
 			'enabled'  => true,
@@ -18,8 +20,6 @@ $superquest_entries = array_merge(
 	)
 );
 
-// Excluded pages are one site-wide list rather than a per-quest or
-// per-language one, so it is read once here for the form above the tabs.
 $superquest_excluded = \SuperQuestPlugin\Scripts\popup_v2_excluded_ids();
 ?>
 <div class="wrap superquest-wrap">
@@ -31,7 +31,7 @@ $superquest_excluded = \SuperQuestPlugin\Scripts\popup_v2_excluded_ids();
 
 	<div class="superquest-card">
 		<form method="post" action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>">
-			<?php settings_fields( 'superquest-popup-v2-global' ); ?>
+			<?php settings_fields( 'superquest-popup-v2' ); ?>
 			<table class="form-table">
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Loader', 'superquest' ); ?></th>
@@ -44,7 +44,7 @@ $superquest_excluded = \SuperQuestPlugin\Scripts\popup_v2_excluded_ids();
 								<?php checked( get_option( \SuperQuestPlugin\Scripts\ALWAYS_LOAD_OPTION, 0 ), 1 ); ?>>
 							<?php esc_html_e( 'Always load the SuperQuest loader', 'superquest' ); ?>
 						</label>
-						<p class="description"><?php esc_html_e( 'Loads the loader on every page, even ones without a SuperQuest block or popup. Applies to all languages.', 'superquest' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Loads the loader on every page, even ones without a SuperQuest block or popup.', 'superquest' ); ?></p>
 					</td>
 				</tr>
 				<tr>
@@ -60,7 +60,7 @@ $superquest_excluded = \SuperQuestPlugin\Scripts\popup_v2_excluded_ids();
 							class="large-text code"
 							placeholder="12, 34, 56"><?php echo esc_textarea( implode( ', ', $superquest_excluded ) ); ?></textarea>
 						<p class="description">
-							<?php esc_html_e( 'Page or post IDs no popup quest is inserted on, separated by commas or line breaks. Applies to every quest and every language.', 'superquest' ); ?>
+							<?php esc_html_e( 'Page or post IDs no popup quest is inserted on, separated by commas or line breaks. Applies to every quest.', 'superquest' ); ?>
 						</p>
 						<?php if ( ! empty( $superquest_excluded ) ) : ?>
 							<ul class="superquest-excluded-list">
@@ -84,39 +84,17 @@ $superquest_excluded = \SuperQuestPlugin\Scripts\popup_v2_excluded_ids();
 					</td>
 				</tr>
 			</table>
-			<?php submit_button(); ?>
-		</form>
-	</div>
-
-	<?php if ( ! empty( $superquest_tabs ) ) : ?>
-		<div class="nav-tab-wrapper">
-			<?php foreach ( $superquest_tabs as $superquest_tab => $tab_data ) : ?>
-				<a href="<?php echo esc_url( $tab_data['url'] ); ?>"
-					class="nav-tab
-					<?php
-					echo $superquest_active_tab === $superquest_tab
-					? 'nav-tab-active'
-					: '';
-					?>
-		"><?php echo esc_html( $tab_data['label'] ); ?></a>
-			<?php endforeach; ?>
-		</div>
-	<?php endif; ?>
-
-	<div class="superquest-card">
-		<form method="post" action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>">
-			<?php settings_fields( $superquest_group ); ?>
 
 			<p class="description">
-				<?php esc_html_e( 'Every enabled quest below is inserted at the top of the footer on every page of this language, apart from the excluded pages above.', 'superquest' ); ?>
+				<?php esc_html_e( 'Every enabled quest below is inserted at the top of the footer on every page of the site, whatever language it is in, apart from the excluded pages above.', 'superquest' ); ?>
 			</p>
 
 			<?php
 			foreach ( $superquest_entries as $superquest_index => $superquest_entry ) :
 				// Everything past the stored quests is the blank "add" entry.
-				$superquest_is_new = $superquest_index >= count( $superquest_quests );
+				$superquest_is_new = $superquest_index >= count( $superquest_popup_quests );
 				$superquest_name   = $superquest_option . '[' . $superquest_index . ']';
-				$superquest_id     = 'superquest-popup-v2-' . $superquest_lang_key . '-' . $superquest_index;
+				$superquest_id     = 'superquest-popup-v2-' . $superquest_index;
 				?>
 				<fieldset class="superquest-quest-entry<?php echo esc_attr( $superquest_is_new ? ' superquest-quest-entry--new' : '' ); ?>">
 					<legend>

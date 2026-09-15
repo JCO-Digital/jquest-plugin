@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the SuperQuest Plugin package.
 msgid ""
 msgstr ""
-"Project-Id-Version: SuperQuest Plugin 1.11.0\n"
+"Project-Id-Version: SuperQuest Plugin 1.12.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/jquest-plugin\n"
-"POT-Creation-Date: 2026-09-15 18:43:56+00:00\n"
+"POT-Creation-Date: 2026-09-15 22:31:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,13 +25,12 @@ msgstr ""
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
 #: classes/Options/OptionsPage.php:91 classes/Options/OptionsPage.php:92
-#: classes/Options/OptionsPage.php:206 classes/Options/OptionsPage.php:320
+#: classes/Options/OptionsPage.php:188 classes/Options/OptionsPage.php:288
 msgid "General"
 msgstr ""
 
 #: classes/Options/OptionsPage.php:100 classes/Options/OptionsPage.php:101
-#: classes/Options/OptionsPage.php:271 views/popup-v2-settings.php:29
-#: views/usage-settings.php:23
+#: views/popup-v2-settings.php:29 views/usage-settings.php:23
 msgid "Popup"
 msgstr ""
 
@@ -40,11 +39,11 @@ msgstr ""
 msgid "Usage"
 msgstr ""
 
-#: classes/Options/OptionsPage.php:213 classes/Options/OptionsPage.php:243
+#: classes/Options/OptionsPage.php:195 classes/Options/OptionsPage.php:225
 msgid "Organisation ID"
 msgstr ""
 
-#: classes/Options/OptionsPage.php:229
+#: classes/Options/OptionsPage.php:211
 msgid "General settings required for SuperQuest integration."
 msgstr ""
 
@@ -129,7 +128,7 @@ msgstr ""
 #: views/popup-v2-settings.php:47
 msgid ""
 "Loads the loader on every page, even ones without a SuperQuest block or "
-"popup. Applies to all languages."
+"popup."
 msgstr ""
 
 #: views/popup-v2-settings.php:53
@@ -139,56 +138,57 @@ msgstr ""
 #: views/popup-v2-settings.php:63
 msgid ""
 "Page or post IDs no popup quest is inserted on, separated by commas or line "
-"breaks. Applies to every quest and every language."
+"breaks. Applies to every quest."
 msgstr ""
 
 #: views/popup-v2-settings.php:78
 msgid "not found"
 msgstr ""
 
-#: views/popup-v2-settings.php:111
+#: views/popup-v2-settings.php:89
 msgid ""
 "Every enabled quest below is inserted at the top of the footer on every "
-"page of this language, apart from the excluded pages above."
+"page of the site, whatever language it is in, apart from the excluded pages "
+"above."
 msgstr ""
 
-#: views/popup-v2-settings.php:125
+#: views/popup-v2-settings.php:103
 msgid "Add a quest"
 msgstr ""
 
-#: views/popup-v2-settings.php:127
+#: views/popup-v2-settings.php:105
 #. translators: %d: position of the quest in the list.
 msgid "Quest %d"
 msgstr ""
 
-#: views/popup-v2-settings.php:133
+#: views/popup-v2-settings.php:111
 msgid "Enabled"
 msgstr ""
 
-#: views/popup-v2-settings.php:145
+#: views/popup-v2-settings.php:123
 msgid "Insert this quest above the footer"
 msgstr ""
 
-#: views/popup-v2-settings.php:152
+#: views/popup-v2-settings.php:130
 msgid "Quest"
 msgstr ""
 
-#: views/popup-v2-settings.php:158
+#: views/popup-v2-settings.php:136
 msgid "— Select a quest —"
 msgstr ""
 
-#: views/popup-v2-settings.php:171
+#: views/popup-v2-settings.php:149
 #. translators: %s: stored quest ID.
 msgid ""
 "The saved quest (%s) is no longer in the fetched quest list. Pick another "
 "one or remove this entry."
 msgstr ""
 
-#: views/popup-v2-settings.php:181
+#: views/popup-v2-settings.php:159
 msgid "Remove"
 msgstr ""
 
-#: views/popup-v2-settings.php:187
+#: views/popup-v2-settings.php:165
 msgid "Delete this quest when the settings are saved"
 msgstr ""
 

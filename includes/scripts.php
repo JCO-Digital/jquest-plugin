@@ -39,10 +39,23 @@ const ALWAYS_LOAD_OPTION = 'superquest_always_load_loader';
 const POPUP_V2_EXCLUDE_OPTION = 'superquest_popup_v2_exclude_ids';
 
 /**
+ * Option holding the popup quests. Global, like every other popup setting: one
+ * list is configured for the site and inserted on every page of it, whatever
+ * language that page is in.
+ */
+const POPUP_V2_QUESTS_OPTION = 'superquest_popup_v2_quests';
+
+/**
  * Flag option marking that the one-time migration from a single popup quest
  * per language to a list of them has run.
  */
 const POPUP_V2_MIGRATION_FLAG = 'superquest_popup_v2_quests_migrated';
+
+/**
+ * Flag option marking that the one-time merge of the per-language quest lists
+ * into the site-wide one has run.
+ */
+const POPUP_V2_LANGUAGES_MIGRATION_FLAG = 'superquest_popup_v2_quests_merged';
 
 /**
  * Returns the current language slug, or 'default' when Polylang is inactive or
@@ -57,14 +70,13 @@ function current_language(): string {
 }
 
 /**
- * Option prefix for the popup settings of a language.
- *
- * @param string|null $lang Language slug. Defaults to the current language.
+ * Option prefix the popup settings of the current language were stored under
+ * before they became site-wide. Only the back-compat reads below still use it.
  *
  * @return string
  */
-function popup_v2_prefix( ?string $lang = null ): string {
-	return 'superquest_popup_v2_' . ( $lang ?? current_language() ) . '_';
+function popup_v2_prefix(): string {
+	return 'superquest_popup_v2_' . current_language() . '_';
 }
 
 /**
@@ -98,17 +110,6 @@ function sanitize_id_list( $value ): string {
 }
 
 /**
- * Option holding a language's list of popup quests.
- *
- * @param string|null $lang Language slug. Defaults to the current language.
- *
- * @return string
- */
-function popup_v2_quests_option( ?string $lang = null ): string {
-	return popup_v2_prefix( $lang ) . 'quests';
-}
-
-/**
  * Normalises one stored popup quest entry into a predictable shape, so that
  * neither the settings page nor the front end has to guess at what the option
  * holds.
@@ -129,19 +130,23 @@ function normalize_popup_v2_quest( $entry ): array {
 }
 
 /**
- * The popup quests configured for a language, in the order they were added.
- *
- * @param string|null $lang Language slug. Defaults to the current language.
+ * The popup quests configured for the site, in the order they were added.
  *
  * @return array<int, array{enabled: bool, quest_id: string}>
  */
-function popup_v2_quests( ?string $lang = null ): array {
-	$stored = get_option( popup_v2_quests_option( $lang ), null );
+function popup_v2_quests(): array {
+	$stored = get_option( POPUP_V2_QUESTS_OPTION, null );
+
+	// Back-compat for the window before the migrations run on the next admin
+	// request: fall back to this language's list, and then to the one legacy
+	// entry that predates the list, reading either as the site-wide list.
+	$prefix = popup_v2_prefix();
 
 	if ( ! is_array( $stored ) ) {
-		// Back-compat for the window before migrate_popup_v2_quests() runs on
-		// the next admin request: read the one legacy entry as a list of one.
-		$prefix = popup_v2_prefix( $lang );
+		$stored = get_option( $prefix . 'quests', null );
+	}
+
+	if ( ! is_array( $stored ) ) {
 		$stored = array(
 			array(
 				'enabled'  => get_option( $prefix . 'enabled', 0 ),
@@ -236,7 +241,7 @@ function popup_v2_excluded(): bool {
 }
 
 /**
- * The quests this language shows above the footer on the post being rendered.
+ * The quests shown above the footer on the post being rendered.
  *
  * @return string[] Quest IDs, in configured order.
  */
@@ -455,8 +460,8 @@ function has_superquest_block(): bool {
 }
 
 /**
- * Whether this language has at least one popup quest to render above the footer
- * on the page being rendered.
+ * Whether there is at least one popup quest to render above the footer on the
+ * page being rendered.
  *
  * @return bool
  */
@@ -610,6 +615,57 @@ function migrate_popup_v2_quests(): void {
 }
 
 add_action( 'admin_init', __NAMESPACE__ . '\migrate_popup_v2_quests' );
+
+/**
+ * One-time merge of the per-language popup quest lists into the site-wide one.
+ * A quest configured in several languages becomes a single entry, enabled if it
+ * was enabled in any of them, and the per-language options are removed.
+ *
+ * Runs after migrate_popup_v2_quests() on the same hook, so it sees the lists
+ * that migration writes rather than the legacy options behind them.
+ *
+ * @return void
+ */
+function migrate_popup_v2_languages(): void {
+	if ( get_option( POPUP_V2_LANGUAGES_MIGRATION_FLAG ) ) {
+		return;
+	}
+
+	global $wpdb;
+	// Find every language's list, e.g. superquest_popup_v2_en_quests. The
+	// site-wide option is not matched: its name has nothing between the prefix
+	// and `quests` for the wildcard to stand in for.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$language_options = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+			$wpdb->esc_like( 'superquest_popup_v2_' ) . '%' . $wpdb->esc_like( '_quests' )
+		)
+	);
+
+	$merged = array();
+	foreach ( $language_options as $language_option ) {
+		foreach ( sanitize_popup_v2_quests( get_option( $language_option, array() ) ) as $quest ) {
+			$quest_id = $quest['quest_id'];
+
+			$merged[ $quest_id ] = array(
+				'enabled'  => ! empty( $merged[ $quest_id ]['enabled'] ) || $quest['enabled'] ? 1 : 0,
+				'quest_id' => $quest_id,
+			);
+		}
+
+		delete_option( $language_option );
+	}
+
+	// Never overwrite a list already saved through the settings form.
+	if ( ! empty( $merged ) && ! is_array( get_option( POPUP_V2_QUESTS_OPTION, null ) ) ) {
+		update_option( POPUP_V2_QUESTS_OPTION, array_values( $merged ) );
+	}
+
+	update_option( POPUP_V2_LANGUAGES_MIGRATION_FLAG, 1 );
+}
+
+add_action( 'admin_init', __NAMESPACE__ . '\migrate_popup_v2_languages', 11 );
 
 /**
  * Outputs the trigger button styles a superquest-inserter block's popup needs, once
