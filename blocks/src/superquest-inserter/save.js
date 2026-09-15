@@ -18,22 +18,7 @@ import { useBlockProps } from '@wordpress/block-editor';
  * @return {import('@wordpress/element').WPElement} Element to render.
  */
 export default function save( { attributes } ) {
-	const {
-		selectedQuest,
-		organization,
-		popup,
-		popupAuto,
-		popupDelay,
-		popupLimit,
-		popupDisableNoscroll,
-		popupDisableDismiss,
-		popupAttach,
-		popupTriggerButton,
-		popupTriggerButtonLabel,
-		popupTriggerButtonLabelMobile,
-	} = attributes;
-
-	const showTrigger = popup && ! popupAuto && popupTriggerButton;
+	const { selectedQuest, organization } = attributes;
 
 	return (
 		<div { ...useBlockProps.save() }>
@@ -42,40 +27,8 @@ export default function save( { attributes } ) {
 				data-org-id={ organization }
 				data-game-id={ selectedQuest }
 				data-version="v2"
-				data-popup={ popup ? 'true' : 'false' }
-				data-popup-auto={ popupAuto ? 'true' : 'false' }
-				data-popup-delay={ popupDelay }
-				data-popup-limit={ popupLimit }
 				data-new-styles="true"
-				data-popup-disable-dismiss={
-					popupDisableDismiss ? 'true' : 'false'
-				}
-				data-popup-disable-noscroll={
-					popupDisableNoscroll ? 'true' : 'false'
-				}
-				data-popup-attach={ popupAttach ? popupAttach : 'body' }
 			></div>
-			{ showTrigger && (
-				<div className="jquest-popup-toggle" data-jq-load="hover">
-					<a href={ `#jquest-popup-${ selectedQuest }` }>
-						{ ( popupTriggerButtonLabel ||
-							popupTriggerButtonLabelMobile ) && (
-							<span className="label">
-								{ popupTriggerButtonLabel && (
-									<span className="desktop-only">
-										{ popupTriggerButtonLabel }
-									</span>
-								) }
-								{ popupTriggerButtonLabelMobile && (
-									<span className="mobile-only">
-										{ popupTriggerButtonLabelMobile }
-									</span>
-								) }
-							</span>
-						) }
-					</a>
-				</div>
-			) }
 		</div>
 	);
 }

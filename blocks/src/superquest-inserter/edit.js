@@ -4,13 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
 import { __ } from '@wordpress/i18n';
-import {
-	Button,
-	SelectControl,
-	PanelBody,
-	ToggleControl,
-	TextControl,
-} from '@wordpress/components';
+import { Button, SelectControl, PanelBody } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useState } from '@wordpress/element';
 
@@ -42,20 +36,7 @@ import './editor.scss';
  * @return {JSX.Element} Element to render.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const {
-		selectedQuest,
-		organization,
-		popup,
-		popupAuto,
-		popupDelay,
-		popupLimit,
-		popupDisableDismiss,
-		popupDisableNoscroll,
-		popupAttach,
-		popupTriggerButton,
-		popupTriggerButtonLabel,
-		popupTriggerButtonLabelMobile,
-	} = attributes;
+	const { selectedQuest, organization } = attributes;
 
 	// Initialize the state for the quests and text.
 	const [ quests, setQuests ] = useState( [] );
@@ -186,144 +167,6 @@ export default function Edit( { attributes, setAttributes } ) {
 								: __( 'Refresh quests', 'superquest' ) }
 						</Button>
 					</div>
-					<ToggleControl
-						label={ 'Run as Popup' }
-						checked={ !! popup }
-						onChange={ ( val ) => setAttributes( { popup: val } ) }
-						help={ 'If enabled, the quest will run as a popup.' }
-					/>
-					{ popup && (
-						<>
-							<TextControl
-								label={ 'Attach popup to' }
-								value={ popupAttach }
-								onChange={ ( val ) =>
-									setAttributes( { popupAttach: val } )
-								}
-								help={
-									"Insert querySelector query for which element to attach popup to (Default 'body')"
-								}
-							/>
-							<ToggleControl
-								label={ 'Disable no scroll' }
-								checked={ !! popupDisableNoscroll }
-								onChange={ ( val ) =>
-									setAttributes( {
-										popupDisableNoscroll: val,
-									} )
-								}
-								help={
-									'If enabled, no scroll effect will not be applied to body when popup open.'
-								}
-							/>
-							<ToggleControl
-								label={ 'Disable dismiss' }
-								checked={ !! popupDisableDismiss }
-								onChange={ ( val ) =>
-									setAttributes( {
-										popupDisableDismiss: val,
-									} )
-								}
-								help={
-									'If enabled, dismiss effect when clicking outside popup will be disabled.'
-								}
-							/>
-							<ToggleControl
-								label={ 'Open Automatically' }
-								checked={ !! popupAuto }
-								onChange={ ( val ) =>
-									setAttributes( { popupAuto: val } )
-								}
-								help={
-									'If enabled, the popup will open automatically on page load.'
-								}
-							/>
-							{ ! popupAuto && (
-								<>
-									<ToggleControl
-										label={ 'Add trigger button' }
-										checked={ !! popupTriggerButton }
-										onChange={ ( val ) =>
-											setAttributes( {
-												popupTriggerButton: val,
-											} )
-										}
-										help={
-											'Trigger button styling comes from global trigger styles set in SuperQuest settings'
-										}
-									/>
-									{ popupTriggerButton && (
-										<>
-											<TextControl
-												label={ 'Trigger button label' }
-												value={
-													popupTriggerButtonLabel
-												}
-												onChange={ ( val ) =>
-													setAttributes( {
-														popupTriggerButtonLabel:
-															val,
-													} )
-												}
-											/>
-											<TextControl
-												label={
-													'Trigger button label mobile'
-												}
-												value={
-													popupTriggerButtonLabelMobile
-												}
-												onChange={ ( val ) =>
-													setAttributes( {
-														popupTriggerButtonLabelMobile:
-															val,
-													} )
-												}
-											/>
-										</>
-									) }
-								</>
-							) }
-							{ popupAuto && (
-								<>
-									<TextControl
-										label={ 'Popup Delay (milliseconds)' }
-										type="number"
-										value={ popupDelay || 0 }
-										onChange={ ( val ) =>
-											setAttributes( {
-												popupDelay: val
-													? parseInt( val, 10 )
-													: 5000,
-											} )
-										}
-										help={
-											'Delay before auto-popup opens.'
-										}
-										step="1"
-										min="0"
-									/>
-									<TextControl
-										label={ 'Popup Limit (times)' }
-										type="number"
-										value={ popupLimit || 0 }
-										onChange={ ( val ) =>
-											setAttributes( {
-												popupLimit: val
-													? parseInt( val, 10 )
-													: 0,
-											} )
-										}
-										help={
-											"Max times the auto-popup will open. '0' for no limit."
-										}
-										step="1"
-										min="0"
-									/>
-								</>
-							) }
-						</>
-					) }
 				</PanelBody>
 			</InspectorControls>
 			<div { ...useBlockProps() }>
@@ -332,10 +175,6 @@ export default function Edit( { attributes, setAttributes } ) {
 					data-org-id={ organization }
 					data-game-id={ selectedQuest }
 					data-version="v2"
-					data-popup={ popup ? 'true' : 'false' }
-					data-popup-auto={ popupAuto ? 'true' : 'false' }
-					data-popup-delay={ popupDelay }
-					data-popup-limit={ popupLimit }
 					data-new-styles="true"
 				>
 					{ text }

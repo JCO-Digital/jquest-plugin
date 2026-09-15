@@ -37,46 +37,6 @@
     },
     "organization": {
       "type": "string"
-    },
-    "popup": {
-      "type": "boolean",
-      "default": false
-    },
-    "popupAuto": {
-      "type": "boolean",
-      "default": false
-    },
-    "popupDisableDismiss": {
-      "type": "boolean",
-      "default": false
-    },
-    "popupDisableNoscroll": {
-      "type": "boolean",
-      "default": false
-    },
-    "popupAttach": {
-      "type": "string",
-      "default": "body"
-    },
-    "popupDelay": {
-      "type": "number",
-      "default": 5000
-    },
-    "popupLimit": {
-      "type": "number",
-      "default": 0
-    },
-    "popupTriggerButton": {
-      "type": "boolean",
-      "default": false
-    },
-    "popupTriggerButtonLabel": {
-      "type": "string",
-      "default": ""
-    },
-    "popupTriggerButtonLabelMobile": {
-      "type": "string",
-      "default": ""
     }
   }
 }
