@@ -32,7 +32,7 @@ class OptionsPage extends Singleton {
 	}
 
 	/**
-	 * Handles refreshing the jQuest games.
+	 * Handles refreshing the SuperQuest games.
 	 *
 	 * @return void
 	 */
@@ -51,7 +51,7 @@ class OptionsPage extends Singleton {
 	}
 
 	/**
-	 * Handles fetching jQuest games
+	 * Handles fetching SuperQuest games
 	 *
 	 * @param string $option_name The name of the option being updated.
 	 * @param mixed  $old_value   The old value of the option.
@@ -77,8 +77,8 @@ class OptionsPage extends Singleton {
 	 */
 	final public function add_page(): void {
 		add_menu_page(
-			'jQuest',
-			'jQuest',
+			'SuperQuest',
+			'SuperQuest',
 			'manage_options',
 			'jquest-options',
 			array( $this, 'render_page' ),
@@ -100,17 +100,17 @@ class OptionsPage extends Singleton {
 			__( 'Popup', 'jquest' ),
 			__( 'Popup', 'jquest' ),
 			'manage_options',
-			'jquest-popup',
+			'jquest-popup-v2',
 			array( $this, 'render_popup_page' )
 		);
 
 		add_submenu_page(
 			'jquest-options',
-			__( 'Popup v2', 'jquest' ),
-			__( 'Popup v2', 'jquest' ),
+			__( 'Usage', 'jquest' ),
+			__( 'Usage', 'jquest' ),
 			'manage_options',
-			'jquest-popup-v2',
-			array( $this, 'render_popup_v2_page' )
+			'jquest-usage',
+			array( $this, 'render_usage_page' )
 		);
 	}
 
@@ -163,15 +163,13 @@ class OptionsPage extends Singleton {
 								}
 								if ( ! is_object( $item ) ) {
 									return (object) array(
-										'title'   => '',
-										'id'      => '',
-										'version' => 'v1',
+										'title' => '',
+										'id'    => '',
 									);
 								}
 
-								$item->title   = isset( $item->title ) ? sanitize_text_field( $item->title ) : '';
-								$item->id      = isset( $item->id ) ? sanitize_text_field( $item->id ) : '';
-								$item->version = isset( $item->version ) && 'v2' === $item->version ? 'v2' : 'v1';
+								$item->title = isset( $item->title ) ? sanitize_text_field( $item->title ) : '';
+								$item->id    = isset( $item->id ) ? sanitize_text_field( $item->id ) : '';
 								return $item;
 							},
 							$input
@@ -182,19 +180,12 @@ class OptionsPage extends Singleton {
 			)
 		);
 
-		// Popup settings — one group per language (or 'default' when Polylang is inactive).
-		$popup_langs = $this->popup_languages();
-
-		foreach ( $popup_langs as $lang ) {
-			$prefix = 'jquest_popup_' . $lang . '_';
-			$group  = 'jquest-popup-' . $lang;
-
-			// Popup v2 — any number of quests rendered above the footer, each
-			// with its own exclusion list, stored as one list option.
-			$v2_group = 'jquest-popup-v2-' . $lang;
-
+		// Popup settings — one group per language (or 'default' when Polylang is
+		// inactive). A language's quests are any number of entries rendered
+		// above the footer, stored as one list option.
+		foreach ( $this->popup_languages() as $lang ) {
 			register_setting(
-				$v2_group,
+				'jquest-popup-v2-' . $lang,
 				\jQuestPlugin\Scripts\popup_v2_quests_option( $lang ),
 				array(
 					'type'              => 'array',
@@ -202,102 +193,12 @@ class OptionsPage extends Singleton {
 					'sanitize_callback' => 'jQuestPlugin\Scripts\sanitize_popup_v2_quests',
 				)
 			);
-
-			register_setting( $group, $prefix . 'enabled', array( 'sanitize_callback' => 'absint' ) );
-			register_setting( $group, $prefix . 'quest_id', array( 'sanitize_callback' => 'sanitize_text_field' ) );
-			register_setting( $group, $prefix . 'desktop_label', array( 'sanitize_callback' => 'sanitize_text_field' ) );
-			register_setting( $group, $prefix . 'mobile_label', array( 'sanitize_callback' => 'sanitize_text_field' ) );
-			register_setting( $group, $prefix . 'attach', array( 'sanitize_callback' => 'sanitize_text_field' ) );
-			register_setting( $group, $prefix . 'auto', array( 'sanitize_callback' => 'absint' ) );
-			register_setting( $group, $prefix . 'limit', array( 'sanitize_callback' => 'absint' ) );
-			register_setting( $group, $prefix . 'disable_dismiss', array( 'sanitize_callback' => 'absint' ) );
-			register_setting( $group, $prefix . 'disable_noscroll', array( 'sanitize_callback' => 'absint' ) );
 		}
 
-		// Popup script version — a single global setting, saved from its own
-		// form at the top of the popup page (not tied to any language).
-		register_setting( 'jquest-popup-general', \jQuestPlugin\Scripts\POPUP_VERSION_OPTION, array( 'sanitize_callback' => 'jQuestPlugin\Scripts\sanitize_version' ) );
-
-		// Popup v2 settings that are not per-language, saved from their own form
-		// above the language tabs on the Popup v2 page.
+		// Popup settings that are not per-language, saved from their own form
+		// above the language tabs on the popup page.
 		register_setting( 'jquest-popup-v2-global', \jQuestPlugin\Scripts\ALWAYS_LOAD_OPTION, array( 'sanitize_callback' => 'absint' ) );
 		register_setting( 'jquest-popup-v2-global', \jQuestPlugin\Scripts\POPUP_V2_EXCLUDE_OPTION, array( 'sanitize_callback' => 'jQuestPlugin\Scripts\sanitize_id_list' ) );
-
-		// Trigger settings — global (not per-language).
-		$svg_kses = array(
-			'svg'    => array(
-				'xmlns'   => true,
-				'viewBox' => true,
-				'width'   => true,
-				'height'  => true,
-				'fill'    => true,
-			),
-			'path'   => array(
-				'd'            => true,
-				'fill'         => true,
-				'fill-rule'    => true,
-				'clip-rule'    => true,
-				'stroke'       => true,
-				'stroke-width' => true,
-			),
-			'g'      => array( 'fill' => true ),
-			'circle' => array(
-				'cx'           => true,
-				'cy'           => true,
-				'r'            => true,
-				'fill'         => true,
-				'stroke'       => true,
-				'stroke-width' => true,
-			),
-			'rect'   => array(
-				'x'      => true,
-				'y'      => true,
-				'width'  => true,
-				'height' => true,
-				'fill'   => true,
-				'rx'     => true,
-			),
-		);
-
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_enabled', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_minimized', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_watch_selector', array( 'sanitize_callback' => 'sanitize_text_field' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_watch_threshold', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_font_size', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_font_weight', array( 'sanitize_callback' => 'sanitize_text_field' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_underline_width', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_underline_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_underline_hover_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_text_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_bg_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_text_hover_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_bg_hover_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_bg_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_bg_hover_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_hover_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_mode', array( 'sanitize_callback' => 'sanitize_text_field' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_container_size', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_container_border_radius', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_items_gap', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_icon_size', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_side', array( 'sanitize_callback' => 'sanitize_text_field' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_offset_x', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_offset_y', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_border_radius', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_padding_top', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_padding_right', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_padding_bottom', array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-trigger', 'jquest_popup_trigger_padding_left', array( 'sanitize_callback' => 'absint' ) );
-		register_setting(
-			'jquest-popup-trigger',
-			'jquest_popup_trigger_icon_custom',
-			array(
-				'sanitize_callback' => function ( $input ) use ( $svg_kses ) {
-					return wp_kses( $input, $svg_kses );
-				},
-			)
-		);
 
 		// Settings sections.
 		add_settings_section(
@@ -325,7 +226,7 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	final public function render_general_section(): void {
-		echo '<p>' . esc_html__( 'General settings required for jQuest integration.', 'jquest' ) . '</p>';
+		echo '<p>' . esc_html__( 'General settings required for SuperQuest integration.', 'jquest' ) . '</p>';
 	}
 
 
@@ -353,92 +254,21 @@ class OptionsPage extends Singleton {
 		style_register( 'jquest-admin', 'assets/css/admin.css' );
 		wp_enqueue_style( 'jquest-admin' );
 		wp_enqueue_script( 'jquest-backend' );
-		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_script( 'wp-color-picker' );
-
-		$palette = wp_get_global_settings( array( 'color', 'palette' ) );
-		$colors  = array_column(
-			array_merge( $palette['theme'] ?? array(), $palette['default'] ?? array() ),
-			'color'
-		);
-		wp_localize_script( 'wp-color-picker', 'jquestColorPalette', $colors );
-		wp_add_inline_script(
-			'wp-color-picker',
-			'jQuery(function($){ $(".jquest-color-picker").wpColorPicker({ palettes: window.jquestColorPalette }); });',
-			'after'
-		);
 	}
 
 	/**
 	 * Handles the rendering of the popup settings page.
 	 *
-	 * @return void
-	 */
-	final public function render_popup_page(): void {
-		$tabs = array(
-			'trigger' => array(
-				'label' => __( 'Trigger', 'jquest' ),
-				'url'   => add_query_arg( array( 'tab' => 'trigger' ), admin_url( 'admin.php?page=jquest-popup' ) ),
-			),
-		);
-
-		if ( function_exists( 'pll_languages_list' ) ) {
-			foreach ( pll_languages_list( array( 'fields' => 'slug' ) ) as $slug ) {
-				$tabs[ $slug ] = array(
-					'label' => strtoupper( $slug ),
-					'url'   => add_query_arg( array( 'tab' => $slug ), admin_url( 'admin.php?page=jquest-popup' ) ),
-				);
-			}
-		} else {
-			$tabs['default'] = array(
-				'label' => __( 'Popup', 'jquest' ),
-				'url'   => add_query_arg( array( 'tab' => 'default' ), admin_url( 'admin.php?page=jquest-popup' ) ),
-			);
-		}
-
-		$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'trigger'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		$lang_key = $active_tab ? $active_tab : 'default';
-
-		// This popup only handles v1 quests — v2 quests belong on the Popup v2
-		// page. An already-saved v2 quest stays in the list so that saving the
-		// form cannot silently clear a live configuration.
-		$selected = (string) get_option( 'jquest_popup_' . $lang_key . '_quest_id', '' );
-		$games    = array_values(
-			array_filter(
-				get_option( 'jquest_org_games', array() ),
-				function ( $game ) use ( $selected ) {
-					if ( ! is_object( $game ) ) {
-						return false;
-					}
-					if ( ! isset( $game->version ) || 'v2' !== $game->version ) {
-						return true;
-					}
-					return '' !== $selected && $selected === ( $game->id ?? '' );
-				}
-			)
-		);
-
-		$data = array(
-			'tabs'       => $tabs,
-			'active_tab' => $active_tab,
-			'lang_key'   => $lang_key,
-			'games'      => $games,
-		);
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo render_template( 'popup-settings', $data );
-	}
-
-	/**
-	 * Handles the rendering of the Popup v2 settings page.
+	 * The page slug, its options and its template keep their v2 names. They are
+	 * never shown to anyone, and renaming them would orphan saved settings.
 	 *
 	 * @return void
 	 */
-	final public function render_popup_v2_page(): void {
+	final public function render_popup_page(): void {
 		$tabs = array();
 		foreach ( $this->popup_languages() as $slug ) {
 			$tabs[ $slug ] = array(
-				'label' => 'default' === $slug ? __( 'Popup v2', 'jquest' ) : strtoupper( $slug ),
+				'label' => 'default' === $slug ? __( 'Popup', 'jquest' ) : strtoupper( $slug ),
 				'url'   => add_query_arg( array( 'tab' => $slug ), admin_url( 'admin.php?page=jquest-popup-v2' ) ),
 			);
 		}
@@ -446,13 +276,10 @@ class OptionsPage extends Singleton {
 		$requested  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$active_tab = isset( $tabs[ $requested ] ) ? $requested : (string) array_key_first( $tabs );
 
-		// Popup v2 only supports v2 quests, so never offer a v1 one.
 		$games = array_values(
 			array_filter(
 				get_option( 'jquest_org_games', array() ),
-				function ( $game ) {
-					return is_object( $game ) && isset( $game->version ) && 'v2' === $game->version;
-				}
+				'is_object'
 			)
 		);
 
@@ -464,6 +291,18 @@ class OptionsPage extends Singleton {
 		);
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo render_template( 'popup-v2-settings', $data );
+	}
+
+	/**
+	 * Handles the rendering of the block usage page.
+	 *
+	 * @return void
+	 */
+	final public function render_usage_page(): void {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo render_template( 'usage-settings' );
 	}
 
 	/**

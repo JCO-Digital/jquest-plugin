@@ -1,6 +1,6 @@
 <?php
 /**
- * Handles enqueuing of JQUEST scripts, when the block is present on a page.
+ * Handles enqueuing of SuperQuest scripts, when the block is present on a page.
  *
  * @package jQuestPlugin\Scripts
  */
@@ -8,47 +8,38 @@
 namespace jQuestPlugin\Scripts;
 
 /**
- * URL of the jQuest loader. The loader decides which build to fetch based on
- * the window.__JQUEST_VERSION global set below.
+ * URL of the SuperQuest loader. It picks its build from the
+ * window.__JQUEST_VERSION global set below.
  */
 const LOADER_URL = 'https://files.jquest.fi/jquest/jquest-loader.js';
 
 /**
- * Version channel used when none is selected or an unknown one is requested.
+ * The one build every page loads. Blocks and popups all run on it, so nothing
+ * on the page gets a say in which script is fetched.
  */
-const DEFAULT_VERSION = 'stable';
+const SCRIPT_VERSION = 'v2';
 
 /**
- * Version channels the loader understands.
+ * Base URL of the bundle directory, holding manifest.json and the hashed chunks
+ * it lists.
  */
-const VERSIONS = array( 'stable', 'latest', 'v2' );
+const BUNDLE_BASE_URL = 'https://files.jquest.fi/jquest/' . SCRIPT_VERSION;
 
 /**
- * Option holding the popup version channel. Global (shared across languages),
- * since the version is a technical concern rather than per-language content.
- */
-const POPUP_VERSION_OPTION = 'jquest_popup_version';
-
-/**
- * Flag option marking that the one-time popup version migration has run.
- */
-const VERSION_MIGRATION_FLAG = 'jquest_popup_version_migrated';
-
-/**
- * Option loading the loader on every front-end page, whether or not a jQuest
- * block or popup is present. Global, since it is a technical concern.
+ * Option loading the loader on every front-end page, whether or not a
+ * SuperQuest block or popup is present. Global, since it is a technical concern.
  */
 const ALWAYS_LOAD_OPTION = 'jquest_always_load_loader';
 
 /**
- * Option holding the pages every Popup v2 quest is left off. Global, since a
- * page's script channel is a technical concern rather than per-language
- * content, and post IDs never collide between languages.
+ * Option holding the pages no popup quest is inserted on. Global, since post
+ * IDs never collide between languages, and a page that should stay clear of
+ * popups should stay clear of them in every language.
  */
 const POPUP_V2_EXCLUDE_OPTION = 'jquest_popup_v2_exclude_ids';
 
 /**
- * Flag option marking that the one-time migration from a single Popup v2 quest
+ * Flag option marking that the one-time migration from a single popup quest
  * per language to a list of them has run.
  */
 const POPUP_V2_MIGRATION_FLAG = 'jquest_popup_v2_quests_migrated';
@@ -66,7 +57,7 @@ function current_language(): string {
 }
 
 /**
- * Option prefix for the Popup v2 settings of a language.
+ * Option prefix for the popup settings of a language.
  *
  * @param string|null $lang Language slug. Defaults to the current language.
  *
@@ -107,7 +98,7 @@ function sanitize_id_list( $value ): string {
 }
 
 /**
- * Option holding a language's list of Popup v2 quests.
+ * Option holding a language's list of popup quests.
  *
  * @param string|null $lang Language slug. Defaults to the current language.
  *
@@ -118,8 +109,9 @@ function popup_v2_quests_option( ?string $lang = null ): string {
 }
 
 /**
- * Normalises one stored Popup v2 entry into a predictable shape, so neither the
- * settings page nor the front end has to guess at what the option holds.
+ * Normalises one stored popup quest entry into a predictable shape, so that
+ * neither the settings page nor the front end has to guess at what the option
+ * holds.
  *
  * @param mixed $entry The stored entry.
  *
@@ -137,7 +129,7 @@ function normalize_popup_v2_quest( $entry ): array {
 }
 
 /**
- * The Popup v2 quests configured for a language, in the order they were added.
+ * The popup quests configured for a language, in the order they were added.
  *
  * @param string|null $lang Language slug. Defaults to the current language.
  *
@@ -171,7 +163,7 @@ function popup_v2_quests( ?string $lang = null ): array {
 }
 
 /**
- * Sanitises the Popup v2 quest list posted from the settings page.
+ * Sanitises the popup quest list posted from the settings page.
  *
  * The form carries no JavaScript, so a row is deleted either by ticking its
  * remove box or by emptying its quest select; both are dropped here, and what
@@ -207,7 +199,7 @@ function sanitize_popup_v2_quests( $value ): array {
 }
 
 /**
- * The pages Popup v2 is left off, across every language.
+ * The pages no popup quest is inserted on, across every language.
  *
  * @return int[]
  */
@@ -225,12 +217,10 @@ function popup_v2_excluded_ids(): array {
 }
 
 /**
- * Whether the post being rendered is on the Popup v2 exclusion list.
+ * Whether the post being rendered is on the popup exclusion list.
  *
- * Only one loader can run per page and a v2 quest anywhere on it pins the whole
- * page to the v2 bundle, so a page carrying a stable/latest block cannot also
- * carry a v2 popup. Excluding the page takes every quest out of both the loader
- * decision and the footer markup, leaving the block's own channel to win.
+ * Excluding a page takes its quests out of both the loader decision and the
+ * footer markup, so nothing is inserted above that page's footer.
  *
  * @return bool
  */
@@ -266,17 +256,6 @@ function popup_v2_active_quest_ids(): array {
 }
 
 /**
- * Normalises a version channel to one the loader understands.
- *
- * @param mixed $version The requested version.
- *
- * @return string A value from VERSIONS, or DEFAULT_VERSION when unrecognised.
- */
-function sanitize_version( $version ): string {
-	return in_array( $version, VERSIONS, true ) ? (string) $version : DEFAULT_VERSION;
-}
-
-/**
  * Attributes telling consent managers not to gate the loader. The loader sets
  * no cookies and stores nothing, so blocking it until consent only breaks
  * quests. Covers Cookiebot, OneTrust and CookieYes.
@@ -292,18 +271,6 @@ function consent_attributes(): array {
 }
 
 /**
- * Base URL of a version channel's bundle directory, holding manifest.json and
- * the hashed chunks it lists. Mirrors the channel table inside the loader.
- *
- * @param string $version The version channel (see VERSIONS).
- *
- * @return string
- */
-function channel_base_url( string $version ): string {
-	return 'https://files.jquest.fi/jquest/' . sanitize_version( $version );
-}
-
-/**
  * How long a fetched manifest is reused before it is fetched again.
  *
  * The CDN caches the manifest for 60 seconds, so this can lag a deploy by a few
@@ -314,18 +281,15 @@ function channel_base_url( string $version ): string {
 const MANIFEST_CACHE_TTL = 5 * MINUTE_IN_SECONDS;
 
 /**
- * Fetches and caches a channel's manifest.json.
+ * Fetches and caches the bundle's manifest.json.
  *
  * Failures are cached too. An unreachable CDN then costs one attempt per TTL
  * instead of one per page view.
  *
- * @param string $version The version channel (see VERSIONS).
- *
  * @return array<string, mixed> Decoded manifest, or an empty array when unavailable.
  */
-function channel_manifest( string $version ): array {
-	$version = sanitize_version( $version );
-	$key     = 'jquest_manifest_' . $version;
+function bundle_manifest(): array {
+	$key = 'jquest_manifest_' . SCRIPT_VERSION;
 
 	$cached = get_transient( $key );
 	if ( is_array( $cached ) ) {
@@ -334,7 +298,7 @@ function channel_manifest( string $version ): array {
 
 	$manifest = array();
 	$response = wp_remote_get(
-		channel_base_url( $version ) . '/manifest.json',
+		BUNDLE_BASE_URL . '/manifest.json',
 		array( 'timeout' => 2 )
 	);
 
@@ -351,22 +315,20 @@ function channel_manifest( string $version ): array {
 }
 
 /**
- * The chunks worth preloading for a channel. That is the entry chunk plus every
- * chunk it imports statically, so the browser fetches the whole bundle in one
- * round trip instead of entry first and vendors after.
+ * The chunks worth preloading. That is the entry chunk plus every chunk it
+ * imports statically, so the browser fetches the whole bundle in one round trip
+ * instead of entry first and vendors after.
  *
  * A manifest may name them in a "preload" list. Without one, this guesses:
  * every vendor chunk is treated as a static import of the entry, except Sentry,
- * which the entry imports lazily. This matches every current channel. Chunks
- * the entry loads on demand, such as rive and masterQuest, are skipped. They
- * are large and only some quests use them.
- *
- * @param string $version The version channel (see VERSIONS).
+ * which the entry imports lazily. This matches the current bundle. Chunks the
+ * entry loads on demand, such as rive and masterQuest, are skipped. They are
+ * large and only some quests use them.
  *
  * @return string[] Chunk URLs, entry first.
  */
-function channel_preload_urls( string $version ): array {
-	$manifest = channel_manifest( $version );
+function bundle_preload_urls(): array {
+	$manifest = bundle_manifest();
 	$app      = $manifest['app'] ?? '';
 	if ( ! is_string( $app ) || '' === $app ) {
 		return array();
@@ -384,11 +346,10 @@ function channel_preload_urls( string $version ): array {
 		);
 	}
 
-	$base = channel_base_url( $version );
-	$urls = array( $base . '/' . $app );
+	$urls = array( BUNDLE_BASE_URL . '/' . $app );
 	foreach ( $files as $file ) {
 		if ( is_string( $file ) && '' !== $file && $app !== $file ) {
-			$urls[] = $base . '/' . $file;
+			$urls[] = BUNDLE_BASE_URL . '/' . $file;
 		}
 	}
 
@@ -404,25 +365,21 @@ function channel_preload_urls( string $version ): array {
  * manifest, module scripts for the chunks. Every hint carries crossorigin so the
  * preloaded response lands in the same cache and connection pool.
  *
- * @param string $version The version channel (see VERSIONS).
- *
  * @return void
  */
-function print_bundle_preloads( string $version ): void {
-	$base = channel_base_url( $version );
-
+function print_bundle_preloads(): void {
 	printf(
 		'<link rel="preload" as="fetch" href="%s" crossorigin>' . "\n",
-		esc_url( $base . '/manifest.json' )
+		esc_url( BUNDLE_BASE_URL . '/manifest.json' )
 	);
 
-	foreach ( channel_preload_urls( $version ) as $url ) {
+	foreach ( bundle_preload_urls() as $url ) {
 		printf( '<link rel="modulepreload" href="%s" crossorigin>' . "\n", esc_url( $url ) );
 	}
 }
 
 /**
- * Loads the jQuest loader once per page and tells it which version to fetch
+ * Loads the SuperQuest loader once per page and names the build it should fetch
  * via the window.__JQUEST_VERSION global.
  *
  * The loader is a classic IIFE, so it goes out as a classic async script. It
@@ -432,22 +389,18 @@ function print_bundle_preloads( string $version ): void {
  * early is safe because the loader waits for DOMContentLoaded before it looks
  * for widgets.
  *
- * @param string $version        The version channel to load (see VERSIONS).
- * @param bool   $preload_bundle Whether the app bundle will be needed without
- *                               user interaction, and so is worth fetching
- *                               ahead of time.
+ * @param bool $preload_bundle Whether the app bundle will be needed without
+ *                             user interaction, and so is worth fetching ahead
+ *                             of time.
  *
  * @return void
  */
-function insert_jquest_script( string $version = DEFAULT_VERSION, bool $preload_bundle = false ): void {
+function insert_jquest_script( bool $preload_bundle = false ): void {
 	static $inserted = false;
 	if ( $inserted ) {
 		return;
 	}
 	$inserted = true;
-
-	// Fall back to the default channel for anything unrecognised.
-	$version = sanitize_version( $version );
 
 	// The consent attributes are printed directly below. The filter is kept so
 	// consent managers hooked to wp_script_attributes still find the loader tag
@@ -471,7 +424,7 @@ function insert_jquest_script( string $version = DEFAULT_VERSION, bool $preload_
 	// comes first and executes during parsing, and the async loader cannot run
 	// before the parser has reached its own tag, so the order holds.
 	wp_print_inline_script_tag(
-		"window.__JQUEST_VERSION = '" . esc_js( $version ) . "';",
+		"window.__JQUEST_VERSION = '" . esc_js( SCRIPT_VERSION ) . "';",
 		consent_attributes()
 	);
 
@@ -488,124 +441,22 @@ function insert_jquest_script( string $version = DEFAULT_VERSION, bool $preload_
 	);
 
 	if ( $preload_bundle ) {
-		print_bundle_preloads( $version );
+		print_bundle_preloads();
 	}
 }
 
 /**
- * An empty loader request, i.e. a source that needs no loader at all.
+ * Whether the current post content holds at least one SuperQuest block.
  *
- * @return array{present: bool, version: string|null, has_v2_quest: bool}
+ * @return bool
  */
-function empty_loader_request(): array {
-	return array(
-		'present'      => false,
-		'version'      => null,
-		'has_v2_quest' => false,
-	);
+function has_jquest_block(): bool {
+	return has_blocks() && has_block( JQUEST_BLOCK_NAME );
 }
 
 /**
- * Recursively collects what the jquest-inserter blocks in a block tree need:
- * whether any is present, the first requested channel, and whether any of them
- * renders a v2 quest.
- *
- * @param array $blocks The blocks to scan.
- *
- * @return array{present: bool, version: string|null, has_v2_quest: bool}
- */
-function scan_jquest_blocks( array $blocks ): array {
-	$request = empty_loader_request();
-
-	foreach ( $blocks as $block ) {
-		if ( 'jquest-inserter/jquest-inserter' === $block['blockName'] ) {
-			$request['present'] = true;
-
-			// Read the attribute directly. WordPress omits attributes equal to
-			// their default from the block comment, so fall back to the block's
-			// registered default (kept in sync with block.json automatically).
-			$block_type      = \WP_Block_Type_Registry::get_instance()
-				->get_registered( 'jquest-inserter/jquest-inserter' );
-			$default_version = $block_type->attributes['version']['default'] ?? DEFAULT_VERSION;
-			$version         = (string) ( $block['attrs']['version'] ?? $default_version );
-
-			if ( null === $request['version'] && '' !== $version ) {
-				$request['version'] = $version;
-			}
-
-			// The editor pins the channel to v2 when a v2 quest is picked, but
-			// check the quest generation too so content saved before that
-			// behaviour landed is still recognised.
-			if ( 'v2' === ( $block['attrs']['questVersion'] ?? '' ) || 'v2' === $version ) {
-				$request['has_v2_quest'] = true;
-			}
-		}
-
-		if ( empty( $block['innerBlocks'] ) ) {
-			continue;
-		}
-
-		$inner                   = scan_jquest_blocks( $block['innerBlocks'] );
-		$request['present']      = $request['present'] || $inner['present'];
-		$request['has_v2_quest'] = $request['has_v2_quest'] || $inner['has_v2_quest'];
-		$request['version']    ??= $inner['version'];
-	}
-
-	return $request;
-}
-
-/**
- * What the jQuest blocks in the current post content need from the loader.
- *
- * @return array{present: bool, version: string|null, has_v2_quest: bool}
- */
-function block_loader_request(): array {
-	if ( ! has_blocks() || ! has_block( 'jquest-inserter/jquest-inserter' ) ) {
-		return empty_loader_request();
-	}
-
-	$post = get_post();
-	if ( ! $post ) {
-		return empty_loader_request();
-	}
-
-	return scan_jquest_blocks( parse_blocks( $post->post_content ) );
-}
-
-/**
- * What the popup configured for the current language needs from the loader.
- *
- * @return array{present: bool, version: string|null, has_v2_quest: bool, eager?: bool}
- */
-function popup_loader_request(): array {
-	$prefix = 'jquest_popup_' . current_language() . '_';
-
-	if ( ! get_option( $prefix . 'enabled', 0 ) ) {
-		return empty_loader_request();
-	}
-
-	$version = (string) get_option( POPUP_VERSION_OPTION, '' );
-	if ( '' === $version ) {
-		// Back-compat for the window before migrate_popup_version() runs: fall
-		// back to this language's legacy boolean "use latest script" option.
-		$version = get_option( $prefix . 'latest_script', 0 ) ? 'latest' : DEFAULT_VERSION;
-	}
-
-	$quest_id = (string) get_option( $prefix . 'quest_id', '' );
-
-	return array(
-		'present'      => true,
-		'version'      => $version,
-		'has_v2_quest' => 'v2' === \jQuestPlugin\get_jquest_version( $quest_id ),
-		// An auto popup declares itself eager, so its bundle is fetched without
-		// any interaction. A popup the visitor opens only fetches on hover.
-		'eager'        => (bool) get_option( $prefix . 'auto', 0 ),
-	);
-}
-
-/**
- * Whether this language has at least one Popup v2 quest to render above the
- * footer on the page being rendered.
+ * Whether this language has at least one popup quest to render above the footer
+ * on the page being rendered.
  *
  * @return bool
  */
@@ -614,51 +465,28 @@ function popup_v2_enabled(): bool {
 }
 
 /**
- * Loads the one loader this page needs.
+ * Loads the loader on the pages that need it.
  *
- * Only a single loader can run per page, so every source — blocks, the popup,
- * Popup v2 and the always-load setting — is resolved here in one place instead
- * of racing to be the first to call insert_jquest_script(). A v2 quest anywhere
- * on the page pins the channel to v2, since v2 quests cannot run on the other
- * channels; otherwise a block on the page decides, then the global setting.
+ * Only a single loader can run per page, so every source — blocks, popup quests
+ * and the always-load setting — is resolved here in one place instead of racing
+ * to be the first to call insert_jquest_script().
  *
  * @return void
  */
 function maybe_insert_loader(): void {
-	$block_request = block_loader_request();
-	$popup_request = popup_loader_request();
-	$popup_v2      = popup_v2_enabled();
+	$has_block = has_jquest_block();
+	$has_popup = popup_v2_enabled();
 
-	$needed = $block_request['present']
-		|| $popup_request['present']
-		|| $popup_v2
-		|| (bool) get_option( ALWAYS_LOAD_OPTION, 0 );
-
-	if ( ! $needed ) {
+	if ( ! $has_block && ! $has_popup && ! get_option( ALWAYS_LOAD_OPTION, 0 ) ) {
 		return;
 	}
 
 	// Preload the bundle only when the loader will fetch it without the visitor
 	// doing anything. That is a block in the content, since the viewport gate
-	// fires as soon as it scrolls near, an auto popup, or a Popup v2 quest. A
-	// hover-opened popup or the always-load setting alone may never need the
-	// bundle. Preloading a megabyte of vendor code for nothing would only slow
-	// the host page down.
-	$preload_bundle = $block_request['present']
-		|| ( $popup_request['eager'] ?? false )
-		|| $popup_v2;
-
-	if ( $block_request['has_v2_quest'] || $popup_request['has_v2_quest'] || $popup_v2 ) {
-		insert_jquest_script( 'v2', $preload_bundle );
-		return;
-	}
-
-	insert_jquest_script(
-		$block_request['version']
-			?? $popup_request['version']
-			?? (string) get_option( POPUP_VERSION_OPTION, DEFAULT_VERSION ),
-		$preload_bundle
-	);
+	// fires as soon as it scrolls near, or a popup quest. The always-load setting
+	// alone may never need the bundle, and preloading a megabyte of vendor code
+	// for nothing would only slow the host page down.
+	insert_jquest_script( $has_block || $has_popup );
 }
 
 // Priority 2 runs right after wp_enqueue_scripts at 1 and ahead of the theme's
@@ -668,7 +496,7 @@ function maybe_insert_loader(): void {
 add_action( 'wp_head', __NAMESPACE__ . '\maybe_insert_loader', 2 );
 
 /**
- * Outputs the Popup v2 quest div at the top of the footer, i.e. just above
+ * Outputs the popup quest divs at the top of the footer, i.e. just above
  * everything else hooked to wp_footer.
  *
  * @return void
@@ -680,13 +508,11 @@ function maybe_insert_popup_v2_divs(): void {
 	}
 
 	// Prepare every value as a finished, escaped string so the markup below
-	// stays a plain template with no inline PHP. The quests are always v2 ones —
-	// the settings page only offers v2 quests — so the version is hard-coded
-	// rather than looked up, which keeps it right even when the stored quest
-	// list is stale or empty.
-	$lang   = current_language();
-	$org_id = esc_attr( get_option( 'jquest_org_id', '' ) );
-	$locale = 'default' === $lang ? '' : esc_attr( $lang );
+	// stays a plain template with no inline PHP.
+	$lang           = current_language();
+	$org_id         = esc_attr( get_option( 'jquest_org_id', '' ) );
+	$locale         = 'default' === $lang ? '' : esc_attr( $lang );
+	$jquest_version = esc_attr( SCRIPT_VERSION );
 
 	foreach ( $quest_ids as $quest_id ) {
 		$quest_id = esc_attr( $quest_id );
@@ -705,7 +531,7 @@ function maybe_insert_popup_v2_divs(): void {
 			data-locale="{$locale}"
 			data-org-id="{$org_id}"
 			data-game-id="{$quest_id}"
-			data-version="v2"
+			data-version="{$jquest_version}"
 			data-jq-load="eager"
 		></div>
 		HTML;
@@ -720,51 +546,7 @@ function maybe_insert_popup_v2_divs(): void {
 add_action( 'wp_footer', __NAMESPACE__ . '\maybe_insert_popup_v2_divs', 0 );
 
 /**
- * One-time migration from the legacy per-language boolean `latest_script`
- * options to the single global version option. It consolidates every
- * language's value (any "latest" wins), then removes the legacy options and
- * sets a flag so it never runs again.
- *
- * @return void
- */
-function migrate_popup_version(): void {
-	if ( get_option( VERSION_MIGRATION_FLAG ) ) {
-		return;
-	}
-
-	global $wpdb;
-	// Find every language's legacy option, e.g. jquest_popup_en_latest_script.
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-	$legacy_options = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
-			$wpdb->esc_like( 'jquest_popup_' ) . '%' . $wpdb->esc_like( '_latest_script' )
-		)
-	);
-
-	// Only seed the global version if it has not been set explicitly already.
-	if ( ! empty( $legacy_options ) && '' === (string) get_option( POPUP_VERSION_OPTION, '' ) ) {
-		$use_latest = false;
-		foreach ( $legacy_options as $legacy_option ) {
-			if ( get_option( $legacy_option, 0 ) ) {
-				$use_latest = true;
-				break;
-			}
-		}
-		update_option( POPUP_VERSION_OPTION, $use_latest ? 'latest' : DEFAULT_VERSION );
-	}
-
-	foreach ( $legacy_options as $legacy_option ) {
-		delete_option( $legacy_option );
-	}
-
-	update_option( VERSION_MIGRATION_FLAG, 1 );
-}
-
-add_action( 'admin_init', __NAMESPACE__ . '\migrate_popup_version' );
-
-/**
- * One-time migration from the legacy single Popup v2 quest per language to the
+ * One-time migration from the legacy single popup quest per language to the
  * per-language quest list. Each language's `enabled`/`quest_id`/`exclude_ids`
  * trio becomes a list of one, the legacy options are removed, and a flag is set
  * so it never runs again.
@@ -808,8 +590,8 @@ function migrate_popup_v2_quests(): void {
 
 		// The exclusion list is global now, so every language's list is folded
 		// into one. A page excluded in any language stays excluded, which is the
-		// safe direction: the alternative puts a v2 popup back onto a page whose
-		// block needs another script channel.
+		// safe direction: the alternative puts a popup back onto a page somebody
+		// had deliberately kept clear of them.
 		$excluded = array_merge( $excluded, parse_id_list( get_option( $prefix . 'exclude_ids', '' ) ) );
 
 		delete_option( $legacy_option );
@@ -827,64 +609,9 @@ function migrate_popup_v2_quests(): void {
 add_action( 'admin_init', __NAMESPACE__ . '\migrate_popup_v2_quests' );
 
 /**
- * Outputs the jQuest popup div into the footer when the popup is enabled for the current language.
- *
- * @return void
- */
-function maybe_insert_popup_div(): void {
-	$lang   = current_language();
-	$prefix = 'jquest_popup_' . $lang . '_';
-
-	if ( ! get_option( $prefix . 'enabled', 0 ) ) {
-		return;
-	}
-
-	// Prepare every value as a finished, escaped string so the markup below
-	// stays a plain template with no inline PHP. The version goes out as
-	// data-version because that is what the loader reads (dataset.version) —
-	// a widget declaring v2 forces the v2 bundle for the whole page.
-	$org_id           = esc_attr( get_option( 'jquest_org_id', '' ) );
-	$quest_id         = get_option( $prefix . 'quest_id', '' );
-	$quest_version    = \jQuestPlugin\get_jquest_version( $quest_id );
-	$quest_id         = esc_attr( $quest_id );
-	$auto             = get_option( $prefix . 'auto', 0 ) ? 'true' : 'false';
-	$limit            = (int) get_option( $prefix . 'limit', 0 );
-	$attach           = esc_attr( get_option( $prefix . 'attach', 'body' ) );
-	$disable_dismiss  = get_option( $prefix . 'disable_dismiss', 1 ) ? 'true' : 'false';
-	$disable_noscroll = get_option( $prefix . 'disable_noscroll', 1 ) ? 'true' : 'false';
-	$locale           = 'default' === $lang ? '' : esc_attr( $lang );
-	$version_attr     = 'v2' === $quest_version ? "\n\tdata-version=\"v2\"" : '';
-
-	// The popup div is hidden by CSS, so the loader's viewport observer can never
-	// fire for it — something has to tell the loader when to fetch the bundle. A
-	// popup the visitor opens gets that from the trigger button's
-	// data-jq-load="hover", but an auto popup opens with no interaction at all,
-	// so it has to declare itself eager.
-	$load_attr = get_option( $prefix . 'auto', 0 ) ? "\n\tdata-jq-load=\"eager\"" : '';
-
-	// phpcs:disable WordPress.Security.EscapeOutput -- values are escaped/int-cast above.
-	echo <<<HTML
-	<div
-		class="jquest-app"
-		data-new-styles="true"
-		data-locale="{$locale}"
-		data-org-id="{$org_id}"
-		data-game-id="{$quest_id}"{$version_attr}
-		data-popup="true"
-		data-popup-auto="{$auto}"
-		data-popup-limit="{$limit}"
-		data-popup-attach="{$attach}"
-		data-popup-disable-dismiss="{$disable_dismiss}"
-		data-popup-disable-noscroll="{$disable_noscroll}"{$load_attr}
-	></div>
-	HTML;
-	// phpcs:enable WordPress.Security.EscapeOutput
-}
-
-add_action( 'wp_footer', __NAMESPACE__ . '\maybe_insert_popup_div' );
-
-/**
- * Outputs the popup trigger button styles from global settings, once per page.
+ * Outputs the trigger button styles a jquest-inserter block's popup needs, once
+ * per page. The values are whatever the removed trigger settings page last
+ * saved, falling back to the defaults below.
  *
  * @return void
  */
@@ -1058,116 +785,12 @@ function output_popup_trigger_styles(): void {
 }
 
 /**
- * Outputs the jQuest popup trigger button when enabled.
- *
- * @return void
- */
-function maybe_insert_popup_trigger(): void {
-	if ( ! get_option( 'jquest_popup_trigger_enabled', 0 ) ) {
-		return;
-	}
-
-	$prefix = 'jquest_popup_' . current_language() . '_';
-
-	if ( ! get_option( $prefix . 'enabled', 0 ) ) {
-		return;
-	}
-
-	$label        = get_option( $prefix . 'desktop_label', '' );
-	$label_mobile = get_option( $prefix . 'mobile_label', '' );
-	if ( '' === $label ) {
-		$label = get_option( $prefix . 'mobile_label', '' );
-	}
-	$quest_id = get_option( $prefix . 'quest_id', '' );
-
-	$icon_mode = get_option( 'jquest_popup_trigger_icon_mode', 'default' );
-
-	$svg_kses = array(
-		'svg'    => array(
-			'xmlns'   => true,
-			'viewBox' => true,
-			'width'   => true,
-			'height'  => true,
-			'fill'    => true,
-		),
-		'path'   => array(
-			'd'            => true,
-			'fill'         => true,
-			'fill-rule'    => true,
-			'clip-rule'    => true,
-			'stroke'       => true,
-			'stroke-width' => true,
-		),
-		'g'      => array( 'fill' => true ),
-		'circle' => array(
-			'cx'           => true,
-			'cy'           => true,
-			'r'            => true,
-			'fill'         => true,
-			'stroke'       => true,
-			'stroke-width' => true,
-		),
-		'rect'   => array(
-			'x'      => true,
-			'y'      => true,
-			'width'  => true,
-			'height' => true,
-			'fill'   => true,
-			'rx'     => true,
-		),
-	);
-
-	if ( 'default' === $icon_mode ) {
-		$icon =
-			'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.046 21.8a.5.5 0 0 0 .62.635l4.87-1.515A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Z"/></svg>';
-	} elseif ( 'custom' === $icon_mode ) {
-		$icon = wp_kses( get_option( 'jquest_popup_trigger_icon_custom', '' ), $svg_kses );
-	} else {
-		$icon = '';
-	}
-	output_popup_trigger_styles();
-
-	// Build the markup fragments up front so the template stays a plain
-	// heredoc with no inline PHP or conditionals.
-	$toggle_class = '' !== $icon ? 'has-icon' : 'no-icon';
-	$quest_id     = esc_attr( $quest_id );
-
-	$label_html = '';
-	if ( '' !== $label || '' !== $label_mobile ) {
-		$label_parts = '';
-		if ( '' !== $label ) {
-			$label_parts .= '<span class="desktop-only">' . esc_html( $label ) . '</span>';
-		}
-		if ( '' !== $label_mobile ) {
-			$label_parts .= '<span class="mobile-only">' . esc_html( $label_mobile ) . '</span>';
-		}
-		$label_html = '<span class="label">' . $label_parts . '</span>';
-	}
-
-	// $icon is either a trusted literal or already run through wp_kses().
-	$icon_html = '' !== $icon ? '<span class="icon-container">' . $icon . '</span>' : '';
-
-	// phpcs:disable WordPress.Security.EscapeOutput -- values are escaped / wp_kses'd above.
-	echo <<<HTML
-	<div class="jquest-popup-toggle {$toggle_class}" data-jq-load="hover">
-		<a href="#jquest-popup-{$quest_id}">
-			{$label_html}
-			{$icon_html}
-		</a>
-	</div>
-	HTML;
-	// phpcs:enable WordPress.Security.EscapeOutput
-}
-
-add_action( 'wp_footer', __NAMESPACE__ . '\maybe_insert_popup_trigger' );
-
-/**
  * Outputs trigger button styles when any jquest-inserter block on the page has the trigger button enabled.
  *
  * @return void
  */
 function maybe_insert_block_trigger_styles(): void {
-	if ( ! has_blocks() || ! has_block( 'jquest-inserter/jquest-inserter' ) ) {
+	if ( ! has_blocks() || ! has_block( JQUEST_BLOCK_NAME ) ) {
 		return;
 	}
 
@@ -1192,7 +815,7 @@ function maybe_insert_block_trigger_styles(): void {
 function block_has_trigger_button( array $blocks ): bool {
 	foreach ( $blocks as $block ) {
 		if (
-			'jquest-inserter/jquest-inserter' === $block['blockName'] &&
+			JQUEST_BLOCK_NAME === $block['blockName'] &&
 			! empty( $block['attrs']['popup'] ) &&
 			empty( $block['attrs']['popupAuto'] ) &&
 			! empty( $block['attrs']['popupTriggerButton'] )
@@ -1217,7 +840,7 @@ add_action( 'wp_footer', __NAMESPACE__ . '\maybe_insert_block_trigger_styles' );
 	 * @return string
 	 */
 function inject_block_trigger_icon( string $content, array $block ): string {
-	if ( 'jquest-inserter/jquest-inserter' !== $block['blockName'] ) {
+	if ( JQUEST_BLOCK_NAME !== $block['blockName'] ) {
 		return $content;
 	}
 

@@ -6,6 +6,9 @@ const JQUEST_OPTION_PREFIX                = 'jquest_';
 
 const JQUEST_TEXT_DOMAIN = 'jquest';
 
+// Name the inserter block serialises under in post_content.
+const JQUEST_BLOCK_NAME = 'jquest-inserter/jquest-inserter';
+
 const JQUEST_PLUGIN_PATH = __DIR__;
 define( 'JQUEST_PLUGIN_URI', plugin_dir_url( __FILE__ ) );
 

@@ -8,7 +8,7 @@
 namespace jQuestPlugin;
 
 /**
- * Displays the jQuest games in a WP_List_Table.
+ * Displays the SuperQuest games in a WP_List_Table.
  */
 class JQuest_Table extends \WP_List_Table {
 
@@ -37,11 +37,7 @@ class JQuest_Table extends \WP_List_Table {
 			case 'ID':
 				return esc_html( $item->id );
 			case 'Title':
-				$title = esc_html( $item->title );
-				if ( isset( $item->version ) && 'v2' === $item->version ) {
-					$title .= ' <span class="jquest-version-badge">v2</span>';
-				}
-				return $title;
+				return esc_html( $item->title );
 			default:
 				return '';
 		}

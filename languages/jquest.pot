@@ -1,10 +1,10 @@
 # Copyright (C) 2026 J&Co Digital Oy
-# This file is distributed under the same license as the JQUEST Plugin package.
+# This file is distributed under the same license as the SuperQuest Plugin package.
 msgid ""
 msgstr ""
-"Project-Id-Version: JQUEST Plugin 1.10.0\n"
+"Project-Id-Version: SuperQuest Plugin 1.11.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/jquest-plugin\n"
-"POT-Creation-Date: 2026-09-09 12:08:31+00:00\n"
+"POT-Creation-Date: 2026-09-15 17:56:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -29,371 +29,185 @@ msgid "Title"
 msgstr ""
 
 #: classes/Options/OptionsPage.php:91 classes/Options/OptionsPage.php:92
-#: classes/Options/OptionsPage.php:305 classes/Options/OptionsPage.php:481
+#: classes/Options/OptionsPage.php:206 classes/Options/OptionsPage.php:320
 msgid "General"
 msgstr ""
 
 #: classes/Options/OptionsPage.php:100 classes/Options/OptionsPage.php:101
-#: classes/Options/OptionsPage.php:394
+#: classes/Options/OptionsPage.php:271 views/popup-v2-settings.php:29
+#: views/usage-settings.php:23
 msgid "Popup"
 msgstr ""
 
 #: classes/Options/OptionsPage.php:109 classes/Options/OptionsPage.php:110
-#: classes/Options/OptionsPage.php:441 views/popup-settings.php:786
-#: views/popup-settings.php:796
-msgid "Popup v2"
+#: views/usage-settings.php:10
+msgid "Usage"
 msgstr ""
 
-#: classes/Options/OptionsPage.php:312 classes/Options/OptionsPage.php:342
+#: classes/Options/OptionsPage.php:213 classes/Options/OptionsPage.php:243
 msgid "Organisation ID"
 msgstr ""
 
-#: classes/Options/OptionsPage.php:328
-msgid "General settings required for jQuest integration."
+#: classes/Options/OptionsPage.php:229
+msgid "General settings required for SuperQuest integration."
 msgstr ""
 
-#: classes/Options/OptionsPage.php:380
-msgid "Trigger"
+#: classes/Usage_Table.php:24
+msgid "Where"
+msgstr ""
+
+#: classes/Usage_Table.php:25
+msgid "ID"
+msgstr ""
+
+#: classes/Usage_Table.php:26
+msgid "Type"
+msgstr ""
+
+#: classes/Usage_Table.php:27
+msgid "Quests"
+msgstr ""
+
+#: classes/Usage_Table.php:63 classes/Usage_Table.php:84
+msgid "(no title)"
+msgstr ""
+
+#: classes/Usage_Table.php:77
+msgid "View"
+msgstr ""
+
+#: classes/Usage_Table.php:92
+msgid "Used on:"
+msgstr ""
+
+#: classes/Usage_Table.php:111
+msgid "No quest selected"
+msgstr ""
+
+#: classes/Usage_Table.php:123
+msgid "auto popup"
+msgstr ""
+
+#: classes/Usage_Table.php:123
+msgid "popup"
+msgstr ""
+
+#: classes/Usage_Table.php:143
+msgid "Synced pattern"
+msgstr ""
+
+#: classes/Usage_Table.php:159
+msgid "No SuperQuest blocks found."
 msgstr ""
 
 #: helpers.php:18
 msgid ""
-"The plugin \"JQUEST Plugin\" could not be activated because it is missing "
-"dependencies. Please install the dependencies and try again."
+"The plugin \"SuperQuest Plugin\" could not be activated because it is "
+"missing dependencies. Please install the dependencies and try again."
 msgstr ""
 
-#: views/admin-settings.php:9
-msgid "jQuest Settings"
+#: views/admin-settings.php:10
+msgid "Settings"
 msgstr ""
 
-#: views/admin-settings.php:37
+#: views/admin-settings.php:38
 msgid "Refresh games"
 msgstr ""
 
-#: views/admin-settings.php:45
+#: views/admin-settings.php:46
 msgid "Organisation Games"
 msgstr ""
 
-#: views/popup-settings.php:9
-msgid "jQuest Popup"
-msgstr ""
-
-#: views/popup-settings.php:24
-msgid "Script version"
-msgstr ""
-
-#: views/popup-settings.php:37
-msgid ""
-"Which jQuest script version the loader should use. Applies to all popups, "
-"across every language."
-msgstr ""
-
-#: views/popup-settings.php:65
-msgid "Preview"
-msgstr ""
-
-#: views/popup-settings.php:72
-msgid "(hover to see hover state)"
-msgstr ""
-
-#: views/popup-settings.php:95 views/popup-settings.php:749
-#: views/popup-v2-settings.php:132
-msgid "Enabled"
-msgstr ""
-
-#: views/popup-settings.php:103
-msgid "Enable trigger button"
-msgstr ""
-
-#: views/popup-settings.php:108
-msgid "Minimize trigger"
-msgstr ""
-
-#: views/popup-settings.php:116
-msgid "Minimizes trigger at bottom of screen"
-msgstr ""
-
-#: views/popup-settings.php:123
-msgid "Watch selector"
-msgstr ""
-
-#: views/popup-settings.php:132
-msgid "CSS selector of element to watch (querySelector)"
-msgstr ""
-
-#: views/popup-settings.php:138
-msgid "Visibility threshold (%)"
-msgstr ""
-
-#: views/popup-settings.php:149
-msgid ""
-"How much of the watched element must be visible (0–100%) before the trigger "
-"minimizes"
-msgstr ""
-
-#: views/popup-settings.php:154
-msgid "Position"
-msgstr ""
-
-#: views/popup-settings.php:159
-msgid "Side"
-msgstr ""
-
-#: views/popup-settings.php:165
-msgid "Right"
-msgstr ""
-
-#: views/popup-settings.php:168
-msgid "Left"
-msgstr ""
-
-#: views/popup-settings.php:176
-msgid "X offset (px)"
-msgstr ""
-
-#: views/popup-settings.php:191
-msgid "Y offset (px)"
-msgstr ""
-
-#: views/popup-settings.php:205
-msgid "Layout"
-msgstr ""
-
-#: views/popup-settings.php:210
-msgid "Border radius (px)"
-msgstr ""
-
-#: views/popup-settings.php:225
-msgid "Padding top (px)"
-msgstr ""
-
-#: views/popup-settings.php:240
-msgid "Padding right (px)"
-msgstr ""
-
-#: views/popup-settings.php:255
-msgid "Padding bottom (px)"
-msgstr ""
-
-#: views/popup-settings.php:270
-msgid "Padding left (px)"
-msgstr ""
-
-#: views/popup-settings.php:285
-msgid "Items gap (px)"
-msgstr ""
-
-#: views/popup-settings.php:299
-msgid "Typography"
-msgstr ""
-
-#: views/popup-settings.php:304
-msgid "Font size (px)"
-msgstr ""
-
-#: views/popup-settings.php:319
-msgid "Font weight"
-msgstr ""
-
-#: views/popup-settings.php:335
-msgid "Colors"
-msgstr ""
-
-#: views/popup-settings.php:340 views/popup-settings.php:429
-msgid "Text"
-msgstr ""
-
-#: views/popup-settings.php:354 views/popup-settings.php:443
-msgid "Background"
-msgstr ""
-
-#: views/popup-settings.php:368 views/popup-settings.php:457
-msgid "Underline"
-msgstr ""
-
-#: views/popup-settings.php:382
-msgid "Underline width (px)"
-msgstr ""
-
-#: views/popup-settings.php:397 views/popup-settings.php:471
-#: views/popup-settings.php:498 views/popup-settings.php:503
-msgid "Icon"
-msgstr ""
-
-#: views/popup-settings.php:411 views/popup-settings.php:485
-msgid "Icon container"
-msgstr ""
-
-#: views/popup-settings.php:424
-msgid "Colors: Hover"
-msgstr ""
-
-#: views/popup-settings.php:516
-msgid "Default"
-msgstr ""
-
-#: views/popup-settings.php:526
-msgid "None"
-msgstr ""
-
-#: views/popup-settings.php:536
-msgid "Custom"
-msgstr ""
-
-#: views/popup-settings.php:544
-msgid "Custom icon SVG"
-msgstr ""
-
-#: views/popup-settings.php:564
-msgid "Icon size (px)"
-msgstr ""
-
-#: views/popup-settings.php:579
-msgid "Container size (px)"
-msgstr ""
-
-#: views/popup-settings.php:594
-msgid "Container border radius (px)"
-msgstr ""
-
-#: views/popup-settings.php:757
-msgid "Enable popup"
-msgstr ""
-
-#: views/popup-settings.php:764 views/popup-v2-settings.php:151
-msgid "Quest"
-msgstr ""
-
-#: views/popup-settings.php:771 views/popup-v2-settings.php:157
-msgid "— Select a quest —"
-msgstr ""
-
-#: views/popup-settings.php:785
-#. translators: %s: link to the Popup v2 settings page.
-msgid "This is a v2 quest. v2 quests are handled by the %s page — move it there."
-msgstr ""
-
-#: views/popup-settings.php:795
-#. translators: %s: link to the Popup v2 settings page.
-msgid "Only v1 quests can be used here. v2 quests are configured on the %s page."
-msgstr ""
-
-#: views/popup-settings.php:806
-msgid "Desktop label"
-msgstr ""
-
-#: views/popup-settings.php:820
-msgid "Mobile label"
-msgstr ""
-
-#: views/popup-settings.php:832
-msgid "Advanced"
-msgstr ""
-
-#: views/popup-settings.php:837
-msgid "Attach"
-msgstr ""
-
-#: views/popup-settings.php:849
-msgid "Auto"
-msgstr ""
-
-#: views/popup-settings.php:857
-msgid "Automatically open popup"
-msgstr ""
-
-#: views/popup-settings.php:864
-msgid "Limit"
-msgstr ""
-
-#: views/popup-settings.php:877
-msgid "Disable dismiss"
-msgstr ""
-
-#: views/popup-settings.php:885
-msgid "Disable dismiss on click outside"
-msgstr ""
-
-#: views/popup-settings.php:890
-msgid "Disable noscroll"
-msgstr ""
-
-#: views/popup-settings.php:898
-msgid "Disable noscroll on body"
-msgstr ""
-
-#: views/popup-v2-settings.php:28
-msgid "jQuest Popup v2"
-msgstr ""
-
-#: views/popup-v2-settings.php:36
+#: views/popup-v2-settings.php:37
 msgid "Loader"
 msgstr ""
 
-#: views/popup-v2-settings.php:44
-msgid "Always load the jQuest loader"
+#: views/popup-v2-settings.php:45
+msgid "Always load the SuperQuest loader"
 msgstr ""
 
-#: views/popup-v2-settings.php:46
+#: views/popup-v2-settings.php:47
 msgid ""
-"Loads the loader on every page, even ones without a jQuest block or popup. "
-"Applies to all languages."
+"Loads the loader on every page, even ones without a SuperQuest block or "
+"popup. Applies to all languages."
 msgstr ""
 
-#: views/popup-v2-settings.php:52
+#: views/popup-v2-settings.php:53
 msgid "Excluded pages"
 msgstr ""
 
-#: views/popup-v2-settings.php:62
+#: views/popup-v2-settings.php:63
 msgid ""
-"Page or post IDs no Popup v2 quest is inserted on, separated by commas or "
-"line breaks. Applies to every quest and every language. Use this for pages "
-"that embed a jQuest block on the stable or latest script — only one script "
-"can run per page, so a v2 popup would otherwise force the whole page onto "
-"v2 and break the block."
+"Page or post IDs no popup quest is inserted on, separated by commas or line "
+"breaks. Applies to every quest and every language."
 msgstr ""
 
-#: views/popup-v2-settings.php:77
+#: views/popup-v2-settings.php:78
 msgid "not found"
 msgstr ""
 
-#: views/popup-v2-settings.php:110
+#: views/popup-v2-settings.php:111
 msgid ""
 "Every enabled quest below is inserted at the top of the footer on every "
-"page of this language, apart from the excluded pages above. Only v2 quests "
-"can be used here."
+"page of this language, apart from the excluded pages above."
 msgstr ""
 
-#: views/popup-v2-settings.php:124
+#: views/popup-v2-settings.php:125
 msgid "Add a quest"
 msgstr ""
 
-#: views/popup-v2-settings.php:126
+#: views/popup-v2-settings.php:127
 #. translators: %d: position of the quest in the list.
 msgid "Quest %d"
 msgstr ""
 
-#: views/popup-v2-settings.php:144
+#: views/popup-v2-settings.php:133
+msgid "Enabled"
+msgstr ""
+
+#: views/popup-v2-settings.php:145
 msgid "Insert this quest above the footer"
 msgstr ""
 
-#: views/popup-v2-settings.php:170
+#: views/popup-v2-settings.php:152
+msgid "Quest"
+msgstr ""
+
+#: views/popup-v2-settings.php:158
+msgid "— Select a quest —"
+msgstr ""
+
+#: views/popup-v2-settings.php:171
 #. translators: %s: stored quest ID.
 msgid ""
 "The saved quest (%s) is no longer in the fetched quest list. Pick another "
 "one or remove this entry."
 msgstr ""
 
-#: views/popup-v2-settings.php:180
+#: views/popup-v2-settings.php:181
 msgid "Remove"
 msgstr ""
 
-#: views/popup-v2-settings.php:186
+#: views/popup-v2-settings.php:187
 msgid "Delete this quest when the settings are saved"
 msgstr ""
 
+#: views/usage-settings.php:15
+msgid ""
+"Every page, post and synced pattern whose content holds a SuperQuest block. "
+"The list is rebuilt from the database each time this screen is opened, so "
+"it is never out of date."
+msgstr ""
+
+#: views/usage-settings.php:21
+#. translators: %s: link to the popup settings screen.
+msgid ""
+"Popup quests are not listed here: they are inserted site-wide rather than "
+"placed on a page. They are configured on the %s screen."
+msgstr ""
+
 #. Plugin Name of the plugin/theme
-msgid "JQUEST Plugin"
+msgid "SuperQuest Plugin"
 msgstr ""
 
 #. Author URI of the plugin/theme
@@ -401,7 +215,7 @@ msgid "https://jco.fi"
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "A plugin for inserting JQUESTs into your site."
+msgid "A plugin for inserting SuperQuests into your site."
 msgstr ""
 
 #. Author of the plugin/theme

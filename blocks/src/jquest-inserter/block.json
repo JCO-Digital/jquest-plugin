@@ -3,11 +3,12 @@
   "apiVersion": 3,
   "name": "jquest-inserter/jquest-inserter",
   "version": "0.1.0",
-  "title": "jQuest",
+  "title": "SuperQuest",
   "category": "embed",
   "icon": "games",
-  "description": "Insert jQuest content.",
+  "description": "Insert SuperQuest content.",
   "keywords": [
+    "superquest",
     "jquest",
     "game",
     "gamification",
@@ -34,16 +35,8 @@
     "selectedGame": {
       "type": "string"
     },
-    "questVersion": {
-      "type": "string",
-      "default": "v1"
-    },
     "organization": {
       "type": "string"
-    },
-    "version": {
-      "type": "string",
-      "default": "stable"
     },
     "popup": {
       "type": "boolean",

@@ -44,9 +44,7 @@ import './editor.scss';
 export default function Edit( { attributes, setAttributes } ) {
 	const {
 		selectedGame,
-		questVersion,
 		organization,
-		version,
 		popup,
 		popupAuto,
 		popupDelay,
@@ -64,13 +62,6 @@ export default function Edit( { attributes, setAttributes } ) {
 	const [ text, setText ] = useState( __( '', 'jquest' ) );
 	const [ isRefreshing, setIsRefreshing ] = useState( false );
 
-	const versions = [ 'stable', 'latest', 'v2' ];
-
-	const versionOptions = versions.map( ( v ) => ( {
-		label: v.charAt( 0 ).toUpperCase() + v.slice( 1 ),
-		value: v,
-	} ) );
-
 	/**
 	 * Updates the block with a games API response.
 	 *
@@ -82,7 +73,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			setGames( [] );
 			setText(
 				__(
-					'Organization not set. Set organization in JQUEST settings',
+					'Organization not set. Set organization in SuperQuest settings',
 					'jquest'
 				)
 			);
@@ -98,32 +89,20 @@ export default function Edit( { attributes, setAttributes } ) {
 		}
 
 		// Map the games to an array of objects with value and label properties.
-		const gameOptions = data.games.map( ( game ) => {
-			const gameVersion = game.version === 'v2' ? 'v2' : 'v1';
-
-			return {
-				value: game.id,
-				label:
-					gameVersion === 'v2' ? `${ game.title } [v2]` : game.title,
-				title: game.title,
-				version: gameVersion,
-			};
-		} );
+		const gameOptions = data.games.map( ( game ) => ( {
+			value: game.id,
+			label: game.title,
+			title: game.title,
+		} ) );
 		setGames( gameOptions );
 
 		const selectedGameOption =
 			gameOptions.find( ( game ) => game.value === selectedGame ) ||
 			gameOptions[ 0 ];
 
-		setAttributes( {
-			...( selectedGameOption.value !== selectedGame && {
-				selectedGame: selectedGameOption.value,
-			} ),
-			questVersion: selectedGameOption.version,
-			...( selectedGameOption.version === 'v2' && {
-				version: 'v2',
-			} ),
-		} );
+		if ( selectedGameOption.value !== selectedGame ) {
+			setAttributes( { selectedGame: selectedGameOption.value } );
+		}
 	};
 
 	// Use the useEffect hook to fetch the games when the component mounts.
@@ -139,7 +118,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	}, [] );
 
 	/**
-	 * Refreshes the organization's quests from the jQuest API.
+	 * Refreshes the organization's quests from the SuperQuest API.
 	 */
 	const refreshGames = () => {
 		setIsRefreshing( true );
@@ -173,26 +152,12 @@ export default function Edit( { attributes, setAttributes } ) {
 	 * @param {string} newGame - The new selected game.
 	 */
 	const onChangeGame = ( newGame ) => {
-		const selectedGameOption = games.find(
-			( game ) => game.value === newGame
-		);
-		setAttributes( {
-			selectedGame: newGame,
-			questVersion: selectedGameOption?.version || 'v1',
-			...( selectedGameOption?.version === 'v2' && {
-				version: 'v2',
-			} ),
-		} );
+		setAttributes( { selectedGame: newGame } );
 	};
 
 	const openDashboard = () => {
-		const buildUrl = ( org, quest, selectedQuestVersion ) => {
-			return `https://dashboard.jquest.fi/#/dashboard/${ org }/${
-				selectedQuestVersion === 'v2' ? 'quests/' : ''
-			}${ quest }`;
-		};
 		window.open(
-			buildUrl( organization, selectedGame, questVersion ),
+			`https://dashboard.jquest.fi/#/dashboard/${ organization }/quests/${ selectedGame }`,
 			'_blank'
 		);
 	};
@@ -204,7 +169,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				<PanelBody title="Settings">
 					<div className="jquest-inserter-quest-picker">
 						<SelectControl
-							label="Select a game"
+							label="Select a quest"
 							value={ selectedGame }
 							options={ games }
 							onChange={ onChangeGame }
@@ -221,20 +186,6 @@ export default function Edit( { attributes, setAttributes } ) {
 								: __( 'Refresh quests', 'jquest' ) }
 						</Button>
 					</div>
-					{ questVersion !== 'v2' && (
-						<SelectControl
-							label={ __( 'Script Version', 'jquest' ) }
-							value={ version }
-							options={ versionOptions }
-							onChange={ ( newVersion ) =>
-								setAttributes( { version: newVersion } )
-							}
-							help={ __(
-								'Choose which jQuest script version to load.',
-								'jquest'
-							) }
-						/>
-					) }
 					<ToggleControl
 						label={ 'Run as Popup' }
 						checked={ !! popup }
@@ -298,7 +249,7 @@ export default function Edit( { attributes, setAttributes } ) {
 											} )
 										}
 										help={
-											'Trigger button styling comes from global trigger styles set in jQuest settings'
+											'Trigger button styling comes from global trigger styles set in SuperQuest settings'
 										}
 									/>
 									{ popupTriggerButton && (
@@ -375,16 +326,12 @@ export default function Edit( { attributes, setAttributes } ) {
 					) }
 				</PanelBody>
 			</InspectorControls>
-			<div
-				{ ...useBlockProps( {
-					'data-version': version,
-				} ) }
-			>
+			<div { ...useBlockProps() }>
 				<div
 					className="jquest-app"
 					data-org-id={ organization }
 					data-game-id={ selectedGame }
-					data-version={ questVersion === 'v2' ? 'v2' : undefined }
+					data-version="v2"
 					data-popup={ popup ? 'true' : 'false' }
 					data-popup-auto={ popupAuto ? 'true' : 'false' }
 					data-popup-delay={ popupDelay }
@@ -392,9 +339,6 @@ export default function Edit( { attributes, setAttributes } ) {
 					data-new-styles="true"
 				>
 					{ text }
-					{ questVersion === 'v2' && (
-						<span className="jquest-version-badge">v2</span>
-					) }
 					{ organization !== '' && selectedGame !== '' && (
 						<button onClick={ openDashboard }>
 							Edit in dashboard

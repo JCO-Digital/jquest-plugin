@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name:     JQUEST Plugin
+ * Plugin Name:     SuperQuest Plugin
  * Plugin URI:      https://jco.fi
- * Description:     A plugin for inserting JQUESTs into your site.
+ * Description:     A plugin for inserting SuperQuests into your site.
  * Author:          J&Co Digital Oy
  * Author URI:      https://jco.fi
  * Text Domain:     jquest
@@ -39,6 +39,7 @@ require_once __DIR__ . '/includes/blocks.php';
 require_once __DIR__ . '/includes/fields.php';
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/scripts.php';
+require_once __DIR__ . '/includes/usage.php';
 
 $config = new UpdateConfig(
 	pluginFile: __FILE__,

@@ -20,13 +20,11 @@ import { useBlockProps } from '@wordpress/block-editor';
 export default function save( { attributes } ) {
 	const {
 		selectedGame,
-		questVersion,
 		organization,
 		popup,
 		popupAuto,
 		popupDelay,
 		popupLimit,
-		version,
 		popupDisableNoscroll,
 		popupDisableDismiss,
 		popupAttach,
@@ -38,16 +36,12 @@ export default function save( { attributes } ) {
 	const showTrigger = popup && ! popupAuto && popupTriggerButton;
 
 	return (
-		<div
-			{ ...useBlockProps.save( {
-				'data-version': version,
-			} ) }
-		>
+		<div { ...useBlockProps.save() }>
 			<div
 				className="jquest-app"
 				data-org-id={ organization }
 				data-game-id={ selectedGame }
-				data-version={ questVersion === 'v2' ? 'v2' : undefined }
+				data-version="v2"
 				data-popup={ popup ? 'true' : 'false' }
 				data-popup-auto={ popupAuto ? 'true' : 'false' }
 				data-popup-delay={ popupDelay }

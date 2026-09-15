@@ -1,4 +1,4 @@
-/* jQuest Admin Styles */
+/* SuperQuest Admin Styles */
 
 /* ── Page wrapper ─────────────────────────────── */
 .jquest-wrap {
@@ -6,24 +6,29 @@
 }
 
 /* ── Page header ──────────────────────────────── */
+/* The wordmark is white and cyan, so the bar behind it has to stay dark. */
 .jquest-wrap .jquest-page-header {
 	display: flex;
 	align-items: center;
-	gap: 10px;
+	flex-wrap: wrap;
+	gap: 8px 18px;
 	margin: 20px 0 8px;
+	padding: 14px 20px;
+	border-radius: 10px;
+	background: #111827;
 }
 
 .jquest-wrap .jquest-page-header h1 {
 	margin: 0;
 	padding: 0;
-	font-size: 1.6rem;
-	font-weight: 600;
-	color: #1a2e40;
+	font-size: 1.3rem;
+	font-weight: 500;
+	color: #e5e7eb;
 }
 
-.jquest-wrap .jquest-page-header svg {
-	width: 28px;
-	height: 28px;
+.jquest-wrap .jquest-page-header .jquest-logo {
+	width: 190px;
+	height: auto;
 	flex-shrink: 0;
 }
 
@@ -223,18 +228,33 @@
 	font-size: 0.85rem;
 }
 
-.jquest-version-badge {
-	display: inline-flex;
-	align-items: center;
-	margin-left: 6px;
-	padding: 2px 7px;
-	border-radius: 999px;
-	background: #dbeafe;
-	color: #1e40af;
-	font-size: 0.7rem;
-	font-weight: 700;
-	line-height: 1.2;
+/* ── Block usage table ────────────────────────── */
+.jquest-wrap .jquest-usage-status {
+	margin-left: 4px;
+	padding: 1px 6px;
+	border-radius: 4px;
+	background: #f1f5f9;
+	color: #64748b;
+	font-size: 0.72rem;
+	font-weight: 600;
 	text-transform: uppercase;
+}
+
+.jquest-wrap .jquest-usage-tag {
+	margin-left: 4px;
+	padding: 1px 6px;
+	border-radius: 999px;
+	background: #e0f2fe;
+	color: #075985;
+	font-size: 0.72rem;
+	font-weight: 600;
+}
+
+.jquest-wrap .jquest-usage-hosts {
+	margin-top: 4px;
+	color: #6b7280;
+	font-size: 0.8rem;
+	line-height: 1.6;
 }
 
 /* ── Excluded pages list ──────────────────────── */

@@ -95,6 +95,18 @@ function join_path( string $path, string ...$parts ): string {
 }
 
 /**
+ * URL of the SuperQuest wordmark.
+ *
+ * The mark is drawn in white and cyan, so whatever it sits on has to be dark
+ * enough for it to read.
+ *
+ * @return string
+ */
+function logo_url(): string {
+	return JQUEST_PLUGIN_URI . 'assets/img/Super-Quest-Color-Gradient-RGB.svg';
+}
+
+/**
  * Can be used to render a template file.
  *
  * @param string $template The template file name. E.g. "my-template".
@@ -114,19 +126,19 @@ function render_template( string $template, array $data = array() ): string {
 }
 
 /**
- * Adds the API generation to every valid quest in a collection.
+ * Normalises a quest collection returned by the API into a list of objects,
+ * dropping anything that is not one.
  *
- * @param mixed  $quests  Quest collection returned by the API.
- * @param string $version Quest generation.
+ * @param mixed $quests Quest collection returned by the API.
  *
  * @return array
  */
-function add_jquest_versions( $quests, string $version ): array {
+function normalize_jquests( $quests ): array {
 	if ( ! is_array( $quests ) ) {
 		return array();
 	}
 
-	$versioned_quests = array();
+	$normalized = array();
 	foreach ( $quests as $quest ) {
 		if ( is_array( $quest ) ) {
 			$quest = (object) $quest;
@@ -135,35 +147,14 @@ function add_jquest_versions( $quests, string $version ): array {
 			continue;
 		}
 
-		$quest->version     = $version;
-		$versioned_quests[] = $quest;
+		$normalized[] = $quest;
 	}
 
-	return $versioned_quests;
+	return $normalized;
 }
 
 /**
- * Gets the generation of a stored quest.
- *
- * @param string     $quest_id Quest ID.
- * @param array|null $quests   Optional quest collection. Uses the stored quests by default.
- *
- * @return string
- */
-function get_jquest_version( string $quest_id, ?array $quests = null ): string {
-	$quests = $quests ?? get_option( 'jquest_org_games', array() );
-
-	foreach ( $quests as $quest ) {
-		if ( is_object( $quest ) && isset( $quest->id ) && $quest_id === $quest->id ) {
-			return isset( $quest->version ) && 'v2' === $quest->version ? 'v2' : 'v1';
-		}
-	}
-
-	return 'v1';
-}
-
-/**
- * Fetch the JQUESTs from Firestore.
+ * Fetch the SuperQuests from Firestore.
  * This function is called when the 'jquest__organization_id' option is updated.
  *
  * @param mixed $value The new value of the 'jquest__organization_id' option.
@@ -181,7 +172,7 @@ function fetch_jquests( $value ) {
 	$api_response_body = wp_remote_retrieve_body( $api_response );
 	$decoded_response  = json_decode( $api_response_body, false );
 	if ( is_null( $decoded_response ) ) {
-		update_option( 'jquest_org_message', 'Failed to fetch JQUESTs from Firestore.' );
+		update_option( 'jquest_org_message', 'Failed to fetch SuperQuests from Firestore.' );
 		update_option( 'jquest_org_games', array() );
 		return;
 	}
@@ -194,8 +185,7 @@ function fetch_jquests( $value ) {
 		return;
 	}
 
-	$v1_quests = add_jquest_versions( $decoded_response->data ?? array(), 'v1' );
-	$v2_quests = add_jquest_versions( $decoded_response->quests ?? array(), 'v2' );
-
-	update_option( 'jquest_org_games', array_merge( $v1_quests, $v2_quests ) );
+	// The API still returns the retired generation in `data`. Only `quests` is
+	// read, so nothing but the current generation is ever offered.
+	update_option( 'jquest_org_games', normalize_jquests( $decoded_response->quests ?? array() ) );
 }

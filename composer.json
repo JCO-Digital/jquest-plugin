@@ -1,6 +1,6 @@
 {
   "name": "jcodigital/jquest-plugin",
-  "description": "JQUEST Plugin",
+  "description": "SuperQuest Plugin",
   "license": "GPL-2.0-or-later",
   "type": "wordpress-plugin",
   "autoload": {

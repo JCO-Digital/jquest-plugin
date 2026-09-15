@@ -24,8 +24,9 @@ $jquest_excluded = \jQuestPlugin\Scripts\popup_v2_excluded_ids();
 ?>
 <div class="wrap jquest-wrap">
 	<div class="jquest-page-header">
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 118 137" fill="#1a2e40" aria-hidden="true"><path d="M19.62,45.96v19.05c0,1.2-1.3,1.95-2.34,1.35L.78,56.84c-.48-.28-.78-.79-.78-1.35v-20.85c0-.56.3-1.07.78-1.35L58.07.21c.48-.28,1.08-.28,1.56,0l16.5,9.53c1.04.6,1.04,2.1,0,2.7L20.4,44.61c-.48.28-.78.79-.78,1.35ZM58.15,114.8L2.41,82.62c-1.04-.6-2.34.15-2.34,1.35v19.05c0,.56.29,1.07.78,1.35l57.29,33.08c.48.28,1.08.28,1.56,0l18.06-10.43c.48-.28.78-.79.78-1.35v-19.05c0-1.2-1.3-1.95-2.34-1.35l-16.5,9.53c-.48.28-1.08.28-1.56,0ZM98.08,45.72v64.35c0,1.2,1.3,1.95,2.34,1.35l16.5-9.52c.48-.28.78-.79.78-1.35V34.39c0-.56-.3-1.07-.78-1.35l-18.06-10.43c-.48-.28-1.08-.28-1.56,0l-16.5,9.53c-1.04.6-1.04,2.1,0,2.7l16.5,9.53c.48.28.78.79.78,1.35ZM77.94,80.54c.38-.3.61-.75.61-1.24v-20.94c0-.49-.23-.94-.61-1.24l-18.31-10.58c-.49-.28-1.08-.28-1.56,0l-18.31,10.58c-.38.3-.61.75-.61,1.24v20.94c0,.49.23.94.61,1.24l18.31,10.58c.47.28,1.07.28,1.56,0l18.31-10.58Z"/></svg>
-		<h1><?php esc_html_e( 'jQuest Popup v2', 'jquest' ); ?></h1>
+		<img class="jquest-logo" src="<?php echo esc_url( \jQuestPlugin\logo_url() ); ?>"
+			alt="SuperQuest">
+		<h1><?php esc_html_e( 'Popup', 'jquest' ); ?></h1>
 	</div>
 
 	<div class="jquest-card">
@@ -41,9 +42,9 @@ $jquest_excluded = \jQuestPlugin\Scripts\popup_v2_excluded_ids();
 								name="<?php echo esc_attr( \jQuestPlugin\Scripts\ALWAYS_LOAD_OPTION ); ?>"
 								value="1"
 								<?php checked( get_option( \jQuestPlugin\Scripts\ALWAYS_LOAD_OPTION, 0 ), 1 ); ?>>
-							<?php esc_html_e( 'Always load the jQuest loader', 'jquest' ); ?>
+							<?php esc_html_e( 'Always load the SuperQuest loader', 'jquest' ); ?>
 						</label>
-						<p class="description"><?php esc_html_e( 'Loads the loader on every page, even ones without a jQuest block or popup. Applies to all languages.', 'jquest' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Loads the loader on every page, even ones without a SuperQuest block or popup. Applies to all languages.', 'jquest' ); ?></p>
 					</td>
 				</tr>
 				<tr>
@@ -59,7 +60,7 @@ $jquest_excluded = \jQuestPlugin\Scripts\popup_v2_excluded_ids();
 							class="large-text code"
 							placeholder="12, 34, 56"><?php echo esc_textarea( implode( ', ', $jquest_excluded ) ); ?></textarea>
 						<p class="description">
-							<?php esc_html_e( 'Page or post IDs no Popup v2 quest is inserted on, separated by commas or line breaks. Applies to every quest and every language. Use this for pages that embed a jQuest block on the stable or latest script — only one script can run per page, so a v2 popup would otherwise force the whole page onto v2 and break the block.', 'jquest' ); ?>
+							<?php esc_html_e( 'Page or post IDs no popup quest is inserted on, separated by commas or line breaks. Applies to every quest and every language.', 'jquest' ); ?>
 						</p>
 						<?php if ( ! empty( $jquest_excluded ) ) : ?>
 							<ul class="jquest-excluded-list">
@@ -107,7 +108,7 @@ $jquest_excluded = \jQuestPlugin\Scripts\popup_v2_excluded_ids();
 			<?php settings_fields( $jquest_group ); ?>
 
 			<p class="description">
-				<?php esc_html_e( 'Every enabled quest below is inserted at the top of the footer on every page of this language, apart from the excluded pages above. Only v2 quests can be used here.', 'jquest' ); ?>
+				<?php esc_html_e( 'Every enabled quest below is inserted at the top of the footer on every page of this language, apart from the excluded pages above.', 'jquest' ); ?>
 			</p>
 
 			<?php
