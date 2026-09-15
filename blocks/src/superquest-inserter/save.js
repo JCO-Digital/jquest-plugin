@@ -19,7 +19,7 @@ import { useBlockProps } from '@wordpress/block-editor';
  */
 export default function save( { attributes } ) {
 	const {
-		selectedGame,
+		selectedQuest,
 		organization,
 		popup,
 		popupAuto,
@@ -40,7 +40,7 @@ export default function save( { attributes } ) {
 			<div
 				className="jquest-app"
 				data-org-id={ organization }
-				data-game-id={ selectedGame }
+				data-game-id={ selectedQuest }
 				data-version="v2"
 				data-popup={ popup ? 'true' : 'false' }
 				data-popup-auto={ popupAuto ? 'true' : 'false' }
@@ -57,7 +57,7 @@ export default function save( { attributes } ) {
 			></div>
 			{ showTrigger && (
 				<div className="jquest-popup-toggle" data-jq-load="hover">
-					<a href={ `#jquest-popup-${ selectedGame }` }>
+					<a href={ `#jquest-popup-${ selectedQuest }` }>
 						{ ( popupTriggerButtonLabel ||
 							popupTriggerButtonLabelMobile ) && (
 							<span className="label">

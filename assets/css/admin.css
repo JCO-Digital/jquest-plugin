@@ -1,13 +1,13 @@
 /* SuperQuest Admin Styles */
 
 /* ── Page wrapper ─────────────────────────────── */
-.jquest-wrap {
+.superquest-wrap {
 	max-width: 900px;
 }
 
 /* ── Page header ──────────────────────────────── */
 /* The wordmark is white and cyan, so the bar behind it has to stay dark. */
-.jquest-wrap .jquest-page-header {
+.superquest-wrap .superquest-page-header {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
@@ -18,7 +18,7 @@
 	background: #111827;
 }
 
-.jquest-wrap .jquest-page-header h1 {
+.superquest-wrap .superquest-page-header h1 {
 	margin: 0;
 	padding: 0;
 	font-size: 1.3rem;
@@ -26,20 +26,20 @@
 	color: #e5e7eb;
 }
 
-.jquest-wrap .jquest-page-header .jquest-logo {
+.superquest-wrap .superquest-page-header .superquest-logo {
 	width: 190px;
 	height: auto;
 	flex-shrink: 0;
 }
 
 /* ── Nav tabs ─────────────────────────────────── */
-.jquest-wrap .nav-tab-wrapper {
+.superquest-wrap .nav-tab-wrapper {
 	margin-bottom: 0;
 	padding-bottom: 0;
 	border-bottom: 2px solid #e2e8f0;
 }
 
-.jquest-wrap .nav-tab {
+.superquest-wrap .nav-tab {
 	background: transparent;
 	border: none;
 	border-bottom: 2px solid transparent;
@@ -50,14 +50,14 @@
 	transition: color 0.15s, border-color 0.15s;
 }
 
-.jquest-wrap .nav-tab:hover {
+.superquest-wrap .nav-tab:hover {
 	background: transparent;
 	color: #1a2e40;
 	border-bottom-color: #94a3b8;
 }
 
-.jquest-wrap .nav-tab-active,
-.jquest-wrap .nav-tab-active:hover {
+.superquest-wrap .nav-tab-active,
+.superquest-wrap .nav-tab-active:hover {
 	background: transparent;
 	color: #1a2e40;
 	border-bottom-color: #1a2e40;
@@ -65,7 +65,7 @@
 }
 
 /* ── Card ─────────────────────────────────────── */
-.jquest-card {
+.superquest-card {
 	background: #fff;
 	border: 1px solid #e2e8f0;
 	border-radius: 8px;
@@ -75,13 +75,13 @@
 }
 
 /* ── Form table ───────────────────────────────── */
-.jquest-wrap .form-table {
+.superquest-wrap .form-table {
 	margin: 0;
 	border-collapse: separate;
 	border-spacing: 0;
 }
 
-.jquest-wrap .form-table th {
+.superquest-wrap .form-table th {
 	padding: 14px 20px 14px 0;
 	font-size: 0.875rem;
 	font-weight: 600;
@@ -90,24 +90,24 @@
 	vertical-align: top;
 }
 
-.jquest-wrap .form-table td {
+.superquest-wrap .form-table td {
 	padding: 12px 0;
 	vertical-align: top;
 }
 
-.jquest-wrap .form-table tr:not(:last-child) th,
-.jquest-wrap .form-table tr:not(:last-child) td {
+.superquest-wrap .form-table tr:not(:last-child) th,
+.superquest-wrap .form-table tr:not(:last-child) td {
 	border-bottom: 1px solid #f1f5f9;
 }
 
 /* Section divider row (Advanced h2) */
-.jquest-wrap .form-table .jquest-section-divider td {
+.superquest-wrap .form-table .superquest-section-divider td {
 	padding-top: 24px;
 	padding-bottom: 4px;
 	border-bottom: none;
 }
 
-.jquest-wrap .form-table .jquest-section-divider h2 {
+.superquest-wrap .form-table .superquest-section-divider h2 {
 	margin: 0;
 	font-size: 0.7rem;
 	font-weight: 700;
@@ -117,11 +117,11 @@
 }
 
 /* ── Input fields ─────────────────────────────── */
-.jquest-wrap input[type="text"].regular-text,
-.jquest-wrap input[type="text"]:not([class]),
-.jquest-wrap input[type="number"].small-text,
-.jquest-wrap select,
-.jquest-wrap textarea.large-text {
+.superquest-wrap input[type="text"].regular-text,
+.superquest-wrap input[type="text"]:not([class]),
+.superquest-wrap input[type="number"].small-text,
+.superquest-wrap select,
+.superquest-wrap textarea.large-text {
 	border: 1px solid #d1d5db;
 	border-radius: 6px;
 	padding: 7px 10px;
@@ -131,17 +131,17 @@
 	transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.jquest-wrap input[type="text"].regular-text:focus,
-.jquest-wrap input[type="text"]:not([class]):focus,
-.jquest-wrap input[type="number"].small-text:focus,
-.jquest-wrap select:focus,
-.jquest-wrap textarea.large-text:focus {
+.superquest-wrap input[type="text"].regular-text:focus,
+.superquest-wrap input[type="text"]:not([class]):focus,
+.superquest-wrap input[type="number"].small-text:focus,
+.superquest-wrap select:focus,
+.superquest-wrap textarea.large-text:focus {
 	border-color: #1a2e40;
 	box-shadow: 0 0 0 2px rgba(26, 46, 64, 0.12);
 	outline: none;
 }
 
-.jquest-wrap select {
+.superquest-wrap select {
 	padding-right: 32px;
 	cursor: pointer;
 	appearance: none;
@@ -152,11 +152,11 @@
 	background-position: right 11px center;
 }
 
-.jquest-wrap select:focus {
+.superquest-wrap select:focus {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M3 4.5 6 7.5 9 4.5' stroke='%231a2e40' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
-.jquest-wrap textarea.large-text {
+.superquest-wrap textarea.large-text {
 	padding: 10px;
 	resize: vertical;
 	font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
@@ -164,7 +164,7 @@
 }
 
 /* ── Checkbox ─────────────────────────────────── */
-.jquest-wrap input[type="checkbox"] {
+.superquest-wrap input[type="checkbox"] {
 	width: 16px;
 	height: 16px;
 	margin-right: 6px;
@@ -173,7 +173,7 @@
 	cursor: pointer;
 }
 
-.jquest-wrap .form-table label {
+.superquest-wrap .form-table label {
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
@@ -183,17 +183,17 @@
 }
 
 /* ── Color picker override ─────────────────────── */
-.jquest-wrap .wp-picker-container .wp-color-result {
+.superquest-wrap .wp-picker-container .wp-color-result {
 	border-radius: 6px;
 	border-color: #d1d5db;
 }
 
 /* ── Submit button area ───────────────────────── */
-.jquest-wrap .submit {
+.superquest-wrap .submit {
 	padding: 16px 0 0;
 }
 
-.jquest-wrap .button-primary {
+.superquest-wrap .button-primary {
 	background: #1a2e40;
 	border-color: #1a2e40;
 	color: #fff;
@@ -204,32 +204,32 @@
 	transition: background 0.15s;
 }
 
-.jquest-wrap .button-primary:hover,
-.jquest-wrap .button-primary:focus {
+.superquest-wrap .button-primary:hover,
+.superquest-wrap .button-primary:focus {
 	background: #253d52;
 	border-color: #253d52;
 	color: #fff;
 }
 
-/* ── Games section ────────────────────────────── */
-.jquest-games-section {
+/* ── Quests section ────────────────────────────── */
+.superquest-quests-section {
 	margin-top: 20px;
 }
 
-.jquest-games-section h2 {
+.superquest-quests-section h2 {
 	margin: 0 0 12px;
 	font-size: 1rem;
 	font-weight: 600;
 	color: #1a2e40;
 }
 
-.jquest-wrap .widefat th,
-.jquest-wrap .widefat td {
+.superquest-wrap .widefat th,
+.superquest-wrap .widefat td {
 	font-size: 0.85rem;
 }
 
 /* ── Block usage table ────────────────────────── */
-.jquest-wrap .jquest-usage-status {
+.superquest-wrap .superquest-usage-status {
 	margin-left: 4px;
 	padding: 1px 6px;
 	border-radius: 4px;
@@ -240,7 +240,7 @@
 	text-transform: uppercase;
 }
 
-.jquest-wrap .jquest-usage-tag {
+.superquest-wrap .superquest-usage-tag {
 	margin-left: 4px;
 	padding: 1px 6px;
 	border-radius: 999px;
@@ -250,7 +250,7 @@
 	font-weight: 600;
 }
 
-.jquest-wrap .jquest-usage-hosts {
+.superquest-wrap .superquest-usage-hosts {
 	margin-top: 4px;
 	color: #6b7280;
 	font-size: 0.8rem;
@@ -258,19 +258,19 @@
 }
 
 /* ── Excluded pages list ──────────────────────── */
-.jquest-wrap .jquest-excluded-list {
+.superquest-wrap .superquest-excluded-list {
 	margin: 4px 0 0;
 	color: #6b7280;
 	font-size: 0.8rem;
 	line-height: 1.6;
 }
 
-.jquest-wrap .jquest-excluded-list li {
+.superquest-wrap .superquest-excluded-list li {
 	margin: 0;
 }
 
 /* ── Popup v2 quest entries ───────────────────── */
-.jquest-wrap .jquest-quest-entry {
+.superquest-wrap .superquest-quest-entry {
 	margin: 16px 0 0;
 	padding: 4px 16px 8px;
 	border: 1px solid #e5e7eb;
@@ -278,12 +278,12 @@
 	background: #fbfbfc;
 }
 
-.jquest-wrap .jquest-quest-entry--new {
+.superquest-wrap .superquest-quest-entry--new {
 	border-style: dashed;
 	background: transparent;
 }
 
-.jquest-wrap .jquest-quest-entry legend {
+.superquest-wrap .superquest-quest-entry legend {
 	padding: 0 6px;
 	color: #1a2e40;
 	font-size: 0.8rem;
@@ -292,6 +292,6 @@
 	letter-spacing: 0.03em;
 }
 
-.jquest-wrap .jquest-quest-entry .form-table {
+.superquest-wrap .superquest-quest-entry .form-table {
 	margin: 0;
 }

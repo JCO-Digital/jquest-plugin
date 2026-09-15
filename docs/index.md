@@ -1,6 +1,6 @@
 # SuperQuest Plugin docs
 
-The plugin makes it possible to add an organization id and fetch SuperQuest games that can be inserted in site using a Gutenberg block.
+The plugin makes it possible to add an organization id and fetch SuperQuest quests that can be inserted in site using a Gutenberg block.
 
 
 ## Installation ##

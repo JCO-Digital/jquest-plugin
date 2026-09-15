@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "jquest-inserter/jquest-inserter",
+  "name": "superquest-inserter/superquest-inserter",
   "version": "0.1.0",
   "title": "SuperQuest",
   "category": "embed",
@@ -9,8 +9,8 @@
   "description": "Insert SuperQuest content.",
   "keywords": [
     "superquest",
-    "jquest",
-    "game",
+    "superquest",
+    "quest",
     "gamification",
     "learning",
     "education",
@@ -28,11 +28,11 @@
   "supports": {
     "html": false
   },
-  "textdomain": "jquest",
+  "textdomain": "superquest",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "attributes": {
-    "selectedGame": {
+    "selectedQuest": {
       "type": "string"
     },
     "organization": {

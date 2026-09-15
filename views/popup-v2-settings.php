@@ -1,15 +1,15 @@
 <?php // phpcs:ignore Squiz.Commenting.FileComment.Missing
 
-$jquest_group  = 'jquest-popup-v2-' . $jquest_lang_key;
-$jquest_option = \jQuestPlugin\Scripts\popup_v2_quests_option( $jquest_lang_key );
-$jquest_quests = \jQuestPlugin\Scripts\popup_v2_quests( $jquest_lang_key );
+$superquest_group  = 'superquest-popup-v2-' . $superquest_lang_key;
+$superquest_option = \SuperQuestPlugin\Scripts\popup_v2_quests_option( $superquest_lang_key );
+$superquest_quests = \SuperQuestPlugin\Scripts\popup_v2_quests( $superquest_lang_key );
 
 // The form carries no JavaScript, so a blank entry is always appended: filling
 // it in and saving adds a quest, and leaving it alone changes nothing because
 // the sanitiser drops entries without a quest. It defaults to enabled so that
 // adding a quest takes a single save.
-$jquest_entries = array_merge(
-	$jquest_quests,
+$superquest_entries = array_merge(
+	$superquest_quests,
 	array(
 		array(
 			'enabled'  => true,
@@ -20,62 +20,62 @@ $jquest_entries = array_merge(
 
 // Excluded pages are one site-wide list rather than a per-quest or
 // per-language one, so it is read once here for the form above the tabs.
-$jquest_excluded = \jQuestPlugin\Scripts\popup_v2_excluded_ids();
+$superquest_excluded = \SuperQuestPlugin\Scripts\popup_v2_excluded_ids();
 ?>
-<div class="wrap jquest-wrap">
-	<div class="jquest-page-header">
-		<img class="jquest-logo" src="<?php echo esc_url( \jQuestPlugin\logo_url() ); ?>"
+<div class="wrap superquest-wrap">
+	<div class="superquest-page-header">
+		<img class="superquest-logo" src="<?php echo esc_url( \SuperQuestPlugin\logo_url() ); ?>"
 			alt="SuperQuest">
-		<h1><?php esc_html_e( 'Popup', 'jquest' ); ?></h1>
+		<h1><?php esc_html_e( 'Popup', 'superquest' ); ?></h1>
 	</div>
 
-	<div class="jquest-card">
+	<div class="superquest-card">
 		<form method="post" action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>">
-			<?php settings_fields( 'jquest-popup-v2-global' ); ?>
+			<?php settings_fields( 'superquest-popup-v2-global' ); ?>
 			<table class="form-table">
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Loader', 'jquest' ); ?></th>
+					<th scope="row"><?php esc_html_e( 'Loader', 'superquest' ); ?></th>
 					<td>
-						<input type="hidden" name="<?php echo esc_attr( \jQuestPlugin\Scripts\ALWAYS_LOAD_OPTION ); ?>" value="0">
+						<input type="hidden" name="<?php echo esc_attr( \SuperQuestPlugin\Scripts\ALWAYS_LOAD_OPTION ); ?>" value="0">
 						<label>
 							<input type="checkbox"
-								name="<?php echo esc_attr( \jQuestPlugin\Scripts\ALWAYS_LOAD_OPTION ); ?>"
+								name="<?php echo esc_attr( \SuperQuestPlugin\Scripts\ALWAYS_LOAD_OPTION ); ?>"
 								value="1"
-								<?php checked( get_option( \jQuestPlugin\Scripts\ALWAYS_LOAD_OPTION, 0 ), 1 ); ?>>
-							<?php esc_html_e( 'Always load the SuperQuest loader', 'jquest' ); ?>
+								<?php checked( get_option( \SuperQuestPlugin\Scripts\ALWAYS_LOAD_OPTION, 0 ), 1 ); ?>>
+							<?php esc_html_e( 'Always load the SuperQuest loader', 'superquest' ); ?>
 						</label>
-						<p class="description"><?php esc_html_e( 'Loads the loader on every page, even ones without a SuperQuest block or popup. Applies to all languages.', 'jquest' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Loads the loader on every page, even ones without a SuperQuest block or popup. Applies to all languages.', 'superquest' ); ?></p>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row">
-						<label for="<?php echo esc_attr( \jQuestPlugin\Scripts\POPUP_V2_EXCLUDE_OPTION ); ?>">
-							<?php esc_html_e( 'Excluded pages', 'jquest' ); ?>
+						<label for="<?php echo esc_attr( \SuperQuestPlugin\Scripts\POPUP_V2_EXCLUDE_OPTION ); ?>">
+							<?php esc_html_e( 'Excluded pages', 'superquest' ); ?>
 						</label>
 					</th>
 					<td>
-						<textarea name="<?php echo esc_attr( \jQuestPlugin\Scripts\POPUP_V2_EXCLUDE_OPTION ); ?>"
-							id="<?php echo esc_attr( \jQuestPlugin\Scripts\POPUP_V2_EXCLUDE_OPTION ); ?>"
+						<textarea name="<?php echo esc_attr( \SuperQuestPlugin\Scripts\POPUP_V2_EXCLUDE_OPTION ); ?>"
+							id="<?php echo esc_attr( \SuperQuestPlugin\Scripts\POPUP_V2_EXCLUDE_OPTION ); ?>"
 							rows="3"
 							class="large-text code"
-							placeholder="12, 34, 56"><?php echo esc_textarea( implode( ', ', $jquest_excluded ) ); ?></textarea>
+							placeholder="12, 34, 56"><?php echo esc_textarea( implode( ', ', $superquest_excluded ) ); ?></textarea>
 						<p class="description">
-							<?php esc_html_e( 'Page or post IDs no popup quest is inserted on, separated by commas or line breaks. Applies to every quest and every language.', 'jquest' ); ?>
+							<?php esc_html_e( 'Page or post IDs no popup quest is inserted on, separated by commas or line breaks. Applies to every quest and every language.', 'superquest' ); ?>
 						</p>
-						<?php if ( ! empty( $jquest_excluded ) ) : ?>
-							<ul class="jquest-excluded-list">
+						<?php if ( ! empty( $superquest_excluded ) ) : ?>
+							<ul class="superquest-excluded-list">
 								<?php
 								// The title next to each ID makes a typo, or an ID left
 								// behind by a deleted page, obvious at a glance.
-								foreach ( $jquest_excluded as $jquest_excluded_id ) :
-									$jquest_excluded_title = get_the_title( $jquest_excluded_id );
+								foreach ( $superquest_excluded as $superquest_excluded_id ) :
+									$superquest_excluded_title = get_the_title( $superquest_excluded_id );
 									?>
 									<li>
-										<?php echo esc_html( (string) $jquest_excluded_id ); ?> —
-										<?php if ( '' !== $jquest_excluded_title ) : ?>
-											<?php echo esc_html( $jquest_excluded_title ); ?>
+										<?php echo esc_html( (string) $superquest_excluded_id ); ?> —
+										<?php if ( '' !== $superquest_excluded_title ) : ?>
+											<?php echo esc_html( $superquest_excluded_title ); ?>
 										<?php else : ?>
-											<em><?php esc_html_e( 'not found', 'jquest' ); ?></em>
+											<em><?php esc_html_e( 'not found', 'superquest' ); ?></em>
 										<?php endif; ?>
 									</li>
 								<?php endforeach; ?>
@@ -88,13 +88,13 @@ $jquest_excluded = \jQuestPlugin\Scripts\popup_v2_excluded_ids();
 		</form>
 	</div>
 
-	<?php if ( ! empty( $jquest_tabs ) ) : ?>
+	<?php if ( ! empty( $superquest_tabs ) ) : ?>
 		<div class="nav-tab-wrapper">
-			<?php foreach ( $jquest_tabs as $jquest_tab => $tab_data ) : ?>
+			<?php foreach ( $superquest_tabs as $superquest_tab => $tab_data ) : ?>
 				<a href="<?php echo esc_url( $tab_data['url'] ); ?>"
 					class="nav-tab
 					<?php
-					echo $jquest_active_tab === $jquest_tab
+					echo $superquest_active_tab === $superquest_tab
 					? 'nav-tab-active'
 					: '';
 					?>
@@ -103,34 +103,34 @@ $jquest_excluded = \jQuestPlugin\Scripts\popup_v2_excluded_ids();
 		</div>
 	<?php endif; ?>
 
-	<div class="jquest-card">
+	<div class="superquest-card">
 		<form method="post" action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>">
-			<?php settings_fields( $jquest_group ); ?>
+			<?php settings_fields( $superquest_group ); ?>
 
 			<p class="description">
-				<?php esc_html_e( 'Every enabled quest below is inserted at the top of the footer on every page of this language, apart from the excluded pages above.', 'jquest' ); ?>
+				<?php esc_html_e( 'Every enabled quest below is inserted at the top of the footer on every page of this language, apart from the excluded pages above.', 'superquest' ); ?>
 			</p>
 
 			<?php
-			foreach ( $jquest_entries as $jquest_index => $jquest_entry ) :
+			foreach ( $superquest_entries as $superquest_index => $superquest_entry ) :
 				// Everything past the stored quests is the blank "add" entry.
-				$jquest_is_new = $jquest_index >= count( $jquest_quests );
-				$jquest_name   = $jquest_option . '[' . $jquest_index . ']';
-				$jquest_id     = 'jquest-popup-v2-' . $jquest_lang_key . '-' . $jquest_index;
+				$superquest_is_new = $superquest_index >= count( $superquest_quests );
+				$superquest_name   = $superquest_option . '[' . $superquest_index . ']';
+				$superquest_id     = 'superquest-popup-v2-' . $superquest_lang_key . '-' . $superquest_index;
 				?>
-				<fieldset class="jquest-quest-entry<?php echo esc_attr( $jquest_is_new ? ' jquest-quest-entry--new' : '' ); ?>">
+				<fieldset class="superquest-quest-entry<?php echo esc_attr( $superquest_is_new ? ' superquest-quest-entry--new' : '' ); ?>">
 					<legend>
 						<?php
-						echo $jquest_is_new
-							? esc_html__( 'Add a quest', 'jquest' )
+						echo $superquest_is_new
+							? esc_html__( 'Add a quest', 'superquest' )
 							/* translators: %d: position of the quest in the list. */
-							: esc_html( sprintf( __( 'Quest %d', 'jquest' ), $jquest_index + 1 ) );
+							: esc_html( sprintf( __( 'Quest %d', 'superquest' ), $superquest_index + 1 ) );
 						?>
 					</legend>
 
 					<table class="form-table">
 						<tr>
-							<th scope="row"><?php esc_html_e( 'Enabled', 'jquest' ); ?></th>
+							<th scope="row"><?php esc_html_e( 'Enabled', 'superquest' ); ?></th>
 							<td>
 								<?php
 								// No hidden companion field here: an unchecked box
@@ -139,52 +139,52 @@ $jquest_excluded = \jQuestPlugin\Scripts\popup_v2_excluded_ids();
 								?>
 								<label>
 									<input type="checkbox"
-										name="<?php echo esc_attr( $jquest_name . '[enabled]' ); ?>"
+										name="<?php echo esc_attr( $superquest_name . '[enabled]' ); ?>"
 										value="1"
-										<?php checked( $jquest_entry['enabled'] ); ?>>
-									<?php esc_html_e( 'Insert this quest above the footer', 'jquest' ); ?>
+										<?php checked( $superquest_entry['enabled'] ); ?>>
+									<?php esc_html_e( 'Insert this quest above the footer', 'superquest' ); ?>
 								</label>
 							</td>
 						</tr>
 						<tr>
 							<th scope="row">
-								<label for="<?php echo esc_attr( $jquest_id . '-quest' ); ?>">
-									<?php esc_html_e( 'Quest', 'jquest' ); ?>
+								<label for="<?php echo esc_attr( $superquest_id . '-quest' ); ?>">
+									<?php esc_html_e( 'Quest', 'superquest' ); ?>
 								</label>
 							</th>
 							<td>
-								<select name="<?php echo esc_attr( $jquest_name . '[quest_id]' ); ?>"
-									id="<?php echo esc_attr( $jquest_id . '-quest' ); ?>">
-									<option value=""><?php esc_html_e( '— Select a quest —', 'jquest' ); ?></option>
-									<?php foreach ( $jquest_games as $game ) : ?>
-										<option value="<?php echo esc_attr( $game->id ); ?>"
-											<?php selected( $jquest_entry['quest_id'], $game->id ); ?>>
-											<?php echo esc_html( $game->title ); ?>
+								<select name="<?php echo esc_attr( $superquest_name . '[quest_id]' ); ?>"
+									id="<?php echo esc_attr( $superquest_id . '-quest' ); ?>">
+									<option value=""><?php esc_html_e( '— Select a quest —', 'superquest' ); ?></option>
+									<?php foreach ( $superquest_quests as $quest ) : ?>
+										<option value="<?php echo esc_attr( $quest->id ); ?>"
+											<?php selected( $superquest_entry['quest_id'], $quest->id ); ?>>
+											<?php echo esc_html( $quest->title ); ?>
 										</option>
 									<?php endforeach; ?>
 								</select>
-								<?php if ( ! $jquest_is_new && '' !== $jquest_entry['quest_id'] && ! in_array( $jquest_entry['quest_id'], wp_list_pluck( $jquest_games, 'id' ), true ) ) : ?>
+								<?php if ( ! $superquest_is_new && '' !== $superquest_entry['quest_id'] && ! in_array( $superquest_entry['quest_id'], wp_list_pluck( $superquest_quests, 'id' ), true ) ) : ?>
 									<p class="description">
 										<?php
 										printf(
 											/* translators: %s: stored quest ID. */
-											esc_html__( 'The saved quest (%s) is no longer in the fetched quest list. Pick another one or remove this entry.', 'jquest' ),
-											esc_html( $jquest_entry['quest_id'] )
+											esc_html__( 'The saved quest (%s) is no longer in the fetched quest list. Pick another one or remove this entry.', 'superquest' ),
+											esc_html( $superquest_entry['quest_id'] )
 										);
 										?>
 									</p>
 								<?php endif; ?>
 							</td>
 						</tr>
-						<?php if ( ! $jquest_is_new ) : ?>
+						<?php if ( ! $superquest_is_new ) : ?>
 							<tr>
-								<th scope="row"><?php esc_html_e( 'Remove', 'jquest' ); ?></th>
+								<th scope="row"><?php esc_html_e( 'Remove', 'superquest' ); ?></th>
 								<td>
 									<label>
 										<input type="checkbox"
-											name="<?php echo esc_attr( $jquest_name . '[remove]' ); ?>"
+											name="<?php echo esc_attr( $superquest_name . '[remove]' ); ?>"
 											value="1">
-										<?php esc_html_e( 'Delete this quest when the settings are saved', 'jquest' ); ?>
+										<?php esc_html_e( 'Delete this quest when the settings are saved', 'superquest' ); ?>
 									</label>
 								</td>
 							</tr>

@@ -2,10 +2,10 @@
 /**
  * Abstract singleton class
  *
- * @package jQuestPlugin
+ * @package SuperQuestPlugin
  */
 
-namespace jQuestPlugin;
+namespace SuperQuestPlugin;
 
 use RuntimeException;
 

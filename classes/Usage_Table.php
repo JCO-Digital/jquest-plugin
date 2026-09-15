@@ -2,12 +2,12 @@
 /**
  * Block usage table class.
  *
- * @package jQuestPlugin
+ * @package SuperQuestPlugin
  */
 
-namespace jQuestPlugin;
+namespace SuperQuestPlugin;
 
-use function jQuestPlugin\Usage\scan;
+use function SuperQuestPlugin\Usage\scan;
 
 /**
  * Lists every post holding a SuperQuest block in a WP_List_Table.
@@ -21,10 +21,10 @@ class Usage_Table extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'title'  => __( 'Where', 'jquest' ),
-			'id'     => __( 'ID', 'jquest' ),
-			'type'   => __( 'Type', 'jquest' ),
-			'quests' => __( 'Quests', 'jquest' ),
+			'title'  => __( 'Where', 'superquest' ),
+			'id'     => __( 'ID', 'superquest' ),
+			'type'   => __( 'Type', 'superquest' ),
+			'quests' => __( 'Quests', 'superquest' ),
 		);
 	}
 
@@ -60,7 +60,7 @@ class Usage_Table extends \WP_List_Table {
 	 * @return string
 	 */
 	private function render_title( array $item ): string {
-		$title = '' !== $item['title'] ? $item['title'] : __( '(no title)', 'jquest' );
+		$title = '' !== $item['title'] ? $item['title'] : __( '(no title)', 'superquest' );
 		$edit  = get_edit_post_link( $item['id'] );
 
 		$out = $edit
@@ -68,28 +68,28 @@ class Usage_Table extends \WP_List_Table {
 			: '<strong>' . esc_html( $title ) . '</strong>';
 
 		if ( 'publish' !== $item['status'] ) {
-			$out .= ' <span class="jquest-usage-status">' . esc_html( $item['status'] ) . '</span>';
+			$out .= ' <span class="superquest-usage-status">' . esc_html( $item['status'] ) . '</span>';
 		}
 
 		$permalink = 'publish' === $item['status'] ? get_permalink( $item['id'] ) : '';
 		if ( $permalink ) {
 			$out .= '<div class="row-actions"><span><a href="' . esc_url( $permalink ) . '">'
-				. esc_html__( 'View', 'jquest' ) . '</a></span></div>';
+				. esc_html__( 'View', 'superquest' ) . '</a></span></div>';
 		}
 
 		if ( ! empty( $item['hosts'] ) ) {
 			$links = array();
 			foreach ( $item['hosts'] as $host ) {
 				$host_edit  = get_edit_post_link( $host->ID );
-				$host_title = '' !== $host->post_title ? $host->post_title : __( '(no title)', 'jquest' );
+				$host_title = '' !== $host->post_title ? $host->post_title : __( '(no title)', 'superquest' );
 
 				$links[] = $host_edit
 					? '<a href="' . esc_url( $host_edit ) . '">' . esc_html( $host_title ) . '</a>'
 					: esc_html( $host_title );
 			}
 
-			$out .= '<div class="jquest-usage-hosts">'
-				. esc_html__( 'Used on:', 'jquest' ) . ' ' . implode( ', ', $links )
+			$out .= '<div class="superquest-usage-hosts">'
+				. esc_html__( 'Used on:', 'superquest' ) . ' ' . implode( ', ', $links )
 				. '</div>';
 		}
 
@@ -108,7 +108,7 @@ class Usage_Table extends \WP_List_Table {
 
 		foreach ( $quests as $quest ) {
 			if ( '' === $quest['quest_id'] ) {
-				$lines[] = '<em>' . esc_html__( 'No quest selected', 'jquest' ) . '</em>';
+				$lines[] = '<em>' . esc_html__( 'No quest selected', 'superquest' ) . '</em>';
 				continue;
 			}
 
@@ -119,8 +119,8 @@ class Usage_Table extends \WP_List_Table {
 				: '<code>' . esc_html( $quest['quest_id'] ) . '</code>';
 
 			if ( $quest['popup'] ) {
-				$line .= ' <span class="jquest-usage-tag">'
-					. ( $quest['auto'] ? esc_html__( 'auto popup', 'jquest' ) : esc_html__( 'popup', 'jquest' ) )
+				$line .= ' <span class="superquest-usage-tag">'
+					. ( $quest['auto'] ? esc_html__( 'auto popup', 'superquest' ) : esc_html__( 'popup', 'superquest' ) )
 					. '</span>';
 			}
 
@@ -140,7 +140,7 @@ class Usage_Table extends \WP_List_Table {
 	 */
 	private function type_label( string $type ): string {
 		if ( 'wp_block' === $type ) {
-			return __( 'Synced pattern', 'jquest' );
+			return __( 'Synced pattern', 'superquest' );
 		}
 
 		$object = get_post_type_object( $type );
@@ -156,7 +156,7 @@ class Usage_Table extends \WP_List_Table {
 	 * @return void
 	 */
 	public function no_items() {
-		esc_html_e( 'No SuperQuest blocks found.', 'jquest' );
+		esc_html_e( 'No SuperQuest blocks found.', 'superquest' );
 	}
 
 	/**

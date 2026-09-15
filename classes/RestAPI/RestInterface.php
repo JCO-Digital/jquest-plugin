@@ -2,15 +2,15 @@
 /**
  * REST API interface.
  *
- * @package jQuestPlugin\RestAPI
+ * @package SuperQuestPlugin\RestAPI
  */
 
-namespace jQuestPlugin\RestAPI;
+namespace SuperQuestPlugin\RestAPI;
 
 /**
  * Classes RestAPI class, registers the REST API endpoints for classes and handles the requests.
  *
- * @package jQuestPlugin\RestAPI
+ * @package SuperQuestPlugin\RestAPI
  */
 interface RestInterface {
 

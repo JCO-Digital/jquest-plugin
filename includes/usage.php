@@ -2,10 +2,10 @@
 /**
  * Finds every place the SuperQuest block is used across the site.
  *
- * @package jQuestPlugin\Usage
+ * @package SuperQuestPlugin\Usage
  */
 
-namespace jQuestPlugin\Usage;
+namespace SuperQuestPlugin\Usage;
 
 /**
  * The posts whose content holds at least one SuperQuest block.
@@ -25,18 +25,22 @@ namespace jQuestPlugin\Usage;
 function find_posts_with_block(): array {
 	global $wpdb;
 
-	$like = '%' . $wpdb->esc_like( '<!-- wp:' . JQUEST_BLOCK_NAME ) . '%';
+	// Content the block-name migration has not reached yet still carries the
+	// old name, so both are matched.
+	$like        = '%' . $wpdb->esc_like( '<!-- wp:' . SUPERQUEST_BLOCK_NAME ) . '%';
+	$legacy_like = '%' . $wpdb->esc_like( '<!-- wp:' . SUPERQUEST_LEGACY_BLOCK_NAME ) . '%';
 
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	return $wpdb->get_results(
 		$wpdb->prepare(
 			"SELECT ID, post_title, post_type, post_status, post_content
 			FROM {$wpdb->posts}
-			WHERE post_content LIKE %s
+			WHERE ( post_content LIKE %s OR post_content LIKE %s )
 			AND post_type != 'revision'
 			AND post_status != 'auto-draft'
 			ORDER BY post_type ASC, post_title ASC",
-			$like
+			$like,
+			$legacy_like
 		)
 	);
 }
@@ -95,11 +99,16 @@ function collect_blocks( array $blocks ): array {
 	$found = array();
 
 	foreach ( $blocks as $block ) {
-		if ( JQUEST_BLOCK_NAME === $block['blockName'] ) {
+		if ( \SuperQuestPlugin\is_inserter_block( $block['blockName'] ) ) {
 			$attrs = $block['attrs'] ?? array();
 
+			// Content saved before the attribute was renamed still holds
+			// `selectedGame`. The block's deprecation rewrites it, but only once
+			// an editor opens and re-saves the post, so the scan reads both.
+			$quest_id = $attrs['selectedQuest'] ?? $attrs['selectedGame'] ?? '';
+
 			$found[] = array(
-				'quest_id' => isset( $attrs['selectedGame'] ) ? (string) $attrs['selectedGame'] : '',
+				'quest_id' => (string) $quest_id,
 				'popup'    => ! empty( $attrs['popup'] ),
 				'auto'     => ! empty( $attrs['popupAuto'] ),
 			);
@@ -121,9 +130,9 @@ function collect_blocks( array $blocks ): array {
 function quest_titles(): array {
 	$titles = array();
 
-	foreach ( (array) get_option( 'jquest_org_games', array() ) as $game ) {
-		if ( is_object( $game ) && isset( $game->id ) ) {
-			$titles[ (string) $game->id ] = isset( $game->title ) ? (string) $game->title : '';
+	foreach ( (array) get_option( 'superquest_org_quests', array() ) as $quest ) {
+		if ( is_object( $quest ) && isset( $quest->id ) ) {
+			$titles[ (string) $quest->id ] = isset( $quest->title ) ? (string) $quest->title : '';
 		}
 	}
 

@@ -2,10 +2,10 @@
 /**
  * Helper functions for the plugin.
  *
- * @package jQuestPlugin
+ * @package SuperQuestPlugin
  */
 
-namespace jQuestPlugin;
+namespace SuperQuestPlugin;
 
 /**
  * Used to show an error message when the plugin is missing dependencies.
@@ -15,7 +15,7 @@ namespace jQuestPlugin;
 function dependencies_errors(): void {
 	?>
 	<div class="notice notice-error">
-		<p><?php esc_html_e( 'The plugin "SuperQuest Plugin" could not be activated because it is missing dependencies. Please install the dependencies and try again.', 'jquest' ); ?></p>
+		<p><?php esc_html_e( 'The plugin "SuperQuest Plugin" could not be activated because it is missing dependencies. Please install the dependencies and try again.', 'superquest' ); ?></p>
 	</div>
 	<?php
 }

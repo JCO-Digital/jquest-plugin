@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SuperQuest Plugin 1.11.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/jquest-plugin\n"
-"POT-Creation-Date: 2026-09-15 17:56:21+00:00\n"
+"POT-Creation-Date: 2026-09-15 18:43:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,10 +23,6 @@ msgstr ""
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
-
-#: classes/JQuest_Table.php:22
-msgid "Title"
-msgstr ""
 
 #: classes/Options/OptionsPage.php:91 classes/Options/OptionsPage.php:92
 #: classes/Options/OptionsPage.php:206 classes/Options/OptionsPage.php:320
@@ -50,6 +46,10 @@ msgstr ""
 
 #: classes/Options/OptionsPage.php:229
 msgid "General settings required for SuperQuest integration."
+msgstr ""
+
+#: classes/SuperQuest_Table.php:22
+msgid "Title"
 msgstr ""
 
 #: classes/Usage_Table.php:24
@@ -111,11 +111,11 @@ msgid "Settings"
 msgstr ""
 
 #: views/admin-settings.php:38
-msgid "Refresh games"
+msgid "Refresh quests"
 msgstr ""
 
 #: views/admin-settings.php:46
-msgid "Organisation Games"
+msgid "Organisation Quests"
 msgstr ""
 
 #: views/popup-v2-settings.php:37

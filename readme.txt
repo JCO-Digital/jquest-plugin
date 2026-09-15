@@ -1,7 +1,7 @@
 === SuperQuest Plugin ===
 Contributors: jcodigital
 Donate link: https://jco.fi/
-Tags: superquest, jquest, games, gamification, learning, education, quiz, quizzes, learn
+Tags: superquest, superquest, quests, gamification, learning, education, quiz, quizzes, learn
 Requires at least: 6.0
 Tested up to: 6.4.2
 Requires PHP: 8.0
@@ -9,11 +9,11 @@ Stable tag: 1.11.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-SuperQuest Plugin is a WordPress plugin used to insert SuperQuest games in a WordPress site.
+SuperQuest Plugin is a WordPress plugin used to insert SuperQuest quests in a WordPress site.
 
 == Description ==
 
-The plugin makes it possible to add an organization id and fetch SuperQuest games that can be inserted in site using a Gutenberg block.
+The plugin makes it possible to add an organization id and fetch SuperQuest quests that can be inserted in site using a Gutenberg block.
 
 == Installation ==
 

@@ -1,13 +1,13 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
 
-namespace jQuestPlugin\RestAPI;
+namespace SuperQuestPlugin\RestAPI;
 
-use jQuestPlugin\RestAPI\APIs\JquestAPI;
+use SuperQuestPlugin\RestAPI\APIs\SuperQuestAPI;
 
 /**
  * Bootstrap class, initializes the REST API.
  *
- * @package jQuestPlugin\RestAPI
+ * @package SuperQuestPlugin\RestAPI
  */
 class Bootstrap {
 
@@ -16,7 +16,7 @@ class Bootstrap {
 	 *
 	 * @var RestInterface[]
 	 */
-	public static array $apis = array( JquestAPI::class );
+	public static array $apis = array( SuperQuestAPI::class );
 
 
 	/**
@@ -44,11 +44,11 @@ class Bootstrap {
 		foreach ( self::$apis as $api ) {
 			$api_urls[ $api::nice_name() ] = rest_url( $api::$namespace );
 		}
-		wp_register_script( 'jquest-plugin', '', array(), '1', false );
-		wp_enqueue_script( 'jquest-plugin' );
+		wp_register_script( 'superquest-plugin', '', array(), '1', false );
+		wp_enqueue_script( 'superquest-plugin' );
 		wp_localize_script(
-			'jquest-plugin',
-			'jQuestPlugin',
+			'superquest-plugin',
+			'SuperQuestPlugin',
 			array(
 				'api_urls' => $api_urls,
 				'nonce'    => wp_create_nonce( 'wp_rest' ),

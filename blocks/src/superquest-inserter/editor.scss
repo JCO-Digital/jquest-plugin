@@ -4,7 +4,7 @@
  * Replace them with your own styles or remove the file completely.
  */
 
-.jquest-inserter-quest-picker {
+.superquest-inserter-quest-picker {
 	display: grid;
 	gap: 10px;
 	margin-bottom: 20px;
@@ -16,7 +16,7 @@
 		margin-bottom: 0;
 	}
 
-	.jquest-inserter-refresh-button {
+	.superquest-inserter-refresh-button {
 		justify-content: center;
 		transition:
 			background-color 120ms ease,
@@ -25,7 +25,7 @@
 	}
 }
 
-.wp-block-jquest-inserter-jquest-inserter {
+.wp-block-superquest-inserter-superquest-inserter {
 	border: 1px solid #1f2937;
 	background-color: #111827;
 	background-image: url("../../../assets/img/Super-Quest-Color-Gradient-RGB.svg");

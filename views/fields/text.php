@@ -1,8 +1,8 @@
 <?php // phpcs:ignore Squiz.Commenting.FileComment.Missing
 
-$input_id          = $jquest_id ?? '';
-$input_value       = $jquest_value ?? '';
-$input_placeholder = $jquest_placeholder ?? '';
+$input_id          = $superquest_id ?? '';
+$input_value       = $superquest_value ?? '';
+$input_placeholder = $superquest_placeholder ?? '';
 
 ?>
 <input

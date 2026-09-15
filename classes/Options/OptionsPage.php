@@ -2,16 +2,16 @@
 /**
  * Options page class.
  *
- * @package jQuestPlugin\Options
+ * @package SuperQuestPlugin\Options
  */
 
-namespace jQuestPlugin\Options;
+namespace SuperQuestPlugin\Options;
 
-use jQuestPlugin\Singleton;
-use function jQuestPlugin\fetch_jquests;
-use function jQuestPlugin\render_template;
-use function jQuestPlugin\render_text_field;
-use function jQuestPlugin\style_register;
+use SuperQuestPlugin\Singleton;
+use function SuperQuestPlugin\fetch_quests;
+use function SuperQuestPlugin\render_template;
+use function SuperQuestPlugin\render_text_field;
+use function SuperQuestPlugin\style_register;
 
 /**
  * Options page class.
@@ -27,31 +27,31 @@ class OptionsPage extends Singleton {
 		add_action( 'admin_menu', array( $this, 'add_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_init', array( $this, 'enqueue_assets' ) );
-		add_action( 'updated_option', array( $this, 'jquest_plugin_option_updated' ), 10, 3 );
-		add_action( 'admin_post_jquest_refresh_games', array( $this, 'jquest_plugin_refresh_games' ) );
+		add_action( 'updated_option', array( $this, 'superquest_plugin_option_updated' ), 10, 3 );
+		add_action( 'admin_post_superquest_refresh_quests', array( $this, 'superquest_plugin_refresh_quests' ) );
 	}
 
 	/**
-	 * Handles refreshing the SuperQuest games.
+	 * Handles refreshing the SuperQuest quests.
 	 *
 	 * @return void
 	 */
-	public function jquest_plugin_refresh_games(): void {
+	public function superquest_plugin_refresh_quests(): void {
 		check_admin_referer( 'my_plugin_button_action_nonce', 'my_plugin_button_action_nonce_field' );
 
-		if ( isset( $_POST['jquest_refresh_games'] ) ) {
-			if ( trim( get_option( 'jquest_org_id', '' ) ) !== '' ) {
-				fetch_jquests( get_option( 'jquest_org_id' ) );
+		if ( isset( $_POST['superquest_refresh_quests'] ) ) {
+			if ( trim( get_option( 'superquest_org_id', '' ) ) !== '' ) {
+				fetch_quests( get_option( 'superquest_org_id' ) );
 			}
 
-			$referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( $_SERVER['HTTP_REFERER'] ) : admin_url( 'admin.php?page=jquest-options' );
+			$referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( $_SERVER['HTTP_REFERER'] ) : admin_url( 'admin.php?page=superquest-options' );
 			wp_safe_redirect( $referer );
 			exit;
 		}
 	}
 
 	/**
-	 * Handles fetching SuperQuest games
+	 * Handles fetching SuperQuest quests
 	 *
 	 * @param string $option_name The name of the option being updated.
 	 * @param mixed  $old_value   The old value of the option.
@@ -59,12 +59,12 @@ class OptionsPage extends Singleton {
 	 *
 	 * @return void
 	 */
-	public function jquest_plugin_option_updated( $option_name, $old_value, $new_value ): void {
-		if ( $option_name === 'jquest_org_id' && $old_value !== $new_value ) {
+	public function superquest_plugin_option_updated( $option_name, $old_value, $new_value ): void {
+		if ( $option_name === 'superquest_org_id' && $old_value !== $new_value ) {
 			if ( trim( $new_value ) !== '' ) {
-				fetch_jquests( $new_value );
+				fetch_quests( $new_value );
 			} else {
-				update_option( 'jquest_org_games', array() );
+				update_option( 'superquest_org_quests', array() );
 			}
 		}
 	}
@@ -80,36 +80,36 @@ class OptionsPage extends Singleton {
 			'SuperQuest',
 			'SuperQuest',
 			'manage_options',
-			'jquest-options',
+			'superquest-options',
 			array( $this, 'render_page' ),
 			'data:image/svg+xml;base64,' . base64_encode( '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 118 137"><path fill="black" d="M19.62,45.96v19.05c0,1.2-1.3,1.95-2.34,1.35L.78,56.84c-.48-.28-.78-.79-.78-1.35v-20.85c0-.56.3-1.07.78-1.35L58.07.21c.48-.28,1.08-.28,1.56,0l16.5,9.53c1.04.6,1.04,2.1,0,2.7L20.4,44.61c-.48.28-.78.79-.78,1.35ZM58.15,114.8L2.41,82.62c-1.04-.6-2.34.15-2.34,1.35v19.05c0,.56.29,1.07.78,1.35l57.29,33.08c.48.28,1.08.28,1.56,0l18.06-10.43c.48-.28.78-.79.78-1.35v-19.05c0-1.2-1.3-1.95-2.34-1.35l-16.5,9.53c-.48.28-1.08.28-1.56,0ZM98.08,45.72v64.35c0,1.2,1.3,1.95,2.34,1.35l16.5-9.52c.48-.28.78-.79.78-1.35V34.39c0-.56-.3-1.07-.78-1.35l-18.06-10.43c-.48-.28-1.08-.28-1.56,0l-16.5,9.53c-1.04.6-1.04,2.1,0,2.7l16.5,9.53c.48.28.78.79.78,1.35ZM77.94,80.54c.38-.3.61-.75.61-1.24v-20.94c0-.49-.23-.94-.61-1.24l-18.31-10.58c-.49-.28-1.08-.28-1.56,0l-18.31,10.58c-.38.3-.61.75-.61,1.24v20.94c0,.49.23.94.61,1.24l18.31,10.58c.47.28,1.07.28,1.56,0l18.31-10.58Z"/></svg>' ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 			80
 		);
 
 		add_submenu_page(
-			'jquest-options',
-			__( 'General', 'jquest' ),
-			__( 'General', 'jquest' ),
+			'superquest-options',
+			__( 'General', 'superquest' ),
+			__( 'General', 'superquest' ),
 			'manage_options',
-			'jquest-options',
+			'superquest-options',
 			array( $this, 'render_page' )
 		);
 
 		add_submenu_page(
-			'jquest-options',
-			__( 'Popup', 'jquest' ),
-			__( 'Popup', 'jquest' ),
+			'superquest-options',
+			__( 'Popup', 'superquest' ),
+			__( 'Popup', 'superquest' ),
 			'manage_options',
-			'jquest-popup-v2',
+			'superquest-popup-v2',
 			array( $this, 'render_popup_page' )
 		);
 
 		add_submenu_page(
-			'jquest-options',
-			__( 'Usage', 'jquest' ),
-			__( 'Usage', 'jquest' ),
+			'superquest-options',
+			__( 'Usage', 'superquest' ),
+			__( 'Usage', 'superquest' ),
 			'manage_options',
-			'jquest-usage',
+			'superquest-usage',
 			array( $this, 'render_usage_page' )
 		);
 	}
@@ -135,24 +135,24 @@ class OptionsPage extends Singleton {
 	final public function register_settings(): void {
 
 		register_setting(
-			'jquest-options-general',
-			'jquest_org_id',
+			'superquest-options-general',
+			'superquest_org_id',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
 			)
 		);
 
 		register_setting(
-			'jquest-general',
-			'jquest_org_message',
+			'superquest-general',
+			'superquest_org_message',
 			array(
 				'sanitize_callback' => 'sanitize_text_field',
 			)
 		);
 
 		register_setting(
-			'jquest-general',
-			'jquest_org_games',
+			'superquest-general',
+			'superquest_org_quests',
 			array(
 				'sanitize_callback' => function ( $input ) {
 					if ( is_array( $input ) ) {
@@ -185,37 +185,37 @@ class OptionsPage extends Singleton {
 		// above the footer, stored as one list option.
 		foreach ( $this->popup_languages() as $lang ) {
 			register_setting(
-				'jquest-popup-v2-' . $lang,
-				\jQuestPlugin\Scripts\popup_v2_quests_option( $lang ),
+				'superquest-popup-v2-' . $lang,
+				\SuperQuestPlugin\Scripts\popup_v2_quests_option( $lang ),
 				array(
 					'type'              => 'array',
 					'default'           => array(),
-					'sanitize_callback' => 'jQuestPlugin\Scripts\sanitize_popup_v2_quests',
+					'sanitize_callback' => 'SuperQuestPlugin\Scripts\sanitize_popup_v2_quests',
 				)
 			);
 		}
 
 		// Popup settings that are not per-language, saved from their own form
 		// above the language tabs on the popup page.
-		register_setting( 'jquest-popup-v2-global', \jQuestPlugin\Scripts\ALWAYS_LOAD_OPTION, array( 'sanitize_callback' => 'absint' ) );
-		register_setting( 'jquest-popup-v2-global', \jQuestPlugin\Scripts\POPUP_V2_EXCLUDE_OPTION, array( 'sanitize_callback' => 'jQuestPlugin\Scripts\sanitize_id_list' ) );
+		register_setting( 'superquest-popup-v2-global', \SuperQuestPlugin\Scripts\ALWAYS_LOAD_OPTION, array( 'sanitize_callback' => 'absint' ) );
+		register_setting( 'superquest-popup-v2-global', \SuperQuestPlugin\Scripts\POPUP_V2_EXCLUDE_OPTION, array( 'sanitize_callback' => 'SuperQuestPlugin\Scripts\sanitize_id_list' ) );
 
 		// Settings sections.
 		add_settings_section(
-			'jquest-general',
-			__( 'General', 'jquest' ),
+			'superquest-general',
+			__( 'General', 'superquest' ),
 			array( $this, 'render_general_section' ),
-			'jquest-options-general',
+			'superquest-options-general',
 		);
 
 		add_settings_field(
-			'jquest_org_id',
-			__( 'Organisation ID', 'jquest' ),
+			'superquest_org_id',
+			__( 'Organisation ID', 'superquest' ),
 			array( $this, 'render_id_field' ),
-			'jquest-options-general',
-			'jquest-general',
+			'superquest-options-general',
+			'superquest-general',
 			array(
-				'label_for' => 'jquest_org_id',
+				'label_for' => 'superquest_org_id',
 			)
 		);
 	}
@@ -226,7 +226,7 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	final public function render_general_section(): void {
-		echo '<p>' . esc_html__( 'General settings required for SuperQuest integration.', 'jquest' ) . '</p>';
+		echo '<p>' . esc_html__( 'General settings required for SuperQuest integration.', 'superquest' ) . '</p>';
 	}
 
 
@@ -238,9 +238,9 @@ class OptionsPage extends Singleton {
 	final public function render_id_field(): void {
 		render_text_field(
 			array(
-				'id'          => 'jquest_org_id',
-				'value'       => get_option( 'jquest_org_id', '' ),
-				'placeholder' => __( 'Organisation ID', 'jquest' ),
+				'id'          => 'superquest_org_id',
+				'value'       => get_option( 'superquest_org_id', '' ),
+				'placeholder' => __( 'Organisation ID', 'superquest' ),
 			)
 		);
 	}
@@ -251,9 +251,9 @@ class OptionsPage extends Singleton {
 	 * @return void
 	 */
 	final public function enqueue_assets(): void {
-		style_register( 'jquest-admin', 'assets/css/admin.css' );
-		wp_enqueue_style( 'jquest-admin' );
-		wp_enqueue_script( 'jquest-backend' );
+		style_register( 'superquest-admin', 'assets/css/admin.css' );
+		wp_enqueue_style( 'superquest-admin' );
+		wp_enqueue_script( 'superquest-backend' );
 	}
 
 	/**
@@ -268,17 +268,17 @@ class OptionsPage extends Singleton {
 		$tabs = array();
 		foreach ( $this->popup_languages() as $slug ) {
 			$tabs[ $slug ] = array(
-				'label' => 'default' === $slug ? __( 'Popup', 'jquest' ) : strtoupper( $slug ),
-				'url'   => add_query_arg( array( 'tab' => $slug ), admin_url( 'admin.php?page=jquest-popup-v2' ) ),
+				'label' => 'default' === $slug ? __( 'Popup', 'superquest' ) : strtoupper( $slug ),
+				'url'   => add_query_arg( array( 'tab' => $slug ), admin_url( 'admin.php?page=superquest-popup-v2' ) ),
 			);
 		}
 
 		$requested  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$active_tab = isset( $tabs[ $requested ] ) ? $requested : (string) array_key_first( $tabs );
 
-		$games = array_values(
+		$quests = array_values(
 			array_filter(
-				get_option( 'jquest_org_games', array() ),
+				get_option( 'superquest_org_quests', array() ),
 				'is_object'
 			)
 		);
@@ -287,7 +287,7 @@ class OptionsPage extends Singleton {
 			'tabs'       => $tabs,
 			'active_tab' => $active_tab,
 			'lang_key'   => $active_tab,
-			'games'      => $games,
+			'quests'     => $quests,
 		);
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo render_template( 'popup-v2-settings', $data );
@@ -317,8 +317,8 @@ class OptionsPage extends Singleton {
 		$data = array(
 			'tabs'       => array(
 				'general' => array(
-					'label' => __( 'General', 'jquest' ),
-					'url'   => add_query_arg( array( 'tab' => 'general' ), admin_url( 'admin.php?page=jquest-options' ) ),
+					'label' => __( 'General', 'superquest' ),
+					'url'   => add_query_arg( array( 'tab' => 'general' ), admin_url( 'admin.php?page=superquest-options' ) ),
 				),
 			),
 			'active_tab' => $tab,

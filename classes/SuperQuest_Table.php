@@ -1,16 +1,16 @@
 <?php
 /**
- * JQuest Table class.
+ * SuperQuest Table class.
  *
- * @package jQuestPlugin
+ * @package SuperQuestPlugin
  */
 
-namespace jQuestPlugin;
+namespace SuperQuestPlugin;
 
 /**
- * Displays the SuperQuest games in a WP_List_Table.
+ * Displays the SuperQuest quests in a WP_List_Table.
  */
-class JQuest_Table extends \WP_List_Table {
+class SuperQuest_Table extends \WP_List_Table {
 
 	/**
 	 * Returns the columns for the table.
@@ -19,7 +19,7 @@ class JQuest_Table extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'Title' => __( 'Title', 'jquest' ),
+			'Title' => __( 'Title', 'superquest' ),
 			'ID'    => 'ID',
 		);
 	}
@@ -51,8 +51,8 @@ class JQuest_Table extends \WP_List_Table {
 	 * @return void
 	 */
 	public function extra_tablenav( $which ) {
-		if ( $which === 'top' && get_option( 'jquest_org_message' ) ) {
-			echo esc_html( get_option( 'jquest_org_message' ) );
+		if ( $which === 'top' && get_option( 'superquest_org_message' ) ) {
+			echo esc_html( get_option( 'superquest_org_message' ) );
 		}
 	}
 
@@ -66,6 +66,6 @@ class JQuest_Table extends \WP_List_Table {
 		$hidden                = array();
 		$sortable              = array();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items           = get_option( 'jquest_org_games', array() );
+		$this->items           = get_option( 'superquest_org_quests', array() );
 	}
 }

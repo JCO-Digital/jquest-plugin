@@ -2,10 +2,10 @@
 /**
  * Generic handlers for different field types.
  *
- * @package jQuestPlugin
+ * @package SuperQuestPlugin
  */
 
-namespace jQuestPlugin;
+namespace SuperQuestPlugin;
 
 /**
  * Renders a text field.

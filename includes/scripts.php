@@ -2,10 +2,10 @@
 /**
  * Handles enqueuing of SuperQuest scripts, when the block is present on a page.
  *
- * @package jQuestPlugin\Scripts
+ * @package SuperQuestPlugin\Scripts
  */
 
-namespace jQuestPlugin\Scripts;
+namespace SuperQuestPlugin\Scripts;
 
 /**
  * URL of the SuperQuest loader. It picks its build from the
@@ -29,20 +29,20 @@ const BUNDLE_BASE_URL = 'https://files.jquest.fi/jquest/' . SCRIPT_VERSION;
  * Option loading the loader on every front-end page, whether or not a
  * SuperQuest block or popup is present. Global, since it is a technical concern.
  */
-const ALWAYS_LOAD_OPTION = 'jquest_always_load_loader';
+const ALWAYS_LOAD_OPTION = 'superquest_always_load_loader';
 
 /**
  * Option holding the pages no popup quest is inserted on. Global, since post
  * IDs never collide between languages, and a page that should stay clear of
  * popups should stay clear of them in every language.
  */
-const POPUP_V2_EXCLUDE_OPTION = 'jquest_popup_v2_exclude_ids';
+const POPUP_V2_EXCLUDE_OPTION = 'superquest_popup_v2_exclude_ids';
 
 /**
  * Flag option marking that the one-time migration from a single popup quest
  * per language to a list of them has run.
  */
-const POPUP_V2_MIGRATION_FLAG = 'jquest_popup_v2_quests_migrated';
+const POPUP_V2_MIGRATION_FLAG = 'superquest_popup_v2_quests_migrated';
 
 /**
  * Returns the current language slug, or 'default' when Polylang is inactive or
@@ -64,7 +64,7 @@ function current_language(): string {
  * @return string
  */
 function popup_v2_prefix( ?string $lang = null ): string {
-	return 'jquest_popup_v2_' . ( $lang ?? current_language() ) . '_';
+	return 'superquest_popup_v2_' . ( $lang ?? current_language() ) . '_';
 }
 
 /**
@@ -289,7 +289,7 @@ const MANIFEST_CACHE_TTL = 5 * MINUTE_IN_SECONDS;
  * @return array<string, mixed> Decoded manifest, or an empty array when unavailable.
  */
 function bundle_manifest(): array {
-	$key = 'jquest_manifest_' . SCRIPT_VERSION;
+	$key = 'superquest_manifest_' . SCRIPT_VERSION;
 
 	$cached = get_transient( $key );
 	if ( is_array( $cached ) ) {
@@ -395,7 +395,7 @@ function print_bundle_preloads(): void {
  *
  * @return void
  */
-function insert_jquest_script( bool $preload_bundle = false ): void {
+function insert_superquest_script( bool $preload_bundle = false ): void {
 	static $inserted = false;
 	if ( $inserted ) {
 		return;
@@ -408,7 +408,7 @@ function insert_jquest_script( bool $preload_bundle = false ): void {
 	add_filter(
 		'wp_script_attributes',
 		function ( array $attributes ): array {
-			if ( 'jquest-loader-js' === ( $attributes['id'] ?? '' ) ) {
+			if ( 'superquest-loader-js' === ( $attributes['id'] ?? '' ) ) {
 				$attributes = array_merge( $attributes, consent_attributes() );
 			}
 
@@ -431,7 +431,7 @@ function insert_jquest_script( bool $preload_bundle = false ): void {
 	wp_print_script_tag(
 		array_merge(
 			array(
-				'id'          => 'jquest-loader-js',
+				'id'          => 'superquest-loader-js',
 				'src'         => LOADER_URL,
 				'async'       => true,
 				'crossorigin' => 'anonymous',
@@ -450,8 +450,8 @@ function insert_jquest_script( bool $preload_bundle = false ): void {
  *
  * @return bool
  */
-function has_jquest_block(): bool {
-	return has_blocks() && has_block( JQUEST_BLOCK_NAME );
+function has_superquest_block(): bool {
+	return \SuperQuestPlugin\post_has_inserter_block();
 }
 
 /**
@@ -469,12 +469,12 @@ function popup_v2_enabled(): bool {
  *
  * Only a single loader can run per page, so every source — blocks, popup quests
  * and the always-load setting — is resolved here in one place instead of racing
- * to be the first to call insert_jquest_script().
+ * to be the first to call insert_superquest_script().
  *
  * @return void
  */
 function maybe_insert_loader(): void {
-	$has_block = has_jquest_block();
+	$has_block = has_superquest_block();
 	$has_popup = popup_v2_enabled();
 
 	if ( ! $has_block && ! $has_popup && ! get_option( ALWAYS_LOAD_OPTION, 0 ) ) {
@@ -486,7 +486,7 @@ function maybe_insert_loader(): void {
 	// fires as soon as it scrolls near, or a popup quest. The always-load setting
 	// alone may never need the bundle, and preloading a megabyte of vendor code
 	// for nothing would only slow the host page down.
-	insert_jquest_script( $has_block || $has_popup );
+	insert_superquest_script( $has_block || $has_popup );
 }
 
 // Priority 2 runs right after wp_enqueue_scripts at 1 and ahead of the theme's
@@ -509,14 +509,17 @@ function maybe_insert_popup_v2_divs(): void {
 
 	// Prepare every value as a finished, escaped string so the markup below
 	// stays a plain template with no inline PHP.
-	$lang           = current_language();
-	$org_id         = esc_attr( get_option( 'jquest_org_id', '' ) );
-	$locale         = 'default' === $lang ? '' : esc_attr( $lang );
-	$jquest_version = esc_attr( SCRIPT_VERSION );
+	$lang               = current_language();
+	$org_id             = esc_attr( get_option( 'superquest_org_id', '' ) );
+	$locale             = 'default' === $lang ? '' : esc_attr( $lang );
+	$superquest_version = esc_attr( SCRIPT_VERSION );
 
 	foreach ( $quest_ids as $quest_id ) {
 		$quest_id = esc_attr( $quest_id );
 
+		// data-game-id is the attribute the external loader reads, so it keeps
+		// that name even though the plugin calls these quests everywhere else.
+		//
 		// data-jq-load="eager" opts this widget out of the loader's viewport
 		// gate. The loader only fetches the app bundle once a .jquest-app
 		// approaches the viewport, but these divs sit at the very bottom of the
@@ -531,7 +534,7 @@ function maybe_insert_popup_v2_divs(): void {
 			data-locale="{$locale}"
 			data-org-id="{$org_id}"
 			data-game-id="{$quest_id}"
-			data-version="{$jquest_version}"
+			data-version="{$superquest_version}"
 			data-jq-load="eager"
 		></div>
 		HTML;
@@ -559,12 +562,12 @@ function migrate_popup_v2_quests(): void {
 	}
 
 	global $wpdb;
-	// Find every language's legacy option, e.g. jquest_popup_v2_en_quest_id.
+	// Find every language's legacy option, e.g. superquest_popup_v2_en_quest_id.
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$legacy_options = $wpdb->get_col(
 		$wpdb->prepare(
 			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
-			$wpdb->esc_like( 'jquest_popup_v2_' ) . '%' . $wpdb->esc_like( '_quest_id' )
+			$wpdb->esc_like( 'superquest_popup_v2_' ) . '%' . $wpdb->esc_like( '_quest_id' )
 		)
 	);
 
@@ -609,7 +612,7 @@ function migrate_popup_v2_quests(): void {
 add_action( 'admin_init', __NAMESPACE__ . '\migrate_popup_v2_quests' );
 
 /**
- * Outputs the trigger button styles a jquest-inserter block's popup needs, once
+ * Outputs the trigger button styles a superquest-inserter block's popup needs, once
  * per page. The values are whatever the removed trigger settings page last
  * saved, falling back to the defaults below.
  *
@@ -622,37 +625,37 @@ function output_popup_trigger_styles(): void {
 	}
 	$output = true;
 
-	$text_color                   = get_option( 'jquest_popup_trigger_text_color', '#1a2e40' );
-	$bg_color                     = get_option( 'jquest_popup_trigger_bg_color', '#ffffff' );
-	$text_hover_color             = get_option( 'jquest_popup_trigger_text_hover_color', '#1a2e40' );
-	$bg_hover_color               = get_option( 'jquest_popup_trigger_bg_hover_color', '#f0f0f0' );
-	$icon_bg_color                = get_option( 'jquest_popup_trigger_icon_bg_color', '#ffffff' );
-	$icon_bg_hover_color          = get_option( 'jquest_popup_trigger_icon_bg_hover_color', '' );
-	$icon_color                   = get_option( 'jquest_popup_trigger_icon_color', '' );
-	$icon_hover_color             = get_option( 'jquest_popup_trigger_icon_hover_color', '' );
-	$side                         = get_option( 'jquest_popup_trigger_side', 'right' );
-	$offset_x                     = (int) get_option( 'jquest_popup_trigger_offset_x', 16 );
-	$offset_y                     = (int) get_option( 'jquest_popup_trigger_offset_y', 16 );
-	$border_radius                = (int) get_option( 'jquest_popup_trigger_border_radius', 25 );
-	$padding_top                  = (int) get_option( 'jquest_popup_trigger_padding_top', 11 );
-	$padding_right                = (int) get_option( 'jquest_popup_trigger_padding_right', 23 );
-	$padding_bottom               = (int) get_option( 'jquest_popup_trigger_padding_bottom', 11 );
-	$padding_left                 = (int) get_option( 'jquest_popup_trigger_padding_left', 23 );
-	$icon_container_size          = (int) get_option( 'jquest_popup_trigger_icon_container_size', 29 );
+	$text_color                   = get_option( 'superquest_popup_trigger_text_color', '#1a2e40' );
+	$bg_color                     = get_option( 'superquest_popup_trigger_bg_color', '#ffffff' );
+	$text_hover_color             = get_option( 'superquest_popup_trigger_text_hover_color', '#1a2e40' );
+	$bg_hover_color               = get_option( 'superquest_popup_trigger_bg_hover_color', '#f0f0f0' );
+	$icon_bg_color                = get_option( 'superquest_popup_trigger_icon_bg_color', '#ffffff' );
+	$icon_bg_hover_color          = get_option( 'superquest_popup_trigger_icon_bg_hover_color', '' );
+	$icon_color                   = get_option( 'superquest_popup_trigger_icon_color', '' );
+	$icon_hover_color             = get_option( 'superquest_popup_trigger_icon_hover_color', '' );
+	$side                         = get_option( 'superquest_popup_trigger_side', 'right' );
+	$offset_x                     = (int) get_option( 'superquest_popup_trigger_offset_x', 16 );
+	$offset_y                     = (int) get_option( 'superquest_popup_trigger_offset_y', 16 );
+	$border_radius                = (int) get_option( 'superquest_popup_trigger_border_radius', 25 );
+	$padding_top                  = (int) get_option( 'superquest_popup_trigger_padding_top', 11 );
+	$padding_right                = (int) get_option( 'superquest_popup_trigger_padding_right', 23 );
+	$padding_bottom               = (int) get_option( 'superquest_popup_trigger_padding_bottom', 11 );
+	$padding_left                 = (int) get_option( 'superquest_popup_trigger_padding_left', 23 );
+	$icon_container_size          = (int) get_option( 'superquest_popup_trigger_icon_container_size', 29 );
 	$icon_container_border_radius = (int) get_option(
-		'jquest_popup_trigger_icon_container_border_radius',
+		'superquest_popup_trigger_icon_container_border_radius',
 		50,
 	);
-	$items_gap                    = (int) get_option( 'jquest_popup_trigger_items_gap', 8 );
-	$icon_size                    = (int) get_option( 'jquest_popup_trigger_icon_size', 20 );
-	$font_size                    = (int) get_option( 'jquest_popup_trigger_font_size', 18 );
-	$font_weight                  = get_option( 'jquest_popup_trigger_font_weight', '400' );
-	$underline_width              = (int) get_option( 'jquest_popup_trigger_underline_width', 1 );
-	$underline_color              = get_option( 'jquest_popup_trigger_underline_color', '' );
-	$underline_hover_color        = get_option( 'jquest_popup_trigger_underline_hover_color', '' );
-	$minimized                    = (bool) get_option( 'jquest_popup_trigger_minimized', 0 );
-	$watch_selector               = get_option( 'jquest_popup_trigger_watch_selector', 'footer' );
-	$watch_threshold              = (int) get_option( 'jquest_popup_trigger_watch_threshold', 10 );
+	$items_gap                    = (int) get_option( 'superquest_popup_trigger_items_gap', 8 );
+	$icon_size                    = (int) get_option( 'superquest_popup_trigger_icon_size', 20 );
+	$font_size                    = (int) get_option( 'superquest_popup_trigger_font_size', 18 );
+	$font_weight                  = get_option( 'superquest_popup_trigger_font_weight', '400' );
+	$underline_width              = (int) get_option( 'superquest_popup_trigger_underline_width', 1 );
+	$underline_color              = get_option( 'superquest_popup_trigger_underline_color', '' );
+	$underline_hover_color        = get_option( 'superquest_popup_trigger_underline_hover_color', '' );
+	$minimized                    = (bool) get_option( 'superquest_popup_trigger_minimized', 0 );
+	$watch_selector               = get_option( 'superquest_popup_trigger_watch_selector', 'footer' );
+	$watch_threshold              = (int) get_option( 'superquest_popup_trigger_watch_threshold', 10 );
 	// Build every dynamic value as a finished string first. Keeping the CSS
 	// template free of inline PHP makes it readable and stops the formatter
 	// from splitting a value across lines, which previously produced broken
@@ -785,12 +788,12 @@ function output_popup_trigger_styles(): void {
 }
 
 /**
- * Outputs trigger button styles when any jquest-inserter block on the page has the trigger button enabled.
+ * Outputs trigger button styles when any superquest-inserter block on the page has the trigger button enabled.
  *
  * @return void
  */
 function maybe_insert_block_trigger_styles(): void {
-	if ( ! has_blocks() || ! has_block( JQUEST_BLOCK_NAME ) ) {
+	if ( ! \SuperQuestPlugin\post_has_inserter_block() ) {
 		return;
 	}
 
@@ -806,7 +809,7 @@ function maybe_insert_block_trigger_styles(): void {
 }
 
 	/**
-	 * Recursively checks whether any jquest-inserter block has the trigger button enabled.
+	 * Recursively checks whether any superquest-inserter block has the trigger button enabled.
 	 *
 	 * @param array $blocks The blocks to check.
 	 *
@@ -815,7 +818,7 @@ function maybe_insert_block_trigger_styles(): void {
 function block_has_trigger_button( array $blocks ): bool {
 	foreach ( $blocks as $block ) {
 		if (
-			JQUEST_BLOCK_NAME === $block['blockName'] &&
+			\SuperQuestPlugin\is_inserter_block( $block['blockName'] ) &&
 			! empty( $block['attrs']['popup'] ) &&
 			empty( $block['attrs']['popupAuto'] ) &&
 			! empty( $block['attrs']['popupTriggerButton'] )
@@ -832,7 +835,7 @@ function block_has_trigger_button( array $blocks ): bool {
 add_action( 'wp_footer', __NAMESPACE__ . '\maybe_insert_block_trigger_styles' );
 
 	/**
-	 * Injects the trigger icon (from global settings) into jquest-inserter block output.
+	 * Injects the trigger icon (from global settings) into superquest-inserter block output.
 	 *
 	 * @param string $content The block content.
 	 * @param array  $block   The block object.
@@ -840,7 +843,7 @@ add_action( 'wp_footer', __NAMESPACE__ . '\maybe_insert_block_trigger_styles' );
 	 * @return string
 	 */
 function inject_block_trigger_icon( string $content, array $block ): string {
-	if ( JQUEST_BLOCK_NAME !== $block['blockName'] ) {
+	if ( ! \SuperQuestPlugin\is_inserter_block( $block['blockName'] ) ) {
 		return $content;
 	}
 
@@ -852,7 +855,7 @@ function inject_block_trigger_icon( string $content, array $block ): string {
 		return $content;
 	}
 
-	$icon_mode = get_option( 'jquest_popup_trigger_icon_mode', 'default' );
+	$icon_mode = get_option( 'superquest_popup_trigger_icon_mode', 'default' );
 
 	if ( 'default' === $icon_mode ) {
 		$icon =
@@ -892,7 +895,7 @@ function inject_block_trigger_icon( string $content, array $block ): string {
 				'rx'     => true,
 			),
 		);
-		$icon     = wp_kses( get_option( 'jquest_popup_trigger_icon_custom', '' ), $svg_kses );
+		$icon     = wp_kses( get_option( 'superquest_popup_trigger_icon_custom', '' ), $svg_kses );
 	} else {
 		$icon = '';
 	}

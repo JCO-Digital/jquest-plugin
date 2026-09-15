@@ -1,0 +1,2 @@
+<?php
+return ['domain'=>NULL,'plural-forms'=>'nplurals=2; plural=n != 1;','language'=>'sv','project-id-version'=>'SuperQuest Plugin','pot-creation-date'=>'2026-06-18 11:16:40+00:00','po-revision-date'=>'2026-06-18 10:59+0000','x-generator'=>'Loco https://localise.biz/','messages'=>['Title'=>'Titel','General'=>'Allmänt','Popup'=>'Popup-fönster','Organisation ID'=>'Organisations-ID','Enabled'=>'Aktiverad']];

@@ -5,16 +5,16 @@
  * Description:     A plugin for inserting SuperQuests into your site.
  * Author:          J&Co Digital Oy
  * Author URI:      https://jco.fi
- * Text Domain:     jquest
+ * Text Domain:     superquest
  * Domain Path:     /languages
  * Version: 1.11.0
  *
- * @package         jQuestPlugin
+ * @package         SuperQuestPlugin
  */
 
-namespace jQuestPlugin;
+namespace SuperQuestPlugin;
 
-use jQuestPlugin\Options\OptionsPage;
+use SuperQuestPlugin\Options\OptionsPage;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -24,10 +24,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/consts.php';
 
 // Load regular composer autoloader.
-if ( is_readable( __DIR__ . JQUEST_COMPOSER_AUTOLOADER ) ) {
-	require_once __DIR__ . JQUEST_COMPOSER_AUTOLOADER;
-} elseif ( is_readable( ABSPATH . JQUEST_COMPOSER_AUTOLOADER ) ) {
-	require_once ABSPATH . JQUEST_COMPOSER_AUTOLOADER;
+if ( is_readable( __DIR__ . SUPERQUEST_COMPOSER_AUTOLOADER ) ) {
+	require_once __DIR__ . SUPERQUEST_COMPOSER_AUTOLOADER;
+} elseif ( is_readable( ABSPATH . SUPERQUEST_COMPOSER_AUTOLOADER ) ) {
+	require_once ABSPATH . SUPERQUEST_COMPOSER_AUTOLOADER;
 }
 
 use Jcore\Update\Config\UpdateConfig;
@@ -56,8 +56,8 @@ $config = new UpdateConfig(
  * @return bool
  */
 function check_prerequisites(): bool {
-	$pass = ( is_readable( __DIR__ . JQUEST_COMPOSER_AUTOLOADER ) ||
-				is_readable( ABSPATH . JQUEST_COMPOSER_AUTOLOADER ) );
+	$pass = ( is_readable( __DIR__ . SUPERQUEST_COMPOSER_AUTOLOADER ) ||
+				is_readable( ABSPATH . SUPERQUEST_COMPOSER_AUTOLOADER ) );
 	if ( $pass ) {
 		return true;
 	}
@@ -90,14 +90,14 @@ function initialize_plugin(): void {
  * @return void
  */
 function load_translations(): void {
-	load_plugin_textdomain( JQUEST_TEXT_DOMAIN, false, basename( __DIR__ ) . '/languages' );
+	load_plugin_textdomain( SUPERQUEST_TEXT_DOMAIN, false, basename( __DIR__ ) . '/languages' );
 }
 
 add_action( 'admin_init', __NAMESPACE__ . '\check_prerequisites' );
 add_action( 'plugins_loaded', __NAMESPACE__ . '\load_translations' );
 add_action( 'plugins_loaded', __NAMESPACE__ . '\initialize_plugin' );
 
-add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), __NAMESPACE__ . '\jquest_plugin_settings_link' );
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), __NAMESPACE__ . '\superquest_plugin_settings_link' );
 
 /**
  * Adds a link to the settings page to the plugins page.
@@ -106,7 +106,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), __NAMESPACE__ 
  *
  * @return array
  */
-function jquest_plugin_settings_link( $settings ): array {
-	$settings[] = '<a href="' . get_admin_url( null, 'admin.php?page=jquest-options' ) . '">Settings</a>';
+function superquest_plugin_settings_link( $settings ): array {
+	$settings[] = '<a href="' . get_admin_url( null, 'admin.php?page=superquest-options' ) . '">Settings</a>';
 	return $settings;
 }

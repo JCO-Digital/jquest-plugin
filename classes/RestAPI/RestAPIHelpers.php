@@ -1,11 +1,11 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName Squiz.Commenting.ClassComment.Missing
 
-namespace jQuestPlugin\RestAPI;
+namespace SuperQuestPlugin\RestAPI;
 
 /**
  * Helper class for the REST API.
  *
- * @package jQuestPlugin\RestAPI
+ * @package SuperQuestPlugin\RestAPI
  */
 class RestAPIHelpers {
 

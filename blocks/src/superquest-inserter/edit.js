@@ -43,7 +43,7 @@ import './editor.scss';
  */
 export default function Edit( { attributes, setAttributes } ) {
 	const {
-		selectedGame,
+		selectedQuest,
 		organization,
 		popup,
 		popupAuto,
@@ -57,24 +57,24 @@ export default function Edit( { attributes, setAttributes } ) {
 		popupTriggerButtonLabelMobile,
 	} = attributes;
 
-	// Initialize the state for the games and text.
-	const [ games, setGames ] = useState( [] );
-	const [ text, setText ] = useState( __( '', 'jquest' ) );
+	// Initialize the state for the quests and text.
+	const [ quests, setQuests ] = useState( [] );
+	const [ text, setText ] = useState( __( '', 'superquest' ) );
 	const [ isRefreshing, setIsRefreshing ] = useState( false );
 
 	/**
-	 * Updates the block with a games API response.
+	 * Updates the block with a quests API response.
 	 *
-	 * @param {Object} data Games API response.
+	 * @param {Object} data Quests API response.
 	 */
-	const updateGames = ( data ) => {
-		// Set information texts if no games or organization is found.
+	const updateQuests = ( data ) => {
+		// Set information texts if no quests or organization is found.
 		if ( ! data.organization ) {
-			setGames( [] );
+			setQuests( [] );
 			setText(
 				__(
 					'Organization not set. Set organization in SuperQuest settings',
-					'jquest'
+					'superquest'
 				)
 			);
 			return;
@@ -82,37 +82,37 @@ export default function Edit( { attributes, setAttributes } ) {
 
 		setAttributes( { organization: data.organization } );
 
-		if ( ! data.games?.length ) {
-			setGames( [] );
-			setText( __( 'No games found for organization.', 'jquest' ) );
+		if ( ! data.quests?.length ) {
+			setQuests( [] );
+			setText( __( 'No quests found for organization.', 'superquest' ) );
 			return;
 		}
 
-		// Map the games to an array of objects with value and label properties.
-		const gameOptions = data.games.map( ( game ) => ( {
-			value: game.id,
-			label: game.title,
-			title: game.title,
+		// Map the quests to an array of objects with value and label properties.
+		const questOptions = data.quests.map( ( quest ) => ( {
+			value: quest.id,
+			label: quest.title,
+			title: quest.title,
 		} ) );
-		setGames( gameOptions );
+		setQuests( questOptions );
 
-		const selectedGameOption =
-			gameOptions.find( ( game ) => game.value === selectedGame ) ||
-			gameOptions[ 0 ];
+		const selectedQuestOption =
+			questOptions.find( ( quest ) => quest.value === selectedQuest ) ||
+			questOptions[ 0 ];
 
-		if ( selectedGameOption.value !== selectedGame ) {
-			setAttributes( { selectedGame: selectedGameOption.value } );
+		if ( selectedQuestOption.value !== selectedQuest ) {
+			setAttributes( { selectedQuest: selectedQuestOption.value } );
 		}
 	};
 
-	// Use the useEffect hook to fetch the games when the component mounts.
+	// Use the useEffect hook to fetch the quests when the component mounts.
 	useEffect( () => {
 		apiFetch( {
-			path: '/jquest/v1/games',
+			path: '/superquest/v1/quests',
 		} )
-			.then( updateGames )
+			.then( updateQuests )
 			.catch( () => {
-				setText( __( 'Unable to load quests.', 'jquest' ) );
+				setText( __( 'Unable to load quests.', 'superquest' ) );
 			} );
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [] );
@@ -120,44 +120,44 @@ export default function Edit( { attributes, setAttributes } ) {
 	/**
 	 * Refreshes the organization's quests from the SuperQuest API.
 	 */
-	const refreshGames = () => {
+	const refreshQuests = () => {
 		setIsRefreshing( true );
 		apiFetch( {
-			path: '/jquest/v1/games/refresh',
+			path: '/superquest/v1/quests/refresh',
 			method: 'POST',
 		} )
-			.then( updateGames )
+			.then( updateQuests )
 			.catch( () => {
-				setText( __( 'Unable to refresh quests.', 'jquest' ) );
+				setText( __( 'Unable to refresh quests.', 'superquest' ) );
 			} )
 			.finally( () => {
 				setIsRefreshing( false );
 			} );
 	};
 
-	// Show the selected game label in the block.
+	// Show the selected quest label in the block.
 	useEffect( () => {
-		games.forEach( ( game ) => {
-			if ( game.value === selectedGame ) {
+		quests.forEach( ( quest ) => {
+			if ( quest.value === selectedQuest ) {
 				// eslint-disable-next-line @wordpress/i18n-no-variables
-				setText( __( game.title, 'jquest' ) );
+				setText( __( quest.title, 'superquest' ) );
 			}
 		} );
-	}, [ selectedGame, organization, games ] );
+	}, [ selectedQuest, organization, quests ] );
 
 	/**
-	 * The `onChangeGame` function is called when the selected game changes.
-	 * It sets the selected game attribute to the new game.
+	 * The `onChangeQuest` function is called when the selected quest changes.
+	 * It sets the selected quest attribute to the new quest.
 	 *
-	 * @param {string} newGame - The new selected game.
+	 * @param {string} newQuest - The new selected quest.
 	 */
-	const onChangeGame = ( newGame ) => {
-		setAttributes( { selectedGame: newGame } );
+	const onChangeQuest = ( newQuest ) => {
+		setAttributes( { selectedQuest: newQuest } );
 	};
 
 	const openDashboard = () => {
 		window.open(
-			`https://dashboard.jquest.fi/#/dashboard/${ organization }/quests/${ selectedGame }`,
+			`https://dashboard.jquest.fi/#/dashboard/${ organization }/quests/${ selectedQuest }`,
 			'_blank'
 		);
 	};
@@ -167,23 +167,23 @@ export default function Edit( { attributes, setAttributes } ) {
 		<>
 			<InspectorControls>
 				<PanelBody title="Settings">
-					<div className="jquest-inserter-quest-picker">
+					<div className="superquest-inserter-quest-picker">
 						<SelectControl
 							label="Select a quest"
-							value={ selectedGame }
-							options={ games }
-							onChange={ onChangeGame }
+							value={ selectedQuest }
+							options={ quests }
+							onChange={ onChangeQuest }
 						/>
 						<Button
-							className="jquest-inserter-refresh-button"
+							className="superquest-inserter-refresh-button"
 							variant="secondary"
 							isBusy={ isRefreshing }
 							disabled={ isRefreshing }
-							onClick={ refreshGames }
+							onClick={ refreshQuests }
 						>
 							{ isRefreshing
-								? __( 'Refreshing quests…', 'jquest' )
-								: __( 'Refresh quests', 'jquest' ) }
+								? __( 'Refreshing quests…', 'superquest' )
+								: __( 'Refresh quests', 'superquest' ) }
 						</Button>
 					</div>
 					<ToggleControl
@@ -330,7 +330,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				<div
 					className="jquest-app"
 					data-org-id={ organization }
-					data-game-id={ selectedGame }
+					data-game-id={ selectedQuest }
 					data-version="v2"
 					data-popup={ popup ? 'true' : 'false' }
 					data-popup-auto={ popupAuto ? 'true' : 'false' }
@@ -339,7 +339,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					data-new-styles="true"
 				>
 					{ text }
-					{ organization !== '' && selectedGame !== '' && (
+					{ organization !== '' && selectedQuest !== '' && (
 						<button onClick={ openDashboard }>
 							Edit in dashboard
 						</button>
