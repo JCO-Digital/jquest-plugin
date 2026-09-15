@@ -1,6 +1,12 @@
 # Changelog
 
-## 1.11.0 (2026-09-09)
+## 1.12.0 (2026-09-15)
+
+#### Features
+
+- slight cleanuper to SuperQuest (5c35782)
+
+## v1.11.0 (2026-09-09)
 
 #### Features
 
@@ -192,7 +198,8 @@
 - gitignore change (4cba845)
 - removed deprecated file (2330871)
 
-### Vibe
+#### Vibe
+
 - cleanup (eca2ec2)
 
 ### v1.1.2 (2026-01-11)
@@ -244,7 +251,8 @@
 
 - include vendor folder (77af58b)
 
-### Hotfix
+#### Hotfix
+
 - include vendor file for the time being. 🚑 (e131317)
 
 ### v0.5.1 (2025-05-16)
@@ -254,7 +262,8 @@
 - add .history directory to Gruntfile exclusion list (1749f71)
 - update Gruntfile to exclude .history directory from processing (e195570)
 
-### Chose
+#### Chose
+
 - add comment to clarify default attribute handling in JQUEST block rendering (d5b5a64)
 
 ## v0.5.0 (2025-05-16)
@@ -356,12 +365,14 @@
 - I think these files should be added? As vendor is wanted? (8afc73b)
 - Trying to get plugins to work 5.5 (237fbaf)
 
-### Stash
+#### Stash
+
 - SO I can access from laptop. (598d0b7)
 
 ### v0.3.5 (2024-10-01)
 
-### Misc
+#### Misc
+
 - removed vendor prefixed, its buggy (e4197a7)
 
 ### v0.3.4 (2024-09-24)
@@ -424,6 +435,7 @@
 
 - change name to jquest-plugin 🔧 (46e9f7b)
 
-### Misc
+#### Misc
+
 - Initial commit (f05b54d)
 
